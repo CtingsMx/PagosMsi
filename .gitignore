@@ -1,0 +1,4 @@
+vendor/
+.vscode/
+.well-known
+vendor/*

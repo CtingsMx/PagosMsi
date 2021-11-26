@@ -1,0 +1,7 @@
+#gotoTop{
+    left:30px !important;
+    right: unset !important;
+}
+.fb-comments, .fb_iframe_widget, .fb-comments > span, .fb_iframe_widget > span, .fb-comments > span > iframe, .fb_iframe_widget > span > iframe{
+    width: 400px !important;
+}

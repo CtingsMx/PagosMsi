@@ -1,0 +1,35 @@
+<IfModule mod_headers.c>
+    # WEEK
+    <FilesMatch "\.(jpg|jpeg|png|gif|swf)$">
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+</IfModule>
+
+
+
+# Redirect everyone's except me:
+# RewriteEngine On
+# RewriteBase /
+# RewriteCond %{REMOTE_HOST} !^177.241.33.185
+# RewriteCond %{REQUEST_URI} !^/index.html$
+# RewriteRule .* /index.html [L,R=302]
+
+RewriteEngine On
+RewriteBase /pagos/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?/$1 [L,QSA]  
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
+
+<IfModule !mod_rewrite.c>
+  ErrorDocument 404 /index.php
+</IfModule>
+
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Configure el paquete “ea-php73” como el lenguaje de programación predeterminado “PHP”.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php73 .php .php7 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

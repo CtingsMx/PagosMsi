@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="131" height="31" viewBox="0 0 131 31">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #707070;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        font-size: 14.5px;
+        font-family: Raleway-Bold, Raleway;
+        font-weight: 700;
+      }
+
+      .cls-4 {
+        fill: #009632;
+      }
+
+      .cls-5 {
+        fill: #ff0003;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect id="Rectángulo_83" data-name="Rectángulo 83" class="cls-1" width="131" height="31" transform="translate(1375 341)"/>
+    </clipPath>
+  </defs>
+  <g id="Enmascarar_grupo_24" data-name="Enmascarar grupo 24" class="cls-2" transform="translate(-1375 -341)">
+    <text id="TARJAS_ITALIANAS" data-name="TARJAS ITALIANAS" class="cls-3" transform="translate(1301 341)"><tspan x="74.525" y="14">TARJAS ITALIANAS</tspan></text>
+    <rect id="Rectángulo_57" data-name="Rectángulo 57" class="cls-4" width="45" height="7" transform="translate(1376 365)"/>
+    <rect id="Rectángulo_58" data-name="Rectángulo 58" class="cls-5" width="45" height="7" transform="translate(1461 365)"/>
+  </g>
+</svg>
