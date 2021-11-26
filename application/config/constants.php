@@ -86,22 +86,14 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 
 
-# Yay! Estudio variables globales para Stripe (dev/prod)
-/*
-    Estos datos se utilizan en:
-    clientside: /views/eco/pages/checkout.php
-    serverside: /controllers/plados.php
-
-    ** Nota ** Hay un controlador llamado stripe.php parece que no se usa para nada.
-*/
 define('STRIPE_MODE', 'test'); // test | prod
 define('STRIPE_KEYS', [
 	'serverside' => [
-		'test' => 'sk_test_cNEnkPQ796OFqgwfXH2oBUyq00qKunHgZw',
+		'test' => 'sk_test_51JPs4jHcWweoTFXWqVGuSxA8W8OAzS6c9N2IF6YDwiqy4lSGq1yjg5ayU0sBt3kR5Jo4NZ2EjxCe5pI8AX2lJT2v00khXvkPkq',
 		'prod' => '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',
 	],
 	'clientside' => [
-		'test' => 'pk_test_NVhGAEKZmHWV3XJBFo4YdLCA00mxzgDIwD',
+		'test' => 'pk_test_51JPs4jHcWweoTFXWWWHI2yR5TU9qi4OApPXuhS3OrpddoVaKq4WgoObJfM3Gav7iyMucu5RhfA1hRwwvCd5bojxY00lKYkK3L6',
 		'prod' => 'pk_live_tIWbfEk2yLICEnkKUmDC8oRD007x05PnTK',
 	],
 ]);

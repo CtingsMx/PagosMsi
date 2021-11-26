@@ -36,6 +36,14 @@ class Stripe extends CI_Controller
         session_start();
     }
 
+    function index()
+    {
+        echo "hola";
+    }
+
+
+    
+
 
     // FUNCIONES PARA CHECKOUT STRIPE
 

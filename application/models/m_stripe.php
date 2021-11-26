@@ -8,6 +8,11 @@
 class m_stripe extends CI_Model
 {
 
+    function db()
+    {
+        $DB2 = $this->load->database('firma', TRUE);
+    }
+
     /**
      * Retorna los conceptos de la cuenta del usuario
      * 
