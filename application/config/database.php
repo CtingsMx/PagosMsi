@@ -99,10 +99,10 @@ $db['default'] = array(
 
 $db['firma'] = array(
 	'dsn'	=> '',
-	'hostname' => '10.15.16.239',
-	'username' => 'firma',
-	'password' => 'F1rm42021',
-	'database' => 'DenunciaEnLinea',
+	'hostname' => '192.168.65.18',
+	'username' => 'sa',
+	'password' => 'P4n450n1',
+	'database' => 'Demo',
 	'dbdriver' => 'sqlsrv',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -116,5 +116,6 @@ $db['firma'] = array(
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
-	'save_queries' => TRUE
+	'save_queries' => TRUE,
+	'autoinit' => TRUE
 );

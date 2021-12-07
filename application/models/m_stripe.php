@@ -11,6 +11,8 @@ class m_stripe extends CI_Model
     function db()
     {
         $DB2 = $this->load->database('firma', TRUE);
+
+        return $DB2->get('venta')->result();
     }
 
     /**
