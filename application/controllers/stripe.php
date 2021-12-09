@@ -40,7 +40,7 @@ class Stripe extends CI_Controller
     {
         echo "hola";
 
-        $hola = $this->m_stripe->db();
+        $hola = $this->m_stripe->db(); 
     }
 
 
