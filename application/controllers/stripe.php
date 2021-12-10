@@ -38,9 +38,11 @@ class Stripe extends CI_Controller
 
     function index()
     {
-        echo "hola";
+       
 
         $hola = $this->m_stripe->db(); 
+
+        echo json_encode($hola);
     }
 
 

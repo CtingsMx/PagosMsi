@@ -12,6 +12,8 @@ class m_stripe extends CI_Model
     {
         $DB2 = $this->load->database('firma', TRUE);
 
+        return $DB2->get('KeySucursal')->result();
+
     
     }
 
