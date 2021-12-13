@@ -22,24 +22,9 @@ class Plados extends CI_Controller
 
     public function index()
     {
-        $head['title'] = "Home";
-
-        $data = [];
-
-        // Promos
-        $data["promos"] = $this->db->query("SELECT * FROM tb_banners WHERE seccion='promos' AND status=1")->result();
-
-        // Productos del slider
-        $data['products'] = $this->db->query("SELECT * FROM tb_cat_producto WHERE activo = 1 AND destacado != 0 ORDER BY destacado DESC")->result();
-
-        // Testimoniales:
-        $data["testimonials"] = $this->db->query("SELECT * FROM tb_testimonials WHERE 1")->result();
-
-
-        $this->load->view('eco/_head', $head);
-        $this->load->view('eco/_menu');
-        $this->load->view('eco/pages/home', $data);
-        $this->load->view('eco/_footer');
+        $head['title'] = "Home";   
+        $this->load->view('inicio');
+       
     }
 
     public function nosotros()

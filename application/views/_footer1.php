@@ -9,7 +9,7 @@
     <div class="container clearfix">
 
         <div class="col_half">
-            Derechos Reservados &copy; 2020 Plados <br>
+            Derechos Reservados &copy; <?=date('Y')?> Kober <br>
             <div class="copyright-links"> <a href="#">Anuncio de Privacidad</a></div>
         </div>
 

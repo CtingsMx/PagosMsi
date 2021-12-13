@@ -1,441 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Accept a payment</title>
+    <meta name="description" content="A demo of a payment on Stripe" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    <script src="https://js.stripe.com/v3/"></script>
+ 
+    <style>
+    /* Variables */
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    form {
+        width: 30vw;
+        min-width: 500px;
+        align-self: center;
+        box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
+            0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
+        border-radius: 7px;
+        padding: 40px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    #payment-message {
+        color: rgb(105, 115, 134);
+        font-size: 16px;
+        line-height: 20px;
+        padding-top: 12px;
+        text-align: center;
+    }
+
+    #payment-element {
+        margin-bottom: 24px;
+    }
+
+    /* Buttons and links */
+    button {
+        background: #5469d4;
+        font-family: Arial, sans-serif;
+        color: #ffffff;
+        border-radius: 4px;
+        border: 0;
+        padding: 12px 16px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: block;
+        transition: all 0.2s ease;
+        box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+        width: 100%;
+    }
+
+    button:hover {
+        filter: contrast(115%);
+    }
+
+    button:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+
+    /* spinner/processing state, errors */
+    .spinner,
+    .spinner:before,
+    .spinner:after {
+        border-radius: 50%;
+    }
+
+    .spinner {
+        color: #ffffff;
+        font-size: 22px;
+        text-indent: -99999px;
+        margin: 0px auto;
+        position: relative;
+        width: 20px;
+        height: 20px;
+        box-shadow: inset 0 0 0 2px;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+
+    .spinner:before,
+    .spinner:after {
+        position: absolute;
+        content: "";
+    }
+
+    .spinner:before {
+        width: 10.4px;
+        height: 20.4px;
+        background: #5469d4;
+        border-radius: 20.4px 0 0 20.4px;
+        top: -0.2px;
+        left: -0.2px;
+        -webkit-transform-origin: 10.4px 10.2px;
+        transform-origin: 10.4px 10.2px;
+        -webkit-animation: loading 2s infinite ease 1.5s;
+        animation: loading 2s infinite ease 1.5s;
+    }
+
+    .spinner:after {
+        width: 10.4px;
+        height: 10.2px;
+        background: #5469d4;
+        border-radius: 0 10.2px 10.2px 0;
+        top: -0.1px;
+        left: 10.2px;
+        -webkit-transform-origin: 0px 10.2px;
+        transform-origin: 0px 10.2px;
+        -webkit-animation: loading 2s infinite ease;
+        animation: loading 2s infinite ease;
+    }
+
+    @-webkit-keyframes loading {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes loading {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        form {
+            width: 80vw;
+            min-width: initial;
+        }
+    }
+    </style>
+
+</head>
 
 <body>
-  <section class="menu1" id="menu-0" data-rv-view="0">
-
-    <nav class="navbar navbar-dropdown navbar-fixed-top">
-        <div class="container-fluid">
-
-            <div class="mbr-table">
-                <div class="mbr-table-cell">
-
-                    <div class="navbar-brand">
-                        <a href="index-2.html" class="navbar-logo"><img src="<?=base_url()?>src/eco/assets/images/logoplados-317x79.png" alt="Mobirise"></a>
-                        
-                    </div>
-
-                </div>
-                <div class="mbr-table-cell">
-
-                    <button class="navbar-toggler pull-xs-right hidden-md-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
-                        <span class="hamburger-icon"></span>
-                    </button>
-
-                    <ul class="nav-dropdown collapse pull-xs-right nav navbar-nav navbar-toggleable-sm" id="exCollapsingNavbar"><li class="nav-item"><a class="nav-link link" href="page9.html">DISEÑO ITALIANO</a></li><li class="nav-item dropdown"><a class="nav-link link dropdown-toggle" data-toggle="dropdown-submenu" href="page1.html" aria-expanded="false">TARJAS</a><div class="dropdown-menu"><a class="dropdown-item" href="page1.html">Tecnología</a><a class="dropdown-item" href="page5.html">Lux</a><a class="dropdown-item" href="page3.html">Elegance</a><a class="dropdown-item" href="page6.html">One<br></a></div></li><li class="nav-item dropdown open"><a class="nav-link link dropdown-toggle" data-toggle="dropdown-submenu" href="https://mobirise.com/" aria-expanded="true">MEZCLADORAS</a><div class="dropdown-menu"><a class="dropdown-item" href="page4.html">¿Cómo funcionan?</a><a class="dropdown-item" href="page7.html">Modelos</a><a class="dropdown-item" href="https://mobirise.com/"></a></div></li><li class="nav-item nav-btn"><a class="nav-link btn btn-primary-outline btn-primary" href="page8.html">DÓNDE COMPRAR</a></li></ul>
-                    <button hidden="" class="navbar-toggler navbar-close" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
-                        <span class="close-icon"></span>
-                    </button>
-
-                </div>
-            </div>
-
+    <!-- Display a payment form -->
+    <form id="payment-form">
+        <div id="payment-element">
+            <!--Stripe.js injects the Payment Element-->
         </div>
-    </nav>
-
-</section>
-
-<section class="mbr-section mbr-section-hero mbr-section-full intro intro1 mbr-section-with-arrow mbr-parallax-background mbr-after-navbar" id="intro1-4g" data-rv-view="2" style="background-image: url(<?=base_url()?>src/eco//images/banner-home-1-1600x900.png);">
-
-    
-
-    <div class="mbr-table-cell">
-
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-12 col-lg-5 col-lg-offset-1 text-xs-center text-lg-left">
-
-
-                    <p class="mbr-section-subtitle lead subtitle">LA ELEGANCIA DEL DISEÑO ITALIANO EN TU COCINA</p>
-
-                    <h1 class="mbr-section-title display-1">TARJA DE CUARZO ANTIBACTERIAL</h1>
-                </div>
-
-                <div class="col-xs-12 col-lg-4 col-lg-offset-1" data-form-type="formoid">
-                    <div data-form-alert="true">
-                        <div hidden="" data-form-alert-success="true" class="alert alert-form alert-success text-xs-center">Thanks for filling out form!</div>
-                    </div>
-
-
-                    <form action="https://mobirise.com/" method="post" data-form-title="TARJA DE CUARZO ANTIBACTERIAL">
-
-                        <input type="hidden" value="QDLEB1J7LYXuh1+v5LXtN1gEc5Nfwvk2PLx2JRjawXkGV7z600/XUp+D55nvFB3yEV9IuQyEytPz4mq8iRb3Ht0KyTzNgYBKiy91a+BGf0ajtDeVJL5Ou8RX7/3AotUT" data-form-email="true">
-
-                        <div class="row row-sm-offset">
-
-                            <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label class="form-control-label">Nombre*</label>
-                                    <input type="text" class="form-control" name="name" required="" data-form-field="Name" placeholder="Nombre*">
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label class="form-control-label">Email*</label>
-                                    <input type="email" class="form-control" name="email" required="" data-form-field="Email" placeholder="Email*">
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label class="form-control-label">Ciudad</label>
-                                    <input type="tel" class="form-control" name="phone" data-form-field="Phone" placeholder="Ciudad">
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-control-label">Mensaje</label>
-                            <textarea class="form-control" name="message" rows="7" data-form-field="Message" placeholder="Mensaje"></textarea>
-                        </div>
-
-                        <div class="text-xs-center"><button type="submit" class="btn btn-secondary">ENVIAR</button></div>
-
-                    </form>
-                                    
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="mbr-arrow mbr-arrow-floating" aria-hidden="true">
-        <a href="#features3-1">
-            <img alt="" src="<?=base_url()?>src/eco/assets/images/arrowdown.png">
-        </a>
-    </div>
-
-</section>
-
-<section class="mbr-section mbr-section-hero features4" id="features3-1" data-rv-view="12" style="background-image: url('<?=base_url()?>src/eco/assets/images/bannerprincipal-1770x500.jpg'); padding-top: 120px; padding-bottom: 0px;">
-
-    <div class="mbr-overlay" style="opacity: 0.9; background-color: rgb(21, 150, 133);"></div>
-
-    <div class="mbr-table-cell">
-
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-12 col-lg-8 col-lg-offset-2 text-xs-center">
-
-                    <h1 class="mbr-section-title display-1"><span style="font-weight: normal;">La tarja antibacterial que purifica el aire de tu cocina</span></h1>
-
-                </div>
-            </div>
-
-            <div class="mbr-cards-row row">
-                <div class="mbr-cards-col col-xs-12 col-lg-4">
-                    <div class="container">
-                        <div class="card cart-block">
-                            <div class="mbr-figure-background"></div>
-                            <div class="card-img iconbox"><span class="icon54-v1-leaf-1 mbr-iconfont mbr-iconfont-features4" style="color: rgb(255, 255, 255);"></span></div>
-                            <div class="card-block text-xs-center">
-                                <h5 class="mbr-section-subtitle lead">ANTICONTAMINANTE&nbsp;</h5>
-                                <p class="mbr-section-text lead">¡Como tener un árbol en la cocina!<br>El dióxido de titanio fotocatalítico combate las impurezas en el aire.<br></p>
-
-
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mbr-cards-col col-xs-12 col-lg-4">
-                    <div class="container">
-                        <div class="card cart-block">
-                            <div class="mbr-figure-background"></div>
-                            <div class="card-img iconbox"><a href="https://mobirise.com/" class="imind-security-bug mbr-iconfont mbr-iconfont-features4" style="color: rgb(255, 255, 255);"></a></div>
-                            <div class="card-block text-xs-center">
-                                <h5 class="mbr-section-subtitle lead">ANTIBACTERIAL</h5>
-                                <p class="mbr-section-text lead">Gracias a la tecnología Microstop con iones de plata, las bacterias no se pueden reproducir.</p>
-
-
-                                
-                            </div>
-                        </div>
-                  </div>
-                </div>
-                <div class="mbr-cards-col col-xs-12 col-lg-4">
-                    <div class="container">
-                        <div class="card cart-block">
-                            <div class="mbr-figure-background"></div>
-                            <div class="card-img iconbox"><span class="icon54-v1-recycle-water mbr-iconfont mbr-iconfont-features4" style="color: rgb(255, 255, 255);"></span></div>
-                            <div class="card-block text-xs-center">
-                                <h5 class="mbr-section-subtitle lead">AUTOLIMPIEZA</h5>
-                                <p class="mbr-section-text lead">La protección Ultraclean y la no porosidad de todo el material evitan que agua y suciedad se acumulen.</p>
-
-
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                
-                
-            </div>
-
-        </div>
-    </div>
-
-</section>
-
-<section class="mbr-section--bg-adapted mbr-section-full mbr-section--relative header9" id="header9-2" data-rv-view="15" style="background-color: rgb(255, 255, 255);">
-    
-    <div class="mbr-table-cell mbr-table-cell-vertical-middle elements-content position-relative">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-12 col-lg-8 col-lg-offset-2 text-xs-center">
-
-                    <h1 class="mbr-section-title display-1">¿Por qué elegir PLADOS®?</h1>
-
-                    <p class="mbr-section-text lead header-text">PLADOS® es uno de los principales fabricantes mundiales de fregaderos de cocina hechos de materiales compuestos (ULTRAQUARTZ, microULTRAGRANIT, ULTRAMETAL, ULTRAVITRO y NATURSTONE) con presencia en los 5  continentes.<br>¡Elegir PLADOS® es optar por tecnología, diseño y ecología!</p>
-
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-12 col-sm-4 col-lg-3 col-lg-offset-1">
-
-                    <div class="clearfix"></div>
-                    
-                    <ul class="nav nav-tabs" role="tablist"><li class="nav-item" style="display: block;"><a class="nav-link text-black active" role="tab" data-toggle="tab" href="#tab1header9-2" aria-expanded="false">RESISTEN A MANCHAS</a></li><li class="nav-item" style="display: block;"><a class="nav-link" role="tab" data-toggle="tab" href="#tab2header9-2" aria-expanded="false">RESISTEN GOLPES Y RAYONES</a></li><li class="nav-item" style="display: block;"><a class="nav-link" role="tab" data-toggle="tab" href="#tab3header9-2" aria-expanded="false">RESISTEN EL CALOR</a></li><li class="nav-item" style="display: block;"><a class="nav-link" role="tab" data-toggle="tab" href="#tab4header9-2" aria-expanded="false">NO PIERDEN EL COLOR</a></li><li class="nav-item" style="display: block;"><a class="nav-link" role="tab" data-toggle="tab" href="#tab5header9-2" aria-expanded="true">FÁCILES DE LIMPIAR</a></li><li class="nav-item" style="display: none"><a class="nav-link" role="tab" data-toggle="tab" href="#tab6header9-2">Beautiful</a></li></ul>
-
-                </div>
-
-                <div class="col-xs-12 col-sm-8 col-lg-8">
-                    <div class="tab-content noScroll">
-
-                        <div id="tab1header9-2" class="tab-pane in active text-xs-center text-lg-left" role="tabpanel">
-
-                            <div class="row">
-                                <div class="col-xs-12 col-lg-5">
-                                    <div class="mbr-figure"><img src="<?=base_url()?>src/eco/assets/images/anti-manchas-600x600.png" class="card-img-top"></div>
-                                </div>
-                                <div class="col-xs-12 col-lg-6">
-                                    <div>
-                                        <div class="mbr-figure icon-block"><span class="imind-aquarius-2 mbr-iconfont mbr-iconfont-header5" style="color: rgb(21, 150, 133);"></span></div>
-                                    </div>
-                                    <div>
-                                        <p class="mbr-section-subtitle lead description-title">RESISTEN A MANCHAS</p>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p class="mbr-section-text lead">Olvídate del estrés de las manchas. El material de PLADOS® es resistente a la acumulación de suciedad gracias a la no porosidad.<br>No tendrás que usar productos de limpieza agresivos.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div id="tab2header9-2" class="tab-pane text-xs-center text-lg-left" role="tabpanel">
-
-                            <div class="row">
-                                <div class="col-xs-12 col-lg-5">
-                                    <div class="mbr-figure"><img src="<?=base_url()?>src/eco/assets/images/anti-rayones-600x600.png" class="card-img-top"></div>
-                                </div>
-                                <div class="col-xs-12 col-lg-6">
-                                    <div>
-                                        <div class="mbr-figure icon-block"><span class="icon54-v4-filleting-knife mbr-iconfont mbr-iconfont-header5" style="color: rgb(21, 150, 133);"></span></div>
-                                    </div>
-                                    <div>
-                                        <p class="mbr-section-subtitle lead description-title">RESISTEN GOLPES Y RAYONES</p>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p class="mbr-section-text lead">Un material súper duro que vuelve a las tarjas resistentes a rayones, roturas y golpes de alto impacto.&nbsp;<br></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        
-                        <div id="tab3header9-2" class="tab-pane text-xs-center text-lg-left" role="tabpanel">
-
-                            <div class="row">
-                                <div class="col-xs-12 col-lg-5">
-                                    <div class="mbr-figure"><img src="<?=base_url()?>src/eco/assets/images/resiste-calor-600x600.png" class="card-img-top"></div>
-                                </div>
-                                <div class="col-xs-12 col-lg-6">
-                                    <div>
-                                        <div class="mbr-figure icon-block"><span class="imind-fire-flame mbr-iconfont mbr-iconfont-header5" style="color: rgb(21, 150, 133);"></span></div>
-                                    </div>
-                                    <div>
-                                        <p class="mbr-section-subtitle lead description-title">RESISTEN EL CALOR</p>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p class="mbr-section-text lead">Las tarjas PLADOS® soportan el choque térmico.<br>Resisten hasta 280° C sin daños.<br></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div id="tab4header9-2" class="tab-pane text-xs-center text-lg-left" role="tabpanel">
-
-                            <div class="row">
-                                <div class="col-xs-12 col-lg-5">
-                                    <div class="mbr-figure"><img src="<?=base_url()?>src/eco/assets/images/color-600x600.png" class="card-img-top"></div>
-                                </div>
-                                <div class="col-xs-12 col-lg-6">
-                                    <div>
-                                        <div class="mbr-figure icon-block"><span class="mdi-action-invert-colors mbr-iconfont mbr-iconfont-header5" style="color: rgb(21, 150, 133);"></span></div>
-                                    </div>
-                                    <div>
-                                        <p class="mbr-section-subtitle lead description-title">NO PIERDEN EL COLOR</p>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p class="mbr-section-text lead">Tendrás un color permanentemente brillante sin importar el paso del tiempo o una exposición frecuente y prolongada a la luz solar.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div id="tab5header9-2" class="tab-pane text-xs-center text-lg-left" role="tabpanel">
-
-                            <div class="row">
-                                <div class="col-xs-12 col-lg-5">
-                                    <div class="mbr-figure"><img src="<?=base_url()?>src/eco/assets/images/facil-limpiar-600x600.png" class="card-img-top"></div>
-                                </div>
-                                <div class="col-xs-12 col-lg-6">
-                                    <div>
-                                        <div class="mbr-figure icon-block"><span class="icon54-v2-hand-washing mbr-iconfont mbr-iconfont-header5" style="color: rgb(21, 150, 133);"></span></div>
-                                    </div>
-                                    <div>
-                                        <p class="mbr-section-subtitle lead description-title">FÁCILES DE LIMPIAR</p>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p class="mbr-section-text lead">La tecnología ULTRACLEAN encauza las gotas de agua, llevándose consigo la suciedad.<br></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div id="tab6header9-2" class="tab-pane text-xs-center text-lg-left" role="tabpanel">
-
-                            <div class="row">
-                                <div class="col-xs-12 col-lg-5">
-                                    <div class="mbr-figure"><img src="<?=base_url()?>src/eco/assets/images/nb6.png" class="card-img-top"></div>
-                                </div>
-                                <div class="col-xs-12 col-lg-6">
-                                    <div>
-                                        <div class="mbr-figure icon-block"><a href="https://mobirise.com/" class="etl-icon icon-global mbr-iconfont mbr-iconfont-header5" style="color: rgb(21, 150, 133);"></a></div>
-                                    </div>
-                                    <div>
-                                        <p class="mbr-section-subtitle lead description-title">CONTACT FORMS</p>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p class="mbr-section-text lead">Easily add subscribe and contact forms without any server-side integration. Just link your email to form and get submissions instantly. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium id perspiciatis, sint odit error animi veniam omnis cupiditate distinctio, a quidem deleniti laborum maiores optio laudantium earum vel! Sint, rerum.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-</section>
-
-<section class="mbr-gallery mbr-section mbr-section-nopadding mbr-slider-carousel" data-filter="false" id="gallery1-3" data-rv-view="18" style="background-color: rgb(255, 255, 255); padding-top: 0rem; padding-bottom: 0rem;">
-    <!-- Filter -->
-    
-
-    <!-- Gallery -->
-    <div class="mbr-gallery-row">
-        <div class=" mbr-gallery-layout-default">
-            <div>
-                <div>
-                    <div class="mbr-gallery-item mbr-gallery-item__mobirise3 mbr-gallery-item--p0" data-video-url="false" data-tags="Awesome">
-                        <div href="#lb-gallery1-3" data-slide-to="0" data-toggle="modal">
-                            <img src="<?=base_url()?>src/eco/assets/images/lux-1-900x500-800x444.png" alt="">
-                            
-                            <span class="icon-magnifying-glass"></span>
-                        </div>
-
-                        
-                    </div><div class="mbr-gallery-item mbr-gallery-item__mobirise3 mbr-gallery-item--p0" data-video-url="false" data-tags="Responsive">
-                        <div href="#lb-gallery1-3" data-slide-to="1" data-toggle="modal">
-                            
-                            
-
-                            <img src="<?=base_url()?>src/eco/assets/images/elegance-900x500-800x444.png" alt="">
-                            
-                            <span class="icon-magnifying-glass"></span>
-                        </div>
-
-                        
-                    </div><div class="mbr-gallery-item mbr-gallery-item__mobirise3 mbr-gallery-item--p0" data-video-url="false" data-tags="Animated">
-                        <div href="#lb-gallery1-3" data-slide-to="2" data-toggle="modal">
-                            
-                            
-
-                            <img src="<?=base_url()?>src/eco/assets/images/one-1-900x500-800x444.png" alt="">
-                            
-                            <span class="icon-magnifying-glass"></span>
-                        </div>
-
-                        
-                    </div><div class="mbr-gallery-item mbr-gallery-item__mobirise3 mbr-gallery-item--p0" data-video-url="false" data-tags="Awesome">
-                        <div href="#lb-gallery1-3" data-slide-to="3" data-toggle="modal">
-                            
-                            
-
-                            <img src="<?=base_url()?>src/eco/assets/images/mixers-900x500-800x444.png" alt="">
-                            
-                            <span class="icon-magnifying-glass"></span>
-                        </div>
-
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-
-    <!-- Lightbox -->
-    <div data-app-prevent-settings="" class="mbr-slider modal fade carousel slide" tabindex="-1" data-keyboard="true" data-interval="false" id="lb-gallery1-3">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <ol class="carousel-indicators">
-                        <li data-app-prevent-settings="" data-target="#lb-gallery1-3" data-slide-to="0"></li><li data-app-prevent-settings="" data-target="#lb-gallery1-3" data-slide-to="1"></li><li data-app-prevent-settings="" data-target="#lb-gallery1-3" class=" active" data-slide-to="2"></li><li data-app-prevent-settings="" data-target="#lb-gallery1-3" data-slide-to="3"></li>
-                    </ol>
-                    <div class="carousel-inner">
-                        <div class="carousel-item">
-                            <img src="<?=base_url()?>src/eco/assets/images/lux-1-900x500.png" alt="">
-                        </div><div class="carousel-item">
-                            <img src="<?=base_url()?>src/eco/assets/images/elegance-900x500.png" alt="">
-                        </div><div class="carousel-item active">
-                            <img src="<?=base_url()?>src/eco/assets/images/one-1-900x500.png" alt="">
-                        </div><div class="carousel-item">
-                            <img src="<?=base_url()?>src/eco/assets/images/mixers-900x500.png" alt="">
-                        </div>
-                    </div>
-                    <a class="left carousel-control" role="button" data-slide="prev" href="#lb-gallery1-3"><img src="<?=base_url()?>src/eco/assets/images/arrowleft.png"></a>
-                    <a class="right carousel-control" role="button" data-slide="next" href="#lb-gallery1-3"><img src="<?=base_url()?>src/eco/assets/images/arrowright.png"></a>
-
-                    <a class="close" href="#" role="button" data-dismiss="modal">
-                        <span aria-hidden="true">×</span>
-                        <span class="sr-only">Close</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+        <button id="submit">
+            <div class="spinner hidden" id="spinner"></div>
+            <span id="button-text">Pay now</span>
+        </button>
+        <div id="payment-message" class="hidden"></div>
+    </form>
+</body>
+
+</html>
+
+
+<script>
+// This is your test publishable API key.
+const stripe = Stripe(
+    "pk_test_51JPs4jHcWweoTFXWWWHI2yR5TU9qi4OApPXuhS3OrpddoVaKq4WgoObJfM3Gav7iyMucu5RhfA1hRwwvCd5bojxY00lKYkK3L6");
+
+// The items the customer wants to buy
+const items = [{
+    id: "xl-tshirt"
+}];
+
+let elements;
+
+initialize();
+checkStatus();
+
+document
+    .querySelector("#payment-form")
+    .addEventListener("submit", handleSubmit);
+
+// Fetches a payment intent and captures the client secret
+async function initialize() {
+    const {
+        clientSecret
+    } = await fetch("./stripe", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            items
+        }),
+    }).then((r) => r.json());
+
+    elements = stripe.elements({
+        clientSecret
+    });
+
+    const paymentElement = elements.create("payment");
+    paymentElement.mount("#payment-element");
+}
+
+async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+
+    const {
+        error
+    } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+            // Make sure to change this to your payment completion page
+            return_url: "http://localhost:4242/public/checkout.html",
+        },
+    });
+
+    // This point will only be reached if there is an immediate error when
+    // confirming the payment. Otherwise, your customer will be redirected to
+    // your `return_url`. For some payment methods like iDEAL, your customer will
+    // be redirected to an intermediate site first to authorize the payment, then
+    // redirected to the `return_url`.
+    if (error.type === "card_error" || error.type === "validation_error") {
+        showMessage(error.message);
+    } else {
+        showMessage("An unexpected error occured.");
+    }
+
+    setLoading(false);
+}
+
+// Fetches the payment intent status after payment submission
+async function checkStatus() {
+    const clientSecret = new URLSearchParams(window.location.search).get(
+        "payment_intent_client_secret"
+    );
+
+    if (!clientSecret) {
+        return;
+    }
+
+    const {
+        paymentIntent
+    } = await stripe.retrievePaymentIntent(clientSecret);
+
+    switch (paymentIntent.status) {
+        case "succeeded":
+            showMessage("Payment succeeded!");
+            break;
+        case "processing":
+            showMessage("Your payment is processing.");
+            break;
+        case "requires_payment_method":
+            showMessage("Your payment was not successful, please try again.");
+            break;
+        default:
+            showMessage("Something went wrong.");
+            break;
+    }
+}
+
+// ------- UI helpers -------
+
+function showMessage(messageText) {
+    const messageContainer = document.querySelector("#payment-message");
+
+    messageContainer.classList.remove("hidden");
+    messageContainer.textContent = messageText;
+
+    setTimeout(function() {
+        messageContainer.classList.add("hidden");
+        messageText.textContent = "";
+    }, 4000);
+}
+
+// Show a spinner on payment submission
+function setLoading(isLoading) {
+    if (isLoading) {
+        // Disable the button and show a spinner
+        document.querySelector("#submit").disabled = true;
+        document.querySelector("#spinner").classList.remove("hidden");
+        document.querySelector("#button-text").classList.add("hidden");
+    } else {
+        document.querySelector("#submit").disabled = false;
+        document.querySelector("#spinner").classList.add("hidden");
+        document.querySelector("#button-text").classList.remove("hidden");
+    }
+}
+</script>
