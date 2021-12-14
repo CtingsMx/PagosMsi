@@ -40,15 +40,10 @@ class Stripe extends CI_Controller
     {
 
 
-        $hola = "hola"; // $this->m_stripe->db();
+        $hola = "NO AUTORIZADO"; // $this->m_stripe->db();
 
         echo json_encode($hola);
     }
-
-   
-
-
-
     //FUNCIONES PARA PAGOS MSI
 
     /**
@@ -91,13 +86,25 @@ class Stripe extends CI_Controller
         /**
          * Revisa que haya articulos en el carrito
          */
+
+        $pedido = array(
+            'articulo'         => 1,
+            'cantidad'         => 1,
+            'precio'           => 50000,
+            'descripcion'    => 'PRODUCTO DE PRUEBA',
+            'color'            => 'NEGRO',
+            'foto'            => '123'
+        );
+
+        $_SESSION['cart']['PRUEBA'] = $pedido;
+
         if (!isset($_SESSION['cart'])) {
             $datos['carrito'] = null;
             redirect('carrito');
         }
         // retrieve json from POST body
         $cuenta = $this->m_stripe->obtCuenta();
-        $usuario = $this->m_plados->obt_cliente($_SESSION['idCliente']);
+       // $usuario = $this->m_plados->obt_cliente($_SESSION['idCliente']);
 
         $json_str = file_get_contents('php://input');
         $json_obj = json_decode($json_str);
@@ -113,10 +120,10 @@ class Stripe extends CI_Controller
                     ]
                 ]
             ],
-            'receipt_email' => $usuario->correo,
+            //'receipt_email' => $usuario->correo,
         );
         //Agrega al PI la direccion de envio
-        $data['shipping'] = $this->m_stripe->formateaEnvio($usuario);
+        //$data['shipping'] = $this->m_stripe->formateaEnvio($usuario);
 
 
         if (isset($_SESSION['promoCode'])) {
@@ -183,7 +190,7 @@ class Stripe extends CI_Controller
             $intent->confirm($confirm_data);
             echo json_encode($intent);
             if ($intent->status == 'succeeded') {
-                $this->guardaPedido($json_obj['payment_intent_id'], $intent->status);
+               // $this->guardaPedido($json_obj['payment_intent_id'], $intent->status);
             }
         } catch (\Stripe\Exception\ApiErrorException $e) {
 
@@ -212,14 +219,7 @@ class Stripe extends CI_Controller
         $carrito = $_SESSION['cart'];
         $cuenta = $this->m_stripe->obtCuenta();
 
-        $pedido = array(
-            'cliente'       => $_SESSION['idCliente'],
-            'idPago'        => $idPago,
-            'cantArticulos' => $cuenta['cantProductos'],
-            'cuenta'        => $cuenta['total'],
-            'descuento'     => $cuenta['puntos'],
-            'subtotal'      => $cuenta['subtotal']
-        );
+      
 
         $this->m_plados->guardaPedido($pedido);
 

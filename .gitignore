@@ -2,3 +2,4 @@ vendor/
 .vscode/
 .well-known
 vendor/*
+application/logs
