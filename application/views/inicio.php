@@ -37,31 +37,31 @@
                             <tbody>
                                 <tr>
                                     <td># Pedido:</td>
-                                    <td align="center" width="50%"><b>@ViewBag.venta.ID</b></td>
+                                    <td align="center" width="50%"><b><?=$venta[0]->ID?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Sucursal:</td>
-                                    <td align="center" width="50%"><b>@ViewBag.sucursal.nombre</b></td>
+                                    <td align="center" width="50%"><b><?=$venta[0]->Sucursal?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Cliente:</td>
-                                    <td align="center" width="50%"><b>@ViewBag.venta.Nombre</b></td>
+                                    <td align="center" width="50%"><b><?=$venta[0]->Nombre?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Email:</td>
-                                    <td align="center" width="50%"><b>@ViewBag.venta.eMail1</b></td>
+                                    <td align="center" width="50%"><b><?=$venta[0]->eMail1?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Telefonos:</td>
-                                    <td align="center" width="50%"><b>@ViewBag.venta.Telefonos</b></td>
+                                    <td align="center" width="50%"><b><?=$venta[0]->Telefonos?></b></td>
                                 </tr>
                                 <tr>
                                     <td>RFC:</td>
-                                    <td align="center" width="50%"><b>@ViewBag.venta.RFC</b></td>
+                                    <td align="center" width="50%"><b><?=$venta[0]->RFC?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Total a cobrar:</td>
-                                    <td align="center" width="50%"><b style="color:red;">@ViewBag.venta.VentaTotal (@ViewBag.venta.MonedaV33)</b></td>
+                                    <td align="center" width="50%"><b style="color:red;"><?=$venta[0]->VentaTotal?> (<?=$venta[0]->MonedaV33?>)</b></td>
                                 </tr>
                             </tbody>
                         </table>

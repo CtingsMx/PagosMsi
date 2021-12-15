@@ -22,8 +22,19 @@ class Plados extends CI_Controller
 
     public function index()
     {
-        $head['title'] = "Home";   
-        $this->load->view('inicio');
+        $id = $this->input->get('id');
+
+        if(!$id){
+            echo "ingrese la Compra";
+            return;
+        }
+        $head['title'] = "Home";
+        
+        $venta = $this->m_plados->obtVenta($id);
+
+        $datos['venta'] = $venta;
+        
+        $this->load->view('inicio', $datos);
        
     }
 

@@ -6,189 +6,48 @@ class m_plados extends CI_Model
     function __construct()
     {
         parent::__construct();
+        
     }
 
-    function obt_productos()
-    {
-        $qry = '';
+   
+   function obtVenta($id) 
+   {
+    $DB2 = $this->load->database('firma', TRUE);
+    
+    $qry = "";
 
-        $qry = "
-    	SELECT
-        p.id_catProducto
-       ,p.titulo
-       ,p.sku
-       ,t.producto
-	   ,l.linea
-       ,c.color
-       ,p.color as idColor
-       ,p.modelo
-       ,p.precio
-       ,p._precio
-       ,p.foto
-       ,p.descripcion
-		FROM tb_cat_producto p
-		LEFT JOIN tb_cat_tipo t ON t.id_tipo = p.producto
-		LEFT JOIN tb_cat_linea l ON l.id_linea = p.linea
-        LEFT JOIN tb_cat_colores c ON c.codigo = p.color
-        WHERE p.activo = 1 
-        ORDER BY p.destacado DESC";
+    $qry = "
+        SELECT v.ID,
+        v.Mov,
+        movid,
+        v.Sucursal,
+        v3.VentaSubTotal,
+        ISNULL(v3.VentaDescuentoImporte,0) AS Descuento,
+        v3.VentaTotal,
+        v3.MonedaV33,
+        d.Articulo,
+        a.Descripcion1,
+        d.Cantidad,
+        v.Cliente,
+        c.Nombre,
+        c.RFC,
+        c.eMail1,
+        c.Telefonos,
+        c.Direccion,
+        c.CodigoPostal,
+        c.Poblacion,
+        c.Estado  
+        FROM venta v 
+        JOIN CFDVentaV33 v3 ON v3.id=v.id 
+        JOIN ventad d ON d.id=v.id 
+        JOIN art a ON a.Articulo=d.Articulo 
+        JOIN cte c ON c.Cliente=v.Cliente 
+        WHERE v.ID={$id}";
+    
 
-        return $this->db->query($qry)->result();
-    }
+    return $DB2->query($qry)->result();
 
-    function obt_articulo($id)
-    {
-        $qry = '';
-
-        $qry = "
-    	SELECT
-        p.id_catProducto
-        ,p.titulo
-        ,p.sku
-       ,t.producto
-	   ,l.linea
-	   ,p.color as idColor
-       ,c.color
-       ,p.modelo
-       ,p.precio
-       ,p._precio
-       ,p.foto
-       ,p.descripcion
-		FROM tb_cat_producto p
-		LEFT JOIN tb_cat_tipo t ON t.id_tipo = p.producto
-		LEFT JOIN tb_cat_linea l ON l.id_linea = p.linea
-		LEFT JOIN tb_cat_colores c ON c.codigo = p.color
-		WHERE id_catProducto = $id";
-
-        return $this->db->query($qry)->row();
-    }
-
-    function obt_relacionados($modelo)
-    {
-        $qry = '';
-
-        $qry = "
-    	SELECT t.producto
-	   ,l.linea
-       ,c.color
-       ,p.modelo
-       ,p.precio
-       ,p.foto
-       ,p.descripcion
-		FROM tb_cat_producto p
-		LEFT JOIN tb_cat_tipo t ON t.id_tipo = p.producto
-		LEFT JOIN tb_cat_linea l ON l.id_linea = p.linea
-		LEFT JOIN tb_cat_colores c ON c.codigo = p.color
-		WHERE id_catProducto = '$modelo'";
-
-        return $this->db->query($qry)->row();
-    }
-
-    function obt_productosPedidos($pedido)
-    {
-        $this->db->where('pedido', $pedido);
-
-        return $this->db->get('tb_articulosPedidos')->result();
-    }
-
-    function guardar_cliente($cliente)
-    {
-        $this->db->insert('tb_clientes', $cliente);
-    }
-
-    function guardar_direccion($direccion)
-    {
-        $this->db->insert('tb_direcciones', $direccion);
-    }
-
-    function ingresar_factura($idPedido, $factura)
-    {
-        $this->db->where('id', $factura);
-        $this->db->set('pedido', $idPedido);
-
-        $this->db->update('tb_datos_factura', $this);
-    }
-
-    function buscar_datosFactura($pedido)
-    {
-        $this->db->where('pedido', $pedido);
-        return $this->db->get('tb_datos_factura')->row();
-    }
-
-    function obt_cliente($id)
-    {
-        $qry = '';
-
-        $qry = "
-			SELECT * FROM tb_clientes
-			INNER JOIN tb_direcciones
-			WHERE id = '$id'
-			AND id = cliente";
-
-        return $this->db->query($qry)->row();
-    }
-
-    /**
-     * Guarda el pedido validado en la Base de datos
-     * 
-     * @param object $pedido datos del nuevo pedido
-     * 
-     * @return void
-     */
-    function guardaPedido($pedido)
-    {
-        $this->db->insert('tb_pedidos', $pedido);
-    }
-
-    function datos_factura($datos)
-    {
-        $this->db->insert('tb_datos_factura', $datos);
-    }
-
-    function articulo_pedido($carrito)
-    {
-        $this->db->insert('tb_articulosPedidos', $carrito);
-    }
-
-    function comprobar_pedido($usuario)
-    {
-        $this->db->where('sesCompra', $usuario);
-
-        return $this->db->get('tb_pedidos')->num_rows();
-    }
-
-    function obt_pedido($pedido)
-    {
-        $qry = '';
-
-        $qry = "
-		SELECT * FROM tb_clientes c
-		INNER JOIN tb_pedidos p
-		INNER JOIN tb_direcciones d
-        INNER JOIN tb_estatusPedido e
-		WHERE c.id = p.cliente
-		AND d.cliente = c.id
-        AND e.id = p.estatus
-		AND p.id_pedido = $pedido";
-
-        return $this->db->query($qry)->row();
-    }
-
-    function color($color)
-    {
-        if ($color == 58) {
-            $esta = ' <span style="background-color: #f3f3f3 !important; border-color:#000 !important" class="badge badge-info badge-circle"><i class="fa fa-tint"></i> </span>';
-            return $esta;
-        }
-        if ($color == 44) {
-            $esta = ' <span style="background-color: #292a2a !important; border-color:#000" class="badge badge-info badge-circle"><i class="fa fa-tint"></i> </span>';
-            return $esta;
-        }
-        if ($color == 42) {
-            $esta = ' <span style="background-color: #B6AFA9 !important; border-color:#000" class="badge badge-info badge-circle"><i class="fa fa-tint"></i> </span>';
-            return $esta;
-        }
-    }
+   }
 
     function resaltar($texto, $criterio)
     {
