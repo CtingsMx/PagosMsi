@@ -2,17 +2,10 @@
 
 class m_plados extends CI_Model
 {
-
-    function __construct()
-    {
-        parent::__construct();
-        
-    }
-
    
    function obtVenta($id) 
    {
-    $DB2 = $this->load->database('firma', TRUE);
+    
     
     $qry = "";
 
@@ -45,8 +38,15 @@ class m_plados extends CI_Model
         WHERE v.ID={$id}";
     
 
-    return $DB2->query($qry)->result();
+    return $this->db->query($qry)->result();
 
+   }
+
+   function obtKeySucursal($idSucursal)
+   {
+       $this->db->where('sucursal', $idSucursal);
+
+       return $this->db->get('KeySucursal')->row();
    }
 
     function resaltar($texto, $criterio)
