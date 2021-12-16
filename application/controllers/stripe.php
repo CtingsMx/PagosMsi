@@ -86,18 +86,6 @@ class Stripe extends CI_Controller
         /**
          * Revisa que haya articulos en el carrito
          */
-
-        $pedido = array(
-            'articulo'         => 1,
-            'cantidad'         => 1,
-            'precio'           => 50000,
-            'descripcion'    => 'PRODUCTO DE PRUEBA',
-            'color'            => 'NEGRO',
-            'foto'            => '123'
-        );
-
-        $_SESSION['cart']['PRUEBA'] = $pedido;
-
         if (!isset($_SESSION['cart'])) {
             $datos['carrito'] = null;
             redirect('carrito');

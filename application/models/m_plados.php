@@ -4,24 +4,6 @@ class m_plados extends CI_Model
 {
 
 
-    function verificaVenta($id)
-    {
-        $venta = $this->obtVenta($id);
-
-        // Si la consulta no arroja resultados
-        if(!$venta){
-
-            return json_encode([
-                'ok' => false,
-                'Mensaje'   => "El Id de la venta puesto no existe o no se encuentra disponible para pagos en MSI"
-            ]);
-        }
-
-        return json_encode([
-            'ok' => true
-        ]);
-
-    }
 
     function obtVenta($id)
     {

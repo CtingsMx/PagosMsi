@@ -22,31 +22,41 @@ class Plados extends CI_Controller
 
     public function index()
     {
+
+        $head['title'] = "Portal de Pagos KOBER";
+
+        //id del pago
         $id = $this->input->get('id');
 
         if(!$id){
             echo "ingrese la Compra";
             return;
         }
-        $head['title'] = "Home";
         
         $venta = $this->m_plados->obtVenta($id);
-       // $sucursal = $this->m_plados->obtKeySucursal($venta[0]->Sucursal);
+
+        if(empty($venta)) {
+           echo "No existe el id de compra ingresado";
+           die();
+        }
+
+        $this->m_stripe->generarCuenta($venta[0]);
+        
+        $sucursal = $this->m_plados->obtKeySucursal($venta[0]->Sucursal);
+
+        //PARA PRUEBAS... BORRAR EN PROD
         $sucursal = $this->m_plados->obtKeySucursal(0);
+
+        if(empty($sucursal)) {
+            echo "La sucursal no cuenta con Pagos a Meses sin intereses aun";
+            die();
+         }
 
         $datos['venta'] = $venta;        
         $this->load->view('inicio', $datos);
        
     }
 
-   function menu()
-    {
-        if ($this->session->userdata("logged_in")) {
-            redirect("home");
-        } else {
-            redirect("ingreso");
-        }
-    }
 
     /**
      * Vista del carrito

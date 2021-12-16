@@ -17,6 +17,22 @@ class m_stripe extends CI_Model
     
     }
 
+
+    function generarCuenta($venta){       
+   
+        $pedido = array(
+            'articulo'         => 1,
+            'cantidad'         => 1,
+            'precio'           => $venta->VentaTotal,
+            'descripcion'    => 'KOBER PRODUCTO',
+            'color'            => 'NEGRO',
+            'foto'            => '123'
+        );
+
+        $_SESSION['cart'][0] = $pedido;
+        
+    }
+
     /**
      * Retorna los conceptos de la cuenta del usuario
      * 
