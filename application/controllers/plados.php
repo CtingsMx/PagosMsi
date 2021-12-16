@@ -31,119 +31,15 @@ class Plados extends CI_Controller
         $head['title'] = "Home";
         
         $venta = $this->m_plados->obtVenta($id);
+       // $sucursal = $this->m_plados->obtKeySucursal($venta[0]->Sucursal);
+        $sucursal = $this->m_plados->obtKeySucursal(0);
 
-        $datos['venta'] = $venta;
-        
+        $datos['venta'] = $venta;        
         $this->load->view('inicio', $datos);
        
     }
 
-    public function nosotros()
-    {
-        $head['title'] = "Acerca de nosotros";
-        $this->load->view('eco/_head', $head);
-        $this->load->view('eco/_menu');
-        $this->load->view('eco/pages/nosotros');
-        $this->load->view('eco/_footer');
-    }
-
-    public function soporte()
-    {
-        $head['title'] = "Soporte";
-        $this->load->view('eco/_head', $head);
-        $this->load->view('eco/_menu');
-        $this->load->view('eco/pages/soporte');
-        $this->load->view('eco/_footer');
-    }
-
-    public function tecnologia()
-    {
-        $head['title'] = "Tecnología";
-        $this->load->view('eco/_head', $head);
-        $this->load->view('eco/_menu');
-        $this->load->view('eco/pages/tecnologia');
-        $this->load->view('eco/_footer');
-    }
-
-    public function italiano()
-    {
-        $this->load->view('eco/_head');
-        $this->load->view('eco/_menu');
-        $this->load->view('eco/pages/italiano');
-        $this->load->view('eco/_footer');
-    }
-
-
-    function productos()
-    {
-        $datos['productos'] = $this->m_plados->obt_productos();
-        $head['title'] = "Productos";
-        $this->load->view('eco/_head', $head);
-        //$this->load->view('_menuLateral1');
-        $this->load->view('eco/_menu');
-        $this->load->view('eco/pages/productos', $datos);
-        $this->load->view('eco/_footer');
-    }
-
-    function agregar_carritoP($id, $qty = 1)
-    {
-        $articulo     = $this->m_plados->obt_articulo($id);
-
-        $pedido = array(
-            'articulo'         => $articulo->id_catProducto,
-            'cantidad'         => (isset($_SESSION['cart'][$articulo->id_catProducto])) ? ($_SESSION['cart'][$articulo->id_catProducto]['cantidad'] + $qty) : $qty,
-            'precio'           => $articulo->precio,
-            'descripcion'    => $articulo->producto . ' ' . $articulo->linea . ' MODELO ' . $articulo->modelo,
-            'color'            => $articulo->color,
-            'foto'            => $articulo->foto
-        );
-
-        $_SESSION['alertaNuevoProducto'] = 1;
-        $_SESSION['cart'][$articulo->id_catProducto] = $pedido;
-
-        /*
-        if (isset($_SESSION['cart']) && isset($_SESSION['cart'][$articulo->id_catProducto])) {
-        $_SESSION['cart'][$articulo->id_catProducto]['cantidad']++;
-        } else {
-        $_SESSION['cart'][$articulo->id_catProducto] = $pedido;
-        }
-        */
-
-        redirect('productos');
-    }
-
-
-    function editarCantidad()
-    {
-        $x = $this->input->post('x');
-        $cantidad = $this->input->post('cantidad');
-
-        $_SESSION['cart'][$x]['cantidad'] = $cantidad;
-        echo json_encode($cantidad);
-    }
-
-    function eliminar_carrito()
-    {
-        session_destroy();
-        redirect('productos');
-    }
-
-    function detalle_articulo()
-    {
-        $articulo = $this->uri->segment(2);
-
-        $datos['galeria']      = $this->m_admin->obt_galeria($articulo);
-        $datos['producto']     = $this->m_plados->obt_articulo($articulo);
-        $datos['bullets']    = $this->m_admin->obt_bullets($articulo);
-        $head['title'] = "Detalle Artículo";
-        $this->load->view('eco/_head', $head);
-        $this->load->view('eco/_menu');
-        $this->load->view('eco/pages/producto', $datos);
-        $this->load->view('eco/_footer');
-    }
-
-
-    function menu()
+   function menu()
     {
         if ($this->session->userdata("logged_in")) {
             redirect("home");
