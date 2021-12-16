@@ -178,7 +178,7 @@ class Stripe extends CI_Controller
             $intent->confirm($confirm_data);
             echo json_encode($intent);
             if ($intent->status == 'succeeded') {
-               // $this->guardaPedido($json_obj['payment_intent_id'], $intent->status);
+                $this->guardaPedido($json_obj['payment_intent_id'], $intent->status);
             }
         } catch (\Stripe\Exception\ApiErrorException $e) {
 
@@ -207,31 +207,39 @@ class Stripe extends CI_Controller
         $carrito = $_SESSION['cart'];
         $cuenta = $this->m_stripe->obtCuenta();
 
-      
+       $respuesta = \Stripe\PaymentIntent::retrieve($idPago);
 
-        $this->m_plados->guardaPedido($pedido);
+       echo json_encode($respuesta);
 
-        $idPedido = $this->db->insert_id();
-        $x = 0;
-        foreach ($carrito as $c) {
-            $carrito[$x]['pedido'] = $idPedido;
-            $this->m_plados->articulo_pedido($carrito[$x]);
-            $x++;
-        }
-        //si hay datos de facturacion...
-        if (isset($_SESSION['factura'])) {
-            $this->m_plados->ingresar_factura($idPedido, $_SESSION['factura']);
-        }
+       die();
+
+        $pago = array(
+            'ModuloID',
+            'mov',
+            'movid',
+            'sucursal',
+            'cliente',
+            'nombreCliente',
+            'cp',
+            'referencia',
+            'fechaRegistro',
+            'importeTotal',
+            'msi',
+            'last4',
+            'mesExp',
+            'anioExp',
+            'tipo'
+        );
+
+
+
 
         $_SESSION['cart'] = null;
-        //@$this->m_correos->correo_cliente($idPedido);
-        // @$this->m_correos->correo_ventas($idPedido);
-
-
+   
         echo json_encode(
             [
                 'status' => $estatus,
-                'idPedido' => $idPedido
+                'idPedido' => $idPago
             ]
         );
     }
