@@ -2,14 +2,34 @@
 
 class m_plados extends CI_Model
 {
-   
-   function obtVenta($id) 
-   {
-    
-    
-    $qry = "";
 
-    $qry = "
+
+    function verificaVenta($id)
+    {
+        $venta = $this->obtVenta($id);
+
+        // Si la consulta no arroja resultados
+        if(!$venta){
+
+            return json_encode([
+                'ok' => false,
+                'Mensaje'   => "El Id de la venta puesto no existe o no se encuentra disponible para pagos en MSI"
+            ]);
+        }
+
+        return json_encode([
+            'ok' => true
+        ]);
+
+    }
+
+    function obtVenta($id)
+    {
+
+
+        $qry = "";
+
+        $qry = "
         SELECT v.ID,
         v.Mov,
         movid,
@@ -36,18 +56,17 @@ class m_plados extends CI_Model
         JOIN art a ON a.Articulo=d.Articulo 
         JOIN cte c ON c.Cliente=v.Cliente 
         WHERE v.ID={$id}";
-    
 
-    return $this->db->query($qry)->result();
 
-   }
+        return $this->db->query($qry)->result();
+    }
 
-   function obtKeySucursal($idSucursal)
-   {
-       $this->db->where('sucursal', $idSucursal);
+    function obtKeySucursal($idSucursal)
+    {
+        $this->db->where('sucursal', $idSucursal);
 
-       return $this->db->get('KeySucursal')->row();
-   }
+        return $this->db->get('KeySucursal')->row();
+    }
 
     function resaltar($texto, $criterio)
     {
