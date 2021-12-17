@@ -1,4 +1,5 @@
 const stripe = Stripe('pk_test_51JPs4jHcWweoTFXWWWHI2yR5TU9qi4OApPXuhS3OrpddoVaKq4WgoObJfM3Gav7iyMucu5RhfA1hRwwvCd5bojxY00lKYkK3L6');
+const pedido = document.getElementById("pedido").value;
 
 const elements = stripe.elements();
 const cardElement = elements.create('card');
@@ -76,10 +77,13 @@ confirmButton.addEventListener('click', async (ev) => {
     body: JSON.stringify({
       payment_intent_id: intentId,
       selected_plan: selectedPlan,
+      pedido
     }),
   });
 
   const responseJson = await response.json();
+
+  console.log(response);
 
   // Show success / error response.
   document.getElementById('plans').hidden = true;

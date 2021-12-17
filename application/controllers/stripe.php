@@ -176,19 +176,20 @@ class Stripe extends CI_Controller
                 $json_obj['payment_intent_id']
             );
             $intent->confirm($confirm_data);
-            echo json_encode($intent);
             if ($intent->status == 'succeeded') {
-                $this->guardaPedido($json_obj['payment_intent_id'], $intent->status);
+                 $this->guardaPedido($json_obj['payment_intent_id'], $intent->status);
             }
         } catch (\Stripe\Exception\ApiErrorException $e) {
 
             //echo 'Card Error Message is:' . $e->getError()->message . '';
+       
             echo json_encode(
                 [
                     'status' => $intent->status,
                     'error_message' => $e->getError()->message
                 ]
             );
+         
         }
     }
 
@@ -208,11 +209,7 @@ class Stripe extends CI_Controller
         $cuenta = $this->m_stripe->obtCuenta();
 
        $respuesta = \Stripe\PaymentIntent::retrieve($idPago);
-
-       echo json_encode($respuesta);
-
-       die();
-
+      
         $pago = array(
             'ModuloID',
             'mov',

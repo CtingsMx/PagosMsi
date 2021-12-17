@@ -32,6 +32,7 @@
                 <div class="row" style="background-color: #fff; border-radius:15px;">
                     <div class="table-responsive">
                         <h4 class="text-center" style="margin-top: 15px;">Resumen de Compra</h4>
+                        <input Type="text" value="<?=$venta[0]->ID?>" name="pedido" id="pedido">
                         <hr />
                         <table class="table cart">
                             <tbody>
