@@ -146,4 +146,11 @@ class m_stripe extends CI_Model
 
         return $data;
     }
+
+
+
+    function guardarRespuesta($pago)
+    {
+        $this->db->insert('respuestaPagoMSI');
+    }
 }

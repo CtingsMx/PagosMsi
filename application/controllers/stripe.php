@@ -177,7 +177,7 @@ class Stripe extends CI_Controller
             );
             $intent->confirm($confirm_data);
             if ($intent->status == 'succeeded') {
-                 $this->guardaPedido($json_obj['payment_intent_id'], $intent->status);
+                 $this->guardaPedido($intent, $json_obj['pedido']);
             }
         } catch (\Stripe\Exception\ApiErrorException $e) {
 
@@ -203,42 +203,36 @@ class Stripe extends CI_Controller
      * 
      * @return json
      */
-    function guardaPedido($idPago, $estatus)
+    function guardaPedido($PI, $idPedido)
     {
-        $carrito = $_SESSION['cart'];
-        $cuenta = $this->m_stripe->obtCuenta();
-
-       $respuesta = \Stripe\PaymentIntent::retrieve($idPago);
+       $pedido = $this->m_plados->obtVenta($idPedido);
+       $pedido = $pedido[0];
       
         $pago = array(
-            'ModuloID',
-            'mov',
-            'movid',
-            'sucursal',
-            'cliente',
-            'nombreCliente',
-            'cp',
-            'referencia',
-            'fechaRegistro',
-            'importeTotal',
-            'msi',
-            'last4',
-            'mesExp',
-            'anioExp',
-            'tipo'
+            'ModuloID'      => $idPedido,
+            'mov'           => $pedido->Mov,
+            'movid'         => $pedido->movid,
+            'sucursal'      => $pedido->Sucursal,
+            'cliente'       => $pedido->Cliente,
+            'nombreCliente' => $PI->charges[0]->billing_details->name,
+            'cp'            => $PI->charges[0]->billing_details->address->postal_code,
+            'referencia'    => $PI->id,
+            'fechaRegistro' => $this->m_admin->fecha_actual(),
+            'importeTotal'  => $PI->amount,
+            'msi'           => $PI->charges[0]->payment_method_details->card->installments->plan->count,
+            'last4'         => $PI->charges[0]->payment_method_details->card->last4,
+            'mesExp'        => $PI->charges[0]->payment_method_details->card->exp_month,
+            'anioExp'       => $PI->charges[0]->payment_method_details->card->exp_year,
+            'tipo'          => $PI->charges[0]->payment_method_details->card->network
         );
+
+        $this->m_stripe->guardarRespuesta($pago);
 
 
 
 
         $_SESSION['cart'] = null;
    
-        echo json_encode(
-            [
-                'status' => $estatus,
-                'idPedido' => $idPago
-            ]
-        );
     }
 
     /**
