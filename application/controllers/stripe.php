@@ -235,6 +235,20 @@ class Stripe extends CI_Controller
   
     }
 
+
+
+    function validaId()
+    {
+        header('Content-Type: application/json');
+
+        $idVenta = $this->input->get('idVenta');
+
+        echo json_encode([
+            'ok' => false,
+            'mensaje' => "el id es {$idVenta}"
+        ]);
+    }
+
     /**
      * Genera un nuevo cupon en Stripe
      *
