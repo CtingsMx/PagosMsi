@@ -8,9 +8,7 @@ class Plados extends CI_Controller
     {
         parent::__construct();
         $this->load->helper('url');
-        $this->load->model('usuario', "", true);
         $this->load->model('m_plados', "", true);
-        $this->load->model('m_admin', "", true);
         $this->load->model('m_stripe', "", true);
 
         $this->load->library('session');
@@ -54,7 +52,7 @@ class Plados extends CI_Controller
         $sucursal = $this->m_plados->obtKeySucursal($venta[0]->Sucursal);
 
         //PARA PRUEBAS... BORRAR EN PROD
-      //  $sucursal = $this->m_plados->obtKeySucursal(0);
+        $sucursal = $this->m_plados->obtKeySucursal(0);
 
         if(empty($sucursal)) {
             $error['error'] = "La sucursal no cuenta aún con Pagos a Meses sin intereses";

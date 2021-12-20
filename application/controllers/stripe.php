@@ -17,9 +17,8 @@ class Stripe extends CI_Controller
 
         $this->load->helper('url');
 
-        $this->load->model('m_usuario', "", true);
+
         $this->load->model('m_plados', "", true);
-        $this->load->model('m_correos', "", true);
         $this->load->model('m_stripe', "", true);
 
 
@@ -179,7 +178,7 @@ class Stripe extends CI_Controller
             if ($intent->status == 'succeeded') {
                  $this->guardaPedido($intent, $json_obj['pedido']);
             }
-            
+
             echo json_encode([
                 'status' => $intent->status,
             ]);
