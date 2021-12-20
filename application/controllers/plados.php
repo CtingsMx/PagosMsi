@@ -35,7 +35,7 @@ class Plados extends CI_Controller
             return;
         }
 
-        if($this->m_plados->esNuevoPago($id)){
+        if($this->m_plados->esPagoRealizado($id)){
             $error['error'] = "Esta compra ya fue Pagada";
             $this->load->view('errors', $error);
             return;

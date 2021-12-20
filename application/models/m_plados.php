@@ -46,22 +46,17 @@ class m_plados extends CI_Model
     function obtKeySucursal($idSucursal)
     {
         $this->db->where('sucursal', $idSucursal);
-
         return $this->db->get('KeySucursal')->row();
     }
 
-    function resaltar($texto, $criterio)
+    function esPagoRealizado($id)
     {
-        $claves = explode(" ", $criterio);
-        $clave = array_unique($claves);
-        $num = count($clave);
-        for ($i = 0; $i < $num; $i++) {
-            $texto = preg_replace("/(" . trim($clave[$i]) . ")/i", "<span style='color: #000000;
-	background: #55FF2A;
-	font-weight: bold;'>\\1</span>", $texto);
-        }
-        return $texto;
+        $this->db->where('ModuloID', $id);
+
+        return $this->db->get('respuestaPagoMSI')->num_rows();
     }
+
+  
     function fecha_actual(){
         date_default_timezone_set("America/Mexico_City");
         $fecha = date("Y-m-d");
