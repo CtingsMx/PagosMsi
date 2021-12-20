@@ -62,6 +62,12 @@ class m_plados extends CI_Model
         }
         return $texto;
     }
+    function fecha_actual(){
+        date_default_timezone_set("America/Mexico_City");
+        $fecha = date("Y-m-d");
+        return $fecha;
+    }
+    
 
     function hora_actual()
     {

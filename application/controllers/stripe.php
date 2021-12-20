@@ -179,6 +179,10 @@ class Stripe extends CI_Controller
             if ($intent->status == 'succeeded') {
                  $this->guardaPedido($intent, $json_obj['pedido']);
             }
+            
+            echo json_encode([
+                'status' => $intent->status,
+            ]);
         } catch (\Stripe\Exception\ApiErrorException $e) {
 
             //echo 'Card Error Message is:' . $e->getError()->message . '';
@@ -214,25 +218,22 @@ class Stripe extends CI_Controller
             'movid'         => $pedido->movid,
             'sucursal'      => $pedido->Sucursal,
             'cliente'       => $pedido->Cliente,
-            'nombreCliente' => $PI->charges[0]->billing_details->name,
-            'cp'            => $PI->charges[0]->billing_details->address->postal_code,
+            'nombreCliente' => $PI->charges->data[0]->billing_details->name,
+            'cp'            => $PI->charges->data[0]->billing_details->address->postal_code,
             'referencia'    => $PI->id,
-            'fechaRegistro' => $this->m_admin->fecha_actual(),
+            'fechaRegistro' => $this->m_plados->fecha_actual(),
             'importeTotal'  => $PI->amount,
-            'msi'           => $PI->charges[0]->payment_method_details->card->installments->plan->count,
-            'last4'         => $PI->charges[0]->payment_method_details->card->last4,
-            'mesExp'        => $PI->charges[0]->payment_method_details->card->exp_month,
-            'anioExp'       => $PI->charges[0]->payment_method_details->card->exp_year,
-            'tipo'          => $PI->charges[0]->payment_method_details->card->network
+            'msi'           => $PI->charges->data[0]->payment_method_details->card->installments->plan->count,
+            'last4'         => $PI->charges->data[0]->payment_method_details->card->last4,
+            'mesExp'        => $PI->charges->data[0]->payment_method_details->card->exp_month,
+            'anioExp'       => $PI->charges->data[0]->payment_method_details->card->exp_year,
+            'tipo'          => $PI->charges->data[0]->payment_method_details->card->network
         );
 
         $this->m_stripe->guardarRespuesta($pago);
 
-
-
-
         $_SESSION['cart'] = null;
-   
+  
     }
 
     /**
@@ -310,7 +311,7 @@ class Stripe extends CI_Controller
         }
 
         //datos del cupon
-        $codigo = $validacion->data[0];
+        $codigo = $validacion->data;
 
         $aplicaCodigo = $this->m_stripe->aplicaCodigo($codigo);
 
