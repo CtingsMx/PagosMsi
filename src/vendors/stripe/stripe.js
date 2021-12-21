@@ -44,6 +44,11 @@ const handleInstallmentPlans = async (response) => {
     document.getElementById('payment-intent-id').value = response.intent_id;
     availablePlans = response.available_plans;
 
+    var formatter = new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+  });
+
     // Show available installment options
     availablePlans.forEach((plan, idx) => {
       if (idx < 2) {

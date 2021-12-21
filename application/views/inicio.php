@@ -11,7 +11,7 @@
   
     <link href="<?=base_url()?>src/vendors/stripe/stripe.css" rel="stylesheet" />
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="./src/js/jquery.js"
+    <script src="./src/js/jquery.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
 
 
