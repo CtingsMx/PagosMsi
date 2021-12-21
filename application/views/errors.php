@@ -37,6 +37,9 @@ function validar() {
                 validar();
             })
         }
+        else{
+            window.location.href = `<?=base_url()?>?id=${result.value.id}`;
+        }
     });
 }
 </script>

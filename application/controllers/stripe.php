@@ -281,7 +281,8 @@ class Stripe extends CI_Controller
         }
 
         echo json_encode([
-            'error' => false
+            'error' => false,
+            'id'    => $id
         ]);
     }
 
