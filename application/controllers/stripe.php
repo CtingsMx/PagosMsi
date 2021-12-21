@@ -241,10 +241,10 @@ class Stripe extends CI_Controller
     {
         header('Content-Type: application/json');
 
-        $idVenta = $this->input->get('idVenta');
-
+        $idVenta = $this->input->get('idVenta');     
+  
         echo json_encode([
-            'ok' => false,
+            'error' => true,
             'mensaje' => "el id es {$idVenta}"
         ]);
     }

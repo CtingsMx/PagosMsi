@@ -1,33 +1,42 @@
-
-
 <script>
+function validar() {
+
+
     Swal.fire({
-  title: 'Ingresa el ID de la compra',
-  input: 'number',
-  showCancelButton: false,
-  confirmButtonText: 'Validar Pedido',
-  showLoaderOnConfirm: true,
-  preConfirm: (idVenta) => {
-    return fetch(`./stripe/validaId/${idVenta}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(response.mensaje)
+        title: 'Ingresa el ID de la compra',
+        input: 'number',
+        showCancelButton: false,
+        confirmButtonText: 'Validar Pedido',
+        showLoaderOnConfirm: true,
+        preConfirm: (idVenta) => {
+            return fetch(`./stripe/validaId?idVenta=${idVenta}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.mensaje)
+                    }
+                    return response.json()
+                })
+                .catch(error => {
+                    console.log(error);
+                    Swal.showValidationMessage(
+                        `Request failed: ${error}`
+                    )
+                })
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+        if (result.value.error) {
+            Swal.fire({
+                confirmButtonText: 'reintentar',
+                html: `
+                <div class="swal2-validation-message" 
+                    id="swal2-validation-message" style="display: flex;">
+                        Error en la solicitud: ${result.value.mensaje}
+                    </div>`
+            }).then((r) => {
+                validar();
+            })
         }
-        return response.json()
-      })
-      .catch(error => {
-        Swal.showValidationMessage(
-          `Request failed: ${error}`
-        )
-      })
-  },
-  allowOutsideClick: () => !Swal.isLoading()
-}).then((result) => {
-  if (result.isConfirmed) {
-    Swal.fire({
-      title: `${result.value.idVenta}'s avatar`,
-      imageUrl: result.value.avatar_url
-    })
-  }
-})
+    });
+}
 </script>
