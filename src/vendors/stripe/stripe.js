@@ -46,16 +46,22 @@ const handleInstallmentPlans = async (response) => {
 
     // Show available installment options
     availablePlans.forEach((plan, idx) => {
-      const newInput = document.getElementById('immediate-plan').cloneNode();
-      newInput.setAttribute('value', idx);
-      newInput.setAttribute('id', '');
-      const label = document.createElement('label');
-      label.appendChild(newInput);
-      label.appendChild(
-        document.createTextNode(`${plan.count} ${plan.interval}s`),
-      );
-
-      selectPlanForm.appendChild(label);
+      if (idx < 2) {
+        $('#load-msi').append(`
+            <label class="cta-msi" data-idx="${idx}" onclick="markPlan(${idx})">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="plan">${plan.count} ${(plan.count > 1) ? 'MESES' : 'PAGO'} </div>
+                        <div class="msi">sin intereses</div>
+                    </div>
+                    <div class="col-xs-6">
+                        <b>Mensualidad:</b>
+                        <big>${formatter.format(500 / plan.count)}</big>
+                    </div>
+                </div>
+            </label>
+        `);
+    }
     });
 
     document.getElementById('details').hidden = true;

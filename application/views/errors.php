@@ -1,4 +1,26 @@
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10 center">
+        <div class="row">
+            <h4 align="center">
+                Bienvenido a la pasarela de pagos. De click en el siguiente boton para comenzar
+            </h4>
+            <div class="col-md-12 center" align="center">
+                <button align="center" class="btn btn-primary col-md-3" onclick="validar()">Comenzar</button>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
 <script>
+(() => {
+    validar()
+})();
+
+
 function validar() {
 
 
@@ -36,8 +58,7 @@ function validar() {
             }).then((r) => {
                 validar();
             })
-        }
-        else{
+        } else {
             window.location.href = `<?=base_url()?>?id=${result.value.id}`;
         }
     });
