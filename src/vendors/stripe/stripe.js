@@ -97,11 +97,11 @@ confirmButton.addEventListener("click", async (ev) => {
 
   var message;
   if (responseJson.status === "succeeded" && selectedPlan !== undefined) {
-    message = `Success! You made a charge with this plan:${selectedPlan.count} ${selectedPlan.interval}`;
+    message = `Pago Realizado! Se realizo el pago a :${selectedPlan.count} ${selectedPlan.interval}`;
   } else if (responseJson.status === "succeeded") {
-    message = "Success! You paid immediately!";
+    message = "Pago Realizado! Tu pago se realizó en una sola excibición!";
   } else {
-    message = "Uh oh! Something went wrong";
+    message = "Uh oh! Algo salio mal.";
   }
 
   document.getElementById("status-message").innerText = message;
