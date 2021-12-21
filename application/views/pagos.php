@@ -71,11 +71,30 @@
                 <div id="plans" hidden>
                     <h4>Planes Disponibles con esta tarjeta</h4>
                     <br />
-
-                    <form id="installment-plan-form">
-                        <label><input id="immediate-plan" type="radio" name="installment_plan" value="-1" /><br />  Una sola Excibición</label>
-                        <input id="payment-intent-id" type="hidden" />
-                    </form>
+                    <form id="installment-plan-form" class="hidden">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <label style="text-transform: unset; margin-bottom:2px;"><i class="fas fa-check" style="color: #159b7e;"></i> Selecciona la modalidad de pago que
+                                        prefieras</label>
+                                    <label style="text-transform: unset;"><i class="fas fa-check" style="color: transparent;"></i>(Opciones disponibles para la tarjeta
+                                        presentada):</label>
+                                </div>
+                            </div>
+                            <div id="load-msi">
+                                <label class="cta-msi" data-idx="-1" onclick="markPlan(-1)">
+                                    <div class="row">
+                                        <div class="col-xs-6" style="display:flex; align-items: center; min-height:60px; flex-direction: column;">
+                                            <div class="plan">1 PAGO</div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <b>Pago único:</b>
+                                            <big>$<?php echo number_format($cuenta['total'], 2); ?></big>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <input id="payment-intent-id" type="hidden" />
+                        </form>
                     <br />
 
                     <button class="btn btn-outline-primary btn-lg btn-block col-md-12" id="confirm-button"> Confirmar Pago </button>
