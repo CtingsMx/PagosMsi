@@ -91,7 +91,7 @@ class Stripe extends CI_Controller
         }
         // retrieve json from POST body
         $cuenta = $this->m_stripe->obtCuenta();
-       // $usuario = $this->m_plados->obt_cliente($_SESSION['idCliente']);
+        // $usuario = $this->m_plados->obt_cliente($_SESSION['idCliente']);
 
         $json_str = file_get_contents('php://input');
         $json_obj = json_decode($json_str);
@@ -176,7 +176,7 @@ class Stripe extends CI_Controller
             );
             $intent->confirm($confirm_data);
             if ($intent->status == 'succeeded') {
-                 $this->guardaPedido($intent, $json_obj['pedido']);
+                $this->guardaPedido($intent, $json_obj['pedido']);
             }
 
             echo json_encode([
@@ -185,14 +185,13 @@ class Stripe extends CI_Controller
         } catch (\Stripe\Exception\ApiErrorException $e) {
 
             //echo 'Card Error Message is:' . $e->getError()->message . '';
-       
+
             echo json_encode(
                 [
                     'status' => $intent->status,
                     'error_message' => $e->getError()->message
                 ]
             );
-         
         }
     }
 
@@ -208,9 +207,9 @@ class Stripe extends CI_Controller
      */
     function guardaPedido($PI, $idPedido)
     {
-       $pedido = $this->m_plados->obtVenta($idPedido);
-       $pedido = $pedido[0];
-      
+        $pedido = $this->m_plados->obtVenta($idPedido);
+        $pedido = $pedido[0];
+
         $pago = array(
             'ModuloID'      => $idPedido,
             'mov'           => $pedido->Mov,
@@ -232,7 +231,6 @@ class Stripe extends CI_Controller
         $this->m_stripe->guardarRespuesta($pago);
 
         $_SESSION['cart'] = null;
-  
     }
 
 
@@ -240,12 +238,50 @@ class Stripe extends CI_Controller
     function validaId()
     {
         header('Content-Type: application/json');
+        $id = $this->input->get('idVenta');
 
-        $idVenta = $this->input->get('idVenta');     
-  
+        if (!$id) {
+            echo json_encode([
+                'error' => true,
+                'mensaje' => "ingrese la Compra"
+            ]);
+            return;
+        }
+
+        if ($this->m_plados->esPagoRealizado($id)) {
+            echo json_encode([
+                'error' => true,
+                'mensaje' => "Esta compra ya fue Pagada"
+            ]);
+            return;
+        }
+
+        $venta = $this->m_plados->obtVenta($id);
+
+        if (empty($venta)) {
+            echo json_encode([
+                'error' => true,
+                'mensaje' => "La compra solicitada no existe"
+            ]);
+            return;
+        }
+
+        $sucursal = $this->m_plados->obtKeySucursal($venta[0]->Sucursal);
+
+        //PARA PRUEBAS... BORRAR EN PROD
+        $sucursal = $this->m_plados->obtKeySucursal(0);
+
+        if (empty($sucursal)) {
+
+            echo json_encode([
+                'error' => true,
+                'mensaje' => "La sucursal no cuenta aún con Pagos a Meses sin intereses"
+            ]);
+            return;
+        }
+
         echo json_encode([
-            'error' => true,
-            'mensaje' => "el id es {$idVenta}"
+            'error' => false
         ]);
     }
 
