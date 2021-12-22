@@ -35,6 +35,7 @@ form.addEventListener("submit", async (ev) => {
 });
 
 const selectPlanForm = document.getElementById("installment-plan-form");
+const select = document.getElementById("immediate-plan");
 let availablePlans = [];
 
 const handleInstallmentPlans = async (response) => {
@@ -53,6 +54,14 @@ const handleInstallmentPlans = async (response) => {
     // Show available installment options
     availablePlans.forEach((plan, idx) => {
       if (idx < 2) {
+
+        const option = document.createElement('option');
+        const valor = idx;
+        option.value = valor;
+        option.text = `${plan.count} Meses`;
+        select.appendChild(option);
+      
+        /*ANTERIOR FORMA
         const newInput = document.getElementById("immediate-plan").cloneNode();
         newInput.setAttribute("value", idx);
         newInput.setAttribute("id", "");
@@ -63,6 +72,7 @@ const handleInstallmentPlans = async (response) => {
         );
 
         selectPlanForm.appendChild(label);
+        */
       }
     });
 
@@ -74,7 +84,8 @@ const handleInstallmentPlans = async (response) => {
 const confirmButton = document.getElementById("confirm-button");
 
 confirmButton.addEventListener("click", async (ev) => {
-  const selectedPlanIdx = selectPlanForm.installment_plan.value;
+  const selectedPlanIdx = select.value;
+  console.log(selectedPlanIdx);
   const selectedPlan = availablePlans[selectedPlanIdx];
   const intentId = document.getElementById("payment-intent-id").value;
   const response = await fetch("./stripe/confirmarPago", {

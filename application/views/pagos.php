@@ -75,9 +75,24 @@
                         <h4>Planes Disponibles con esta tarjeta</h4>
                         <br />
                         <form id="installment-plan-form">
-                            <label><input id="immediate-plan" class="form-check-input" type="radio"
-                                    name="installment_plan" value="-1" /><br /> Un Pago</label>
+                            <label for="inmediate-plan">
+                                Seleccione las Parcialidades de pago
+                            </label>
+                            <select id="immediate-plan" name="installment_plan" class="form-control input-large">
+                                <option value="-1">Una Sola Excibición</option>
+                            </select>
+
                             <input id="payment-intent-id" type="hidden" />
+
+                            <div class="col-md-12 center" align="center" style="margin-top: 30px;">
+
+                                <button class=" form-control btn btn-outline-primary btn-lg btn-block col-md-12"
+                                    id="confirm-button" align="center">
+                                    Confirmar Pago
+                                </button>
+                            </div>
+
+
                         </form>
                         <br />
 
