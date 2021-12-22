@@ -6,11 +6,11 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '192.168.65.18',
-	'username' => 'sa',
-	'password' => 'P4n450n1',
-	'database' => 'DEMOMSI',
-	'dbdriver' => 'sqlsrv',
+	'hostname' => '72.249.57.159',
+	'username' => 'koberdes_pos',
+	'password' => 'd354rr0ll0.1',
+	'database' => 'koberdes_plados',
+	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
@@ -23,7 +23,5 @@ $db['default'] = array(
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
-	'save_queries' => TRUE,
-	'autoinit' => TRUE
+	'save_queries' => TRUE
 );
-
