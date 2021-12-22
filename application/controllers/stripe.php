@@ -69,14 +69,12 @@ class Stripe extends CI_Controller
             $error['error'] = "La sucursal no cuenta aún con Pagos a Meses sin intereses";
             $this->load->view('errors', $error);
             return;
-         }
+        }
 
-         echo json_encode($sucursal);
-         die();
+        \Stripe::setApiKey($sucursal->llave_secreta);
 
-        // $this->ingresaKey($sucursal->)
-
-        $datos['venta'] = $venta; 
+        $datos['venta'] = $venta;
+        $datos['pk']    = $sucursal->llave_publica; 
         $this->load->view('pagos', $datos);       
         
        

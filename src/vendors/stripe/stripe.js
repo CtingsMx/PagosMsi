@@ -1,6 +1,5 @@
-const stripe = Stripe(
-  "pk_test_51JPs4jHcWweoTFXWWWHI2yR5TU9qi4OApPXuhS3OrpddoVaKq4WgoObJfM3Gav7iyMucu5RhfA1hRwwvCd5bojxY00lKYkK3L6"
-);
+const pk = getElementById('pk').val;
+const stripe = Stripe(pk);
 const pedido = document.getElementById("pedido").value;
 
 const elements = stripe.elements();
