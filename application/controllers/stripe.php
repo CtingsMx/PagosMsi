@@ -16,21 +16,15 @@ class Stripe extends CI_Controller
         parent::__construct();
 
         $this->load->helper('url');
-
-
         $this->load->model('m_plados', "", true);
         $this->load->model('m_stripe', "", true);
-
-
         $this->load->library('session');
         $this->load->library('encrypt');
-
         //Obtenemos el valor de las llaves desde las constantes
-        $stripeKeys = STRIPE_KEYS;
-        $SK = $stripeKeys['serverside'][STRIPE_MODE];
+        //$stripeKeys = STRIPE_KEYS;
+       // $SK = $stripeKeys['serverside'][STRIPE_MODE];
 
-
-        \Stripe\Stripe::setApiKey($SK);
+      //  \Stripe\Stripe::setApiKey($SK);
 
         session_start();
     }
@@ -76,6 +70,11 @@ class Stripe extends CI_Controller
             $this->load->view('errors', $error);
             return;
          }
+
+         echo json_encode($sucursal);
+         die();
+
+        // $this->ingresaKey($sucursal->)
 
         $datos['venta'] = $venta; 
         $this->load->view('pagos', $datos);       
