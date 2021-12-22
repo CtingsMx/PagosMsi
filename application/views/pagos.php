@@ -86,18 +86,19 @@
 
                             <div class="col-md-12 center" align="center" style="margin-top: 30px;">
 
-                                <button class=" form-control btn btn-outline-primary btn-lg btn-block col-md-12"
+                                <a href="#" class=" form-control btn btn-outline-primary btn-lg btn-block col-md-12"
                                     id="confirm-button" align="center">
                                     Confirmar Pago
-                                </button>
+                                </a>
                             </div>
 
 
                         </form>
                         <br />
-
+                        <!--
                         <button class="btn btn-outline-primary btn-lg btn-block col-md-12" id="confirm-button">
                             Confirmar Pago </button>
+-->
                     </div>
                     <div id="result" hidden>
                         <h3 class="text-center" id="status-message"></h3>
