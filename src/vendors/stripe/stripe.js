@@ -1,4 +1,5 @@
-const pk = getElementById('pk').val;
+const pk = document.getElementById('pk').value;
+console.log(pk);
 const stripe = Stripe(pk);
 const pedido = document.getElementById("pedido").value;
 

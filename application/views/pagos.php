@@ -1,6 +1,6 @@
 <div class="row">
 
-    <div class="col-md-4" style="margin-top: 50px;">
+    <div class="col-sm-auto " style="margin-top: 50px;">
         <div class="row" style="background-color: #fff; border-radius:15px;">
             <div class="table-responsive">
                 <h4 class="text-center" style="margin-top: 15px;">Resumen de Compra</h4>
@@ -47,19 +47,19 @@
     <div class="col-md-1">
     </div>
 
-    <div class="col-md-7 pull-right" style="margin-top: 50px;">
+    <div class="col-sm-auto" style="margin-top: 50px;">
         <div class="row" style="background-color: #fff; border-radius:15px;">
             <div class="table-responsive">
                 <h4 class="text-center" style="margin-top: 15px;">Pasarela de Pagos</h4>
                 <hr />
 
                 <div class="row">
-                    <div id="details" class="form-group">
+                    <div id="details" class="form-group">                       
+                        <!-- placeholder for Elements -->
+                        <form id="payment-form" class="mt-4">
                         <input id="cardholder-name" type="text" placeholder="NOMBRE DE TITULAR DE TARJETA"
                             class="form-control">
                         <br />
-                        <!-- placeholder for Elements -->
-                        <form id="payment-form" class="mt-4">
                             <div class="col-md-12">
                                 <div id="card-element"></div>
                             </div>
@@ -87,18 +87,15 @@
 
                             <div class="col-md-12 center" align="center" style="margin-top: 30px;">
 
-                                <button class=" form-control btn btn-outline-primary btn-lg btn-block col-md-12"
+                                <a class=" form-control btn btn-outline-primary btn-lg btn-block col-md-12"
                                     id="confirm-button" align="center">
                                     Confirmar Pago
-                                </button>
+</a>
                             </div>
 
 
                         </form>
-                        <br />
-
-                        <button class="btn btn-outline-primary btn-lg btn-block col-md-12" id="confirm-button">
-                            Confirmar Pago </button>
+                        <br />                      
                     </div>
                     <div id="result" hidden>
                         <h3 class="text-center" id="status-message"></h3>

@@ -20,17 +20,19 @@ class Stripe extends CI_Controller
         $this->load->model('m_stripe', "", true);
         $this->load->library('session');
         $this->load->library('encrypt');
-        //Obtenemos el valor de las llaves desde las constantes
-        //$stripeKeys = STRIPE_KEYS;
-       // $SK = $stripeKeys['serverside'][STRIPE_MODE];
-
-      //  \Stripe\Stripe::setApiKey($SK);
-
+      
         session_start();
+
+        if($_SESSION['sk']){
+            $SK = $_SESSION['sk'];
+            \Stripe\Stripe::setApiKey($SK);
+        }
     }
 
     public function index()
     {
+
+        $_SESSION['sk'] = NULL;
 
         $head['title'] = "Portal de Pagos KOBER";
         //id del pago
@@ -71,7 +73,7 @@ class Stripe extends CI_Controller
             return;
         }
 
-        \Stripe::setApiKey($sucursal->llave_secreta);
+        $_SESSION['sk'] = $sucursal->llave_secreta;
 
         $datos['venta'] = $venta;
         $datos['pk']    = $sucursal->llave_publica; 
