@@ -1,16 +1,16 @@
+<div class="clearfix"></div>
+
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10 center">
         <div class="row">
-            <h4 align="center">
+            <br><br>
+            <h4 align="center" style="margin-top: 20px;">
                 Bienvenido a la pasarela de pagos. De click en el siguiente boton para comenzar
             </h4>
-            <div class="col-md-12 center" align="center">
+            <div class="col-md-12 center" align="center" style="margin-top: 20px;">
                 <button align="center" class="btn btn-primary col-md-3" onclick="validar()">Comenzar</button>
-
             </div>
-
-
         </div>
     </div>
 </div>

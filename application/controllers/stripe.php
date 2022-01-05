@@ -23,7 +23,7 @@ class Stripe extends CI_Controller
       
         session_start();
 
-        if($_SESSION['sk']){
+        if(isset($_SESSION['sk']) && $_SESSION['sk']){
             $SK = $_SESSION['sk'];
             \Stripe\Stripe::setApiKey($SK);
         }
@@ -81,35 +81,7 @@ class Stripe extends CI_Controller
         
        
     }
-    //FUNCIONES PARA PAGOS MSI
-
-    /**
-     * Vista del chechout de MSI
-     * 
-     * @return view
-     */
-    function checkoutMsi()
-    {
-        $usuario = $this->m_plados->obt_cliente($_SESSION['idCliente']);
-        $datos['usuario'] = $usuario;
-
-        if (isset($_SESSION['cart'])) {
-            $datos['carrito'] = $_SESSION['cart'];
-            $carrito = $_SESSION['cart'];
-        } else {
-            $datos['carrito'] = null;
-            redirect('carrito');
-        }
-
-        $datos['cuenta']   = $this->m_stripe->obtCuenta();
-        $head['title'] = "Checkout";
-
-        $this->load->view('eco/_head', $head);
-        $this->load->view('eco/_menu');
-        $this->load->view('eco/pages/checkout', $datos);
-        $this->load->view('eco/_footer');
-    }
-
+ 
 
     /**
      * Revisa los datos del pedido en Stripe
