@@ -1,6 +1,6 @@
 <div class="row">
 
-    <div class="col-sm-auto " style="margin-top: 50px;">
+    <div class="col-xs-6 " style="margin-top: 50px;">
         <div class="row" style="background-color: #fff; border-radius:15px;">
             <div class="table-responsive">
                 <h4 class="text-center" style="margin-top: 15px;">Resumen de Compra</h4>
@@ -44,17 +44,14 @@
             </div>
         </div>
     </div>
-    <div class="col-md-1">
-    </div>
-
-    <div class="col-sm-auto" style="margin-top: 50px;">
+       <div class="col-xs-12" style="margin-top: 50px;">
         <div class="row" style="background-color: #fff; border-radius:15px;">
             <div class="table-responsive">
                 <h4 class="text-center" style="margin-top: 15px;">Pasarela de Pagos</h4>
                 <hr />
 
-                <div class="row">
-                    <div id="details" class="form-group">                       
+                
+                    <div id="details" class="">                       
                         <!-- placeholder for Elements -->
                         <form id="payment-form" class="mt-4">
                         <input id="cardholder-name" type="text" placeholder="NOMBRE DE TITULAR DE TARJETA"
@@ -64,7 +61,6 @@
                                 <div id="card-element"></div>
                             </div>
                             <br />
-
                             <button class="btn btn-outline-primary btn-lg btn-block col-md-12" id="card-button">
                                 Realizar Pago
                             </button>
@@ -90,7 +86,7 @@
                                 <a class=" form-control btn btn-outline-primary btn-lg btn-block col-md-12"
                                     id="confirm-button" align="center">
                                     Confirmar Pago
-</a>
+                                </a>
                             </div>
 
 
@@ -100,7 +96,7 @@
                     <div id="result" hidden>
                         <h3 class="text-center" id="status-message"></h3>
                     </div>
-                </div>
+                
 
             </div>
 
