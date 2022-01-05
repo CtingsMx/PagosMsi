@@ -37,7 +37,7 @@ class m_plados extends CI_Model
         JOIN ventad d ON d.id=v.id 
         JOIN art a ON a.Articulo=d.Articulo 
         JOIN cte c ON c.Cliente=v.Cliente 
-        WHERE v.ID={$id}";
+        WHERE movid={$id}";
 
 
         return $this->db->query($qry)->result();
@@ -51,7 +51,7 @@ class m_plados extends CI_Model
 
     function esPagoRealizado($id)
     {
-        $this->db->where('ModuloID', $id);
+        $this->db->where('movid', $id);
 
         return $this->db->get('respuestaPagoMSI')->num_rows();
     }

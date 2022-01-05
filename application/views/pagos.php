@@ -59,52 +59,6 @@
         </div>
     </div>
 
-
-
-    <div class="col-xs-6 " style="margin-top: 50px;">
-        <div class="row" style="background-color: #fff; border-radius:15px;">
-            <div class="table-responsive">
-                <h4 class="text-center" style="margin-top: 15px;">Resumen de Compra</h4>
-                <input Type="hidden" value="<?=$venta[0]->ID?>" name="pedido" id="pedido">
-                <input type="hidden" value="<?=$pk?>" id="pk" name="pk">
-                <hr />
-                <table class="table cart">
-                    <tbody>
-                        <tr>
-                            <td># Pedido:</td>
-                            <td align="center" width="50%"><b><?=$venta[0]->ID?></b></td>
-                        </tr>
-                        <tr>
-                            <td>Sucursal:</td>
-                            <td align="center" width="50%"><b><?=$venta[0]->Sucursal?></b></td>
-                        </tr>
-                        <tr>
-                            <td>Cliente:</td>
-                            <td align="center" width="50%"><b><?=$venta[0]->Nombre?></b></td>
-                        </tr>
-                        <tr>
-                            <td>Email:</td>
-                            <td align="center" width="50%"><b><?=$venta[0]->eMail1?></b></td>
-                        </tr>
-                        <tr>
-                            <td>Telefonos:</td>
-                            <td align="center" width="50%"><b><?=$venta[0]->Telefonos?></b></td>
-                        </tr>
-                        <tr>
-                            <td>RFC:</td>
-                            <td align="center" width="50%"><b><?=$venta[0]->RFC?></b></td>
-                        </tr>
-                        <tr>
-                            <td>Total a cobrar:</td>
-                            <td align="center" width="50%"><b style="color:red;">
-                                    <?=number_format($venta[0]->VentaTotal,2,'.',",")?> (<?=$venta[0]->MonedaV33?>)</b>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
     <div class="col-xs-12" style="margin-top: 50px;">
         <div class="row" style="background-color: #fff; border-radius:15px;">
             <div class="table-responsive">

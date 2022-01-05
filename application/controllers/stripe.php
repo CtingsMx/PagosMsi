@@ -41,7 +41,7 @@ class Stripe extends CI_Controller
         $this->load->view('inicio');
 
         if(!$id){
-            $error['error'] = "ingrese la Compra";
+            $error['error'] = "ingrese el id del Movimiento";
             $this->load->view('errors', $error);
             return;
         }
