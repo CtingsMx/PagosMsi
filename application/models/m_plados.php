@@ -37,7 +37,7 @@ class m_plados extends CI_Model
         JOIN ventad d ON d.id=v.id 
         JOIN art a ON a.Articulo=d.Articulo 
         JOIN cte c ON c.Cliente=v.Cliente 
-        WHERE movid={$id}";
+        WHERE movid='{$id}'";
 
 
         return $this->db->query($qry)->result();

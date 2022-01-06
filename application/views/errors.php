@@ -26,7 +26,7 @@ function validar() {
 
     Swal.fire({
         title: 'Ingresa el ID de la compra',
-        input: 'number',
+        input: 'text',
         showCancelButton: false,
         confirmButtonText: 'Validar Pedido',
         showLoaderOnConfirm: true,
