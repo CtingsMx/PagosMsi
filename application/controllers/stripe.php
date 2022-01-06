@@ -221,7 +221,7 @@ class Stripe extends CI_Controller
         $pedido = $pedido[0];
 
         $pago = array(
-            'ModuloID'      => $idPedido,
+            'ModuloID'      => $pedido->ID,
             'mov'           => $pedido->Mov,
             'movid'         => $pedido->movid,
             'sucursal'      => $pedido->Sucursal,
