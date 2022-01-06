@@ -14,7 +14,7 @@
 
                     <div class="table-responsive">
                         <h4 class="text-center" style="margin-top: 15px;">Resumen de Compra</h4>
-                        <input Type="hidden" value="<?=$venta[0]->ID?>" name="pedido" id="pedido">
+                        <input Type="hidden" value="<?=$venta[0]->movid?>" name="pedido" id="pedido">
                         <input type="hidden" value="<?=$pk?>" id="pk" name="pk">
                         <hr />
                         <table class="table cart">
