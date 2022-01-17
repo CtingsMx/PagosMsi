@@ -60,9 +60,14 @@ class Stripe extends CI_Controller
            return;
         }
 
-        $this->m_stripe->generarCuenta($venta[0]);
+        if(!$venta->MSI){
+            $error['error'] = "La compra solicitada no esta disponible a MSI";
+            $this->load->view('errors', $error);
+        }
+
+        $this->m_stripe->generarCuenta($venta);
         
-        $sucursal = $this->m_plados->obtKeySucursal($venta[0]->Sucursal);
+        $sucursal = $this->m_plados->obtKeySucursal($venta->Sucursal);
 
         //PARA PRUEBAS... BORRAR EN PROD
         $sucursal = $this->m_plados->obtKeySucursal(0);
@@ -218,7 +223,7 @@ class Stripe extends CI_Controller
     function guardaPedido($PI, $idPedido)
     {
         $pedido = $this->m_plados->obtVenta($idPedido);
-        $pedido = $pedido[0];
+        $pedido = $pedido;
 
         $pago = array(
             'ModuloID'      => $pedido->ID,
@@ -226,16 +231,16 @@ class Stripe extends CI_Controller
             'movid'         => $pedido->movid,
             'sucursal'      => $pedido->Sucursal,
             'cliente'       => $pedido->Cliente,
-            'nombreCliente' => $PI->charges->data[0]->billing_details->name,
-            'cp'            => $PI->charges->data[0]->billing_details->address->postal_code,
+            'nombreCliente' => $PI->charges->data->billing_details->name,
+            'cp'            => $PI->charges->data->billing_details->address->postal_code,
             'referencia'    => $PI->id,
             'fechaRegistro' => $this->m_plados->fecha_actual(),
             'importeTotal'  => $PI->amount,
-            'msi'           => $PI->charges->data[0]->payment_method_details->card->installments->plan->count,
-            'last4'         => $PI->charges->data[0]->payment_method_details->card->last4,
-            'mesExp'        => $PI->charges->data[0]->payment_method_details->card->exp_month,
-            'anioExp'       => $PI->charges->data[0]->payment_method_details->card->exp_year,
-            'tipo'          => $PI->charges->data[0]->payment_method_details->card->network
+            'msi'           => $PI->charges->data->payment_method_details->card->installments->plan->count,
+            'last4'         => $PI->charges->data->payment_method_details->card->last4,
+            'mesExp'        => $PI->charges->data->payment_method_details->card->exp_month,
+            'anioExp'       => $PI->charges->data->payment_method_details->card->exp_year,
+            'tipo'          => $PI->charges->data->payment_method_details->card->network
         );
 
         $this->m_stripe->guardarRespuesta($pago);
@@ -276,7 +281,16 @@ class Stripe extends CI_Controller
             return;
         }
 
-        $sucursal = $this->m_plados->obtKeySucursal($venta[0]->Sucursal);
+        if(!$venta->MSI){
+            echo json_encode([
+                'error' => true,
+                'mensaje' => "Este pedido no cuenta con Pagos a Meses sin intereses",
+                'MSI'   => $venta->MSI
+            ]);
+            return;
+        }
+
+        $sucursal = $this->m_plados->obtKeySucursal($venta->Sucursal);
 
         //PARA PRUEBAS... BORRAR EN PROD
         $sucursal = $this->m_plados->obtKeySucursal(0);

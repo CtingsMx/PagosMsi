@@ -14,40 +14,40 @@
 
                     <div class="table-responsive">
                         <h4 class="text-center" style="margin-top: 15px;">Resumen de Compra</h4>
-                        <input Type="hidden" value="<?=$venta[0]->movid?>" name="pedido" id="pedido">
+                        <input Type="hidden" value="<?=$venta->movid?>" name="pedido" id="pedido">
                         <input type="hidden" value="<?=$pk?>" id="pk" name="pk">
                         <hr />
                         <table class="table cart">
                             <tbody>
                                 <tr>
                                     <td># Pedido:</td>
-                                    <td align="center" width="50%"><b><?=$venta[0]->ID?></b></td>
+                                    <td align="center" width="50%"><b><?=$venta->ID?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Sucursal:</td>
-                                    <td align="center" width="50%"><b><?=$venta[0]->Sucursal?></b></td>
+                                    <td align="center" width="50%"><b><?=$venta->Sucursal?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Cliente:</td>
-                                    <td align="center" width="50%"><b><?=$venta[0]->Nombre?></b></td>
+                                    <td align="center" width="50%"><b><?=$venta->Nombre?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Email:</td>
-                                    <td align="center" width="50%"><b><?=$venta[0]->eMail1?></b></td>
+                                    <td align="center" width="50%"><b><?=$venta->eMail1?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Telefonos:</td>
-                                    <td align="center" width="50%"><b><?=$venta[0]->Telefonos?></b></td>
+                                    <td align="center" width="50%"><b><?=$venta->Telefonos?></b></td>
                                 </tr>
                                 <tr>
                                     <td>RFC:</td>
-                                    <td align="center" width="50%"><b><?=$venta[0]->RFC?></b></td>
+                                    <td align="center" width="50%"><b><?=$venta->RFC?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Total a cobrar:</td>
                                     <td align="center" width="50%"><b style="color:red;">
-                                            <?=number_format($venta[0]->VentaTotal,2,'.',",")?>
-                                            (<?=$venta[0]->MonedaV33?>)</b>
+                                            <?=number_format($venta->VentaTotal,2,'.',",")?>
+                                            (<?=$venta->MonedaV33?>)</b>
                                     </td>
                                 </tr>
                             </tbody>

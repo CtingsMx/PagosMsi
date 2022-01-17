@@ -31,16 +31,18 @@ class m_plados extends CI_Model
         c.Direccion,
         c.CodigoPostal,
         c.Poblacion,
-        c.Estado  
+        c.Estado,  
+        v.MSI
         FROM venta v 
         JOIN CFDVentaV33 v3 ON v3.id=v.id 
         JOIN ventad d ON d.id=v.id 
         JOIN art a ON a.Articulo=d.Articulo 
         JOIN cte c ON c.Cliente=v.Cliente 
-        WHERE movid='{$id}'";
+        WHERE movid='{$id}'
+        AND Mov LIKE 'Factura%'";
 
 
-        return $this->db->query($qry)->result();
+        return $this->db->query($qry)->row();
     }
 
     function obtKeySucursal($idSucursal)
@@ -55,7 +57,6 @@ class m_plados extends CI_Model
 
         return $this->db->get('respuestaPagoMSI')->num_rows();
     }
-
   
     function fecha_actual(){
         date_default_timezone_set("America/Mexico_City");
