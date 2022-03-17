@@ -12,6 +12,8 @@ const form = document.getElementById("payment-form");
 
 form.addEventListener("submit", async (ev) => {
   ev.preventDefault();
+  alertEspera();
+
   const { paymentMethod, error } = await stripe.createPaymentMethod(
     "card",
     cardElement,
@@ -84,6 +86,7 @@ const handleInstallmentPlans = async (response) => {
 const confirmButton = document.getElementById("confirm-button");
 
 confirmButton.addEventListener("click", async (ev) => {
+ 
   const selectedPlanIdx = select.value;
   console.log(selectedPlanIdx);
   const selectedPlan = availablePlans[selectedPlanIdx];
@@ -108,7 +111,7 @@ confirmButton.addEventListener("click", async (ev) => {
 
   var message;
   if (responseJson.status === "succeeded" && selectedPlan !== undefined) {
-    message = `Pago Realizado! Se realizo el pago a :${selectedPlan.count} ${selectedPlan.interval}`;
+    message = `Pago Realizado! Se realizo el pago a :${selectedPlan.count} meses`;
   } else if (responseJson.status === "succeeded") {
     message = "Pago Realizado! Tu pago se realizó en una sola excibición!";
   } else {
@@ -117,3 +120,31 @@ confirmButton.addEventListener("click", async (ev) => {
 
   document.getElementById("status-message").innerText = message;
 });
+
+
+
+function alertEspera(){
+  
+let timerInterval
+Swal.fire({
+  title: 'Procesando',
+  html: 'Procesando...',
+  timer: 2000,
+  timerProgressBar: true,
+  didOpen: () => {
+    Swal.showLoading()
+    const b = Swal.getHtmlContainer().querySelector('b')
+    timerInterval = setInterval(() => {
+      b.textContent = Swal.getTimerLeft()
+    }, 100)
+  },
+  willClose: () => {
+    clearInterval(timerInterval)
+  }
+}).then((result) => {
+  /* Read more about handling dismissals below */
+  if (result.dismiss === Swal.DismissReason.timer) {
+    console.log('I was closed by the timer')
+  }
+})
+}
