@@ -1,6 +1,5 @@
 <?php
 
-
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Stripe extends CI_Controller
@@ -20,10 +19,10 @@ class Stripe extends CI_Controller
         $this->load->model('m_stripe', "", true);
         $this->load->library('session');
         $this->load->library('encrypt');
-      
+
         session_start();
 
-        if(isset($_SESSION['sk']) && $_SESSION['sk']){
+        if (isset($_SESSION['sk']) && $_SESSION['sk']) {
             $SK = $_SESSION['sk'];
             \Stripe\Stripe::setApiKey($SK);
         }
@@ -32,7 +31,7 @@ class Stripe extends CI_Controller
     public function index()
     {
 
-        $_SESSION['sk'] = NULL;
+        $_SESSION['sk'] = null;
 
         $head['title'] = "Portal de Pagos KOBER";
         //id del pago
@@ -40,39 +39,39 @@ class Stripe extends CI_Controller
 
         $this->load->view('inicio');
 
-        if(!$id){
+        if (!$id) {
             $error['error'] = "ingrese el id del Movimiento";
             $this->load->view('errors', $error);
             return;
         }
 
-        if($this->m_plados->esPagoRealizado($id)){
+        if ($this->m_plados->esPagoRealizado($id)) {
             $error['error'] = "Esta compra ya fue Pagada";
             $this->load->view('errors', $error);
             return;
         }
-        
+
         $venta = $this->m_plados->obtVenta($id);
 
-        if(empty($venta)) {
+        if (empty($venta)) {
             $error['error'] = "La compra solicitada no existe";
             $this->load->view('errors', $error);
-           return;
+            return;
         }
 
-        if(!$venta->MSI){
+        if (!$venta->MSI) {
             $error['error'] = "La compra solicitada no esta disponible a MSI";
             $this->load->view('errors', $error);
         }
 
         $this->m_stripe->generarCuenta($venta);
-        
+
         $sucursal = $this->m_plados->obtKeySucursal($venta->Sucursal);
 
         //PARA PRUEBAS... BORRAR EN PROD
         $sucursal = $this->m_plados->obtKeySucursal(0);
 
-        if(empty($sucursal)) {
+        if (empty($sucursal)) {
             $error['error'] = "La sucursal no cuenta aún con Pagos a Meses sin intereses";
             $this->load->view('errors', $error);
             return;
@@ -81,16 +80,14 @@ class Stripe extends CI_Controller
         $_SESSION['sk'] = $sucursal->llave_secreta;
 
         $datos['venta'] = $venta;
-        $datos['pk']    = $sucursal->llave_publica; 
-        $this->load->view('pagos', $datos);       
-        
-       
+        $datos['pk'] = $sucursal->llave_publica;
+        $this->load->view('pagos', $datos);
+
     }
- 
 
     /**
      * Revisa los datos del pedido en Stripe
-     * 
+     *
      * @return Json
      */
     public function revisaDatos()
@@ -118,15 +115,14 @@ class Stripe extends CI_Controller
             'payment_method_options' => [
                 'card' => [
                     'installments' => [
-                        'enabled' => true
-                    ]
-                ]
+                        'enabled' => true,
+                    ],
+                ],
             ],
             //'receipt_email' => $usuario->correo,
         );
         //Agrega al PI la direccion de envio
         //$data['shipping'] = $this->m_stripe->formateaEnvio($usuario);
-
 
         if (isset($_SESSION['promoCode'])) {
             $data['metadata'] = ['cupon' => $_SESSION['promoCode']];
@@ -138,7 +134,7 @@ class Stripe extends CI_Controller
             echo json_encode(
                 [
                     'intent_id' => $intent->id,
-                    'available_plans' => $intent->payment_method_options->card->installments->available_plans
+                    'available_plans' => $intent->payment_method_options->card->installments->available_plans,
                 ]
             );
         } catch (\Stripe\Exception\CardException $e) {
@@ -146,7 +142,7 @@ class Stripe extends CI_Controller
             echo 'Card Error Message is:' . $e->getError()->message . '';
             echo json_encode(
                 [
-                    'error_message' => $e->getError()->message
+                    'error_message' => $e->getError()->message,
                 ]
             );
         } catch (\Stripe\Exception\InvalidRequestException $e) {
@@ -154,19 +150,18 @@ class Stripe extends CI_Controller
             echo 'Invalid Parameters Message is:' . $e->getError()->message . '';
             echo json_encode(
                 [
-                    'error_message' => $e->getError()->message
+                    'error_message' => $e->getError()->message,
                 ]
             );
         }
     }
 
-
     /**
      * Valida el pago en Stripe y devuelve exito
-     * 
+     *
      * @return view
      */
-    function confirmarPago()
+    public function confirmarPago()
     {
         header('Content-Type: application/json');
 
@@ -177,13 +172,13 @@ class Stripe extends CI_Controller
 
             if (isset($json_obj['selected_plan'])) {
                 $confirm_data = ['payment_method_options' =>
-                [
-                    'card' => [
-                        'installments' => [
-                            'plan' => $json_obj['selected_plan']
-                        ]
-                    ]
-                ]];
+                    [
+                        'card' => [
+                            'installments' => [
+                                'plan' => $json_obj['selected_plan'],
+                            ],
+                        ],
+                    ]];
             }
 
             $intent = \Stripe\PaymentIntent::retrieve(
@@ -204,7 +199,7 @@ class Stripe extends CI_Controller
             echo json_encode(
                 [
                     'status' => $intent->status,
-                    'error_message' => $e->getError()->message
+                    'error_message' => $e->getError()->message,
                 ]
             );
         }
@@ -212,35 +207,35 @@ class Stripe extends CI_Controller
 
     /**
      * Guarda el pedido en la bd
-     * 
+     *
      * Almacena en la base de datos el pedido validado por Stripe
-     * 
+     *
      * @param string $idPago  pago de de Stripe
      * @param string $estatus estatus desde stripe
-     * 
+     *
      * @return json
      */
-    function guardaPedido($PI, $idPedido)
+    public function guardaPedido($PI, $idPedido)
     {
         $pedido = $this->m_plados->obtVenta($idPedido);
         $pedido = $pedido;
 
         $pago = array(
-            'ModuloID'      => $pedido->ID,
-            'mov'           => $pedido->Mov,
-            'movid'         => $pedido->movid,
-            'sucursal'      => $pedido->Sucursal,
-            'cliente'       => $pedido->Cliente,
+            'ModuloID' => $pedido->ID,
+            'mov' => $pedido->Mov,
+            'movid' => $pedido->movid,
+            'sucursal' => $pedido->Sucursal,
+            'cliente' => $pedido->Cliente,
             'nombreCliente' => $PI->charges->data->billing_details->name,
-            'cp'            => $PI->charges->data->billing_details->address->postal_code,
-            'referencia'    => $PI->id,
+            'cp' => $PI->charges->data->billing_details->address->postal_code,
+            'referencia' => $PI->id,
             'fechaRegistro' => $this->m_plados->fecha_actual(),
-            'importeTotal'  => $PI->amount,
-            'msi'           => $PI->charges->data->payment_method_details->card->installments->plan->count,
-            'last4'         => $PI->charges->data->payment_method_details->card->last4,
-            'mesExp'        => $PI->charges->data->payment_method_details->card->exp_month,
-            'anioExp'       => $PI->charges->data->payment_method_details->card->exp_year,
-            'tipo'          => $PI->charges->data->payment_method_details->card->network
+            'importeTotal' => $PI->amount,
+            'msi' => $PI->charges->data->payment_method_details->card->installments->plan->count,
+            'last4' => $PI->charges->data->payment_method_details->card->last4,
+            'mesExp' => $PI->charges->data->payment_method_details->card->exp_month,
+            'anioExp' => $PI->charges->data->payment_method_details->card->exp_year,
+            'tipo' => $PI->charges->data->payment_method_details->card->network,
         );
 
         $this->m_stripe->guardarRespuesta($pago);
@@ -248,9 +243,7 @@ class Stripe extends CI_Controller
         $_SESSION['cart'] = null;
     }
 
-
-
-    function validaId()
+    public function validaId()
     {
         header('Content-Type: application/json');
         $id = $this->input->get('idVenta');
@@ -258,7 +251,7 @@ class Stripe extends CI_Controller
         if (!$id) {
             echo json_encode([
                 'error' => true,
-                'mensaje' => "ingrese la Compra"
+                'mensaje' => "ingrese la Compra",
             ]);
             return;
         }
@@ -266,7 +259,7 @@ class Stripe extends CI_Controller
         if ($this->m_plados->esPagoRealizado($id)) {
             echo json_encode([
                 'error' => true,
-                'mensaje' => "Esta compra ya fue Pagada"
+                'mensaje' => "Esta compra ya fue Pagada",
             ]);
             return;
         }
@@ -276,16 +269,16 @@ class Stripe extends CI_Controller
         if (empty($venta)) {
             echo json_encode([
                 'error' => true,
-                'mensaje' => "La compra solicitada no existe"
+                'mensaje' => "La compra solicitada no existe",
             ]);
             return;
         }
 
-        if(!$venta->MSI){
+        if (!$venta->MSI) {
             echo json_encode([
                 'error' => true,
                 'mensaje' => "Este pedido no cuenta con Pagos a Meses sin intereses",
-                'MSI'   => $venta->MSI
+                'MSI' => $venta->MSI,
             ]);
             return;
         }
@@ -299,14 +292,14 @@ class Stripe extends CI_Controller
 
             echo json_encode([
                 'error' => true,
-                'mensaje' => "La sucursal no cuenta aún con Pagos a Meses sin intereses"
+                'mensaje' => "La sucursal no cuenta aún con Pagos a Meses sin intereses",
             ]);
             return;
         }
 
         echo json_encode([
             'error' => false,
-            'id'    => $id
+            'id' => $id,
         ]);
     }
 
@@ -318,7 +311,7 @@ class Stripe extends CI_Controller
     public function nuevoCupon()
     {
         header('Content-Type: application/json');
-        $nuevoCupon =   \Stripe\Coupon::create(
+        $nuevoCupon = \Stripe\Coupon::create(
             [
                 'duration' => 'forever',
                 'currency' => 'mxn',
@@ -332,7 +325,7 @@ class Stripe extends CI_Controller
 
     /**
      * Genera un nuevo Codigo de Promoción
-     * 
+     *
      * @return void
      */
     public function nuevoCodigoPromocion()
@@ -343,7 +336,7 @@ class Stripe extends CI_Controller
             [
                 'coupon' => 'BuenFin2021',
                 'code' => 'tarjas',
-                'expires_at' => strtotime('2021-12-12')
+                'expires_at' => strtotime('2021-12-12'),
             ]
         );
 
@@ -352,7 +345,7 @@ class Stripe extends CI_Controller
 
     /**
      * Valida si un cupon esta activo
-     * 
+     *
      * @return Json Objeto de respuesta
      */
     public function validaCupon()
@@ -362,12 +355,12 @@ class Stripe extends CI_Controller
 
         $validacion = \Stripe\PromotionCode::all(["code" => $cupon]);
 
-        //Valida que el codigo exista 
+        //Valida que el codigo exista
         if (!$validacion->data) {
             echo json_encode(
                 [
-                    "error"     => true,
-                    "mensaje"   => "El codigo introducido no es valido."
+                    "error" => true,
+                    "mensaje" => "El codigo introducido no es valido.",
                 ]
             );
 
@@ -377,8 +370,8 @@ class Stripe extends CI_Controller
         if (isset($_SESSION['promoCode'])) {
             echo json_encode(
                 [
-                    "error"     => true,
-                    "mensaje"   => "Este pedido ya cuenta con un codigo de promoción redimido"
+                    "error" => true,
+                    "mensaje" => "Este pedido ya cuenta con un codigo de promoción redimido",
                 ]
             );
             return 0;
@@ -392,19 +385,17 @@ class Stripe extends CI_Controller
         if (!$aplicaCodigo) {
             echo json_encode(
                 [
-                    "error"     => true,
-                    "mensaje"   => "El codigo introducido ya caducó"
+                    "error" => true,
+                    "mensaje" => "El codigo introducido ya caducó",
                 ]
             );
             return 0;
         }
 
-
-
         echo json_encode(
             [
-                "error"     => false,
-                "cuenta"    => $this->m_stripe->obtCuenta(),
+                "error" => false,
+                "cuenta" => $this->m_stripe->obtCuenta(),
 
             ]
         );
