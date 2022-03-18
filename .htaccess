@@ -15,11 +15,7 @@
 # RewriteRule .* /index.html [L,R=302]
 
 RewriteEngine On
-<<<<<<< HEAD
-RewriteBase /PagosMsi/
-=======
-RewriteBase /pagosmsi/
->>>>>>> 935d555a6c0ebf86465cc16cc01eee20c7b69668
+RewriteBase /pagos/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?/$1 [L,QSA]  
