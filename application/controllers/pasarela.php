@@ -2,6 +2,11 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 use Openpay\Data\Openpay;
+use Openpay\Data\OpenpayApiAuthError;
+use Openpay\Data\OpenpayApiConnectionError;
+use Openpay\Data\OpenpayApiError;
+use Openpay\Data\OpenpayApiRequestError;
+use Openpay\Data\OpenpayApiTransactionError;
 
 class Pasarela extends CI_Controller
 {
@@ -66,29 +71,61 @@ class Pasarela extends CI_Controller
 
     public function datosPagos()
     {
-        header('Content-Type: application/json');
+       // header('Content-Type: application/json');
+
+        Openpay::getProductionMode(false);
 
         $openpay = Openpay::getInstance('mex0qnhtpq3m0yvkl3sa', 'sk_0d2dbc7f9a6a4f88a5320c75a28815dd');
 
         $customer = array(
-            'name' => 'Freud',
-            'last_name' => 'Lamar',
+            'name' => 'Usuario de Pruebas',
+            'last_name' => 'Kober',
             'phone_number' => '3312124587',
-            'email' => 'daniel.mora@ctings.com');
+            'email' => 'daniel.mora@kober.com');
 
         $chargeData = array(
             'method' => 'card',
             'source_id' => $_POST["token_id"],
             'amount' => (float) 5000,
             'currency' => 'MXN',
-            'description' => "articulo de prueba",
+            'description' => "articulo de prueba desde Kober",
             'device_session_id' => $_POST["deviceIdHiddenFieldName"],
             'customer' => $customer,
+            'use_3d_secure' => true,
+            'redirect_url' => 'https://google.com',
         );
 
-    //    $charge = $openpay->charges->create($chargeData);
+        // $chargeData['payment_plan']=array('payments'=>$_POST['payments']);
+        $chargeData['payment_plan'] = array('payments' => 6);
 
-        echo json_encode(["usuario" => $customer, "datos" => $chargeData]);
+        try {
+
+            $charge = $openpay->charges->create($chargeData);
+            header("Location: ".$charge->payment_method->url);
+        //    echo json_encode($charge);
+
+        } catch (OpenpayApiTransactionError $e) {
+            echo json_encode(['ERROR on the transaction: ' . $e->getMessage() .
+                ' [error code: ' . $e->getErrorCode() .
+                ', error category: ' . $e->getCategory() .
+                ', HTTP code: ' . $e->getHttpCode() .
+                ', request ID: ' . $e->getRequestId() . ']', 0]);
+
+        } catch (OpenpayApiRequestError $e) {
+            echo json_encode('ERROR on the request: ' . $e->getMessage(), 0);
+
+        } catch (OpenpayApiConnectionError $e) {
+            echo json_encode('ERROR while connecting to the API: ' . $e->getMessage(), 0);
+
+        } catch (OpenpayApiAuthError $e) {
+            echo json_encode('ERROR on the authentication: ' . $e->getMessage(), 0);
+
+        } catch (OpenpayApiError $e) {
+            echo json_encode('ERROR on the API: ' . $e->getMessage(), 0);
+
+        } catch (Exception $e) {
+            echo json_encode('Error on the script: ' . $e->getMessage(), 0);
+        }
 
     }
 
