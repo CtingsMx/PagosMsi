@@ -26,6 +26,10 @@ class Pasarela extends CI_Controller
         $this->load->library('session');
         $this->load->library('encrypt');
 
+        //INICIANDO OPENPAY
+        Openpay::getProductionMode(false);
+        $this->openpay = Openpay::getInstance('mex0qnhtpq3m0yvkl3sa', 'sk_0d2dbc7f9a6a4f88a5320c75a28815dd');
+
         session_start();
 
     }
@@ -71,10 +75,6 @@ class Pasarela extends CI_Controller
 
     public function datosPagos()
     {
-        Openpay::getProductionMode(false);
-
-        $openpay = Openpay::getInstance('mex0qnhtpq3m0yvkl3sa', 'sk_0d2dbc7f9a6a4f88a5320c75a28815dd');
-
         $customer = array(
             'name' => 'Pago chido',
             'last_name' => 'Kober',
@@ -97,7 +97,7 @@ class Pasarela extends CI_Controller
 
         try {
 
-            $charge = $openpay->charges->create($chargeData);
+            $charge = $this->openpay->charges->create($chargeData);
             echo json_encode($charge->payment_method);
 
             //header("Location: " . $charge->payment_method->url);
@@ -131,16 +131,11 @@ class Pasarela extends CI_Controller
     {
         header('Content-Type: application/json');
 
-        Openpay::getProductionMode(false);
-        $openpay = Openpay::getInstance('mex0qnhtpq3m0yvkl3sa', 'sk_0d2dbc7f9a6a4f88a5320c75a28815dd');
-
         $id = $this->input->get('id');
 
         try {
-            $customer = $openpay->customers->get('av9rszvzj0vtze8a39n1');
-            //  $charge = $customer->charges->get();
-            $pago = $openpay->charges->get("tro5mkqvqqjfvakczeab");
 
+            $pago = $this->openpay->charges->get("tro5mkqvqqjfvakczeab");
             echo json_encode($pago->status);
 
         } catch (OpenpayApiTransactionError $e) {
