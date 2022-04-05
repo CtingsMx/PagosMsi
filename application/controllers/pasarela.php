@@ -71,14 +71,12 @@ class Pasarela extends CI_Controller
 
     public function datosPagos()
     {
-       // header('Content-Type: application/json');
-
         Openpay::getProductionMode(false);
 
         $openpay = Openpay::getInstance('mex0qnhtpq3m0yvkl3sa', 'sk_0d2dbc7f9a6a4f88a5320c75a28815dd');
 
         $customer = array(
-            'name' => 'Usuario de Pruebas',
+            'name' => 'Pago chido',
             'last_name' => 'Kober',
             'phone_number' => '3312124587',
             'email' => 'daniel.mora@kober.com');
@@ -92,17 +90,58 @@ class Pasarela extends CI_Controller
             'device_session_id' => $_POST["deviceIdHiddenFieldName"],
             'customer' => $customer,
             'use_3d_secure' => true,
-            'redirect_url' => 'https://google.com',
+            'redirect_url' => 'https://localhost/pagosmsi/pasarela/pagoExitoso?',
         );
 
-        // $chargeData['payment_plan']=array('payments'=>$_POST['payments']);
         $chargeData['payment_plan'] = array('payments' => 6);
 
         try {
 
             $charge = $openpay->charges->create($chargeData);
-            header("Location: ".$charge->payment_method->url);
-        //    echo json_encode($charge);
+            echo json_encode($charge->payment_method);
+
+            //header("Location: " . $charge->payment_method->url);
+
+        } catch (OpenpayApiTransactionError $e) {
+            echo json_encode(['ERROR on the transaction: ' . $e->getMessage() .
+                ' [error code: ' . $e->getErrorCode() .
+                ', error category: ' . $e->getCategory() .
+                ', HTTP code: ' . $e->getHttpCode() .
+                ', request ID: ' . $e->getRequestId() . ']', 0]);
+
+        } catch (OpenpayApiRequestError $e) {
+            echo json_encode('ERROR on the request: ' . $e->getMessage(), 0);
+
+        } catch (OpenpayApiConnectionError $e) {
+            echo json_encode('ERROR while connecting to the API: ' . $e->getMessage(), 0);
+
+        } catch (OpenpayApiAuthError $e) {
+            echo json_encode('ERROR on the authentication: ' . $e->getMessage(), 0);
+
+        } catch (OpenpayApiError $e) {
+            echo json_encode('ERROR on the API: ' . $e->getMessage(), 0);
+
+        } catch (Exception $e) {
+            echo json_encode('Error on the script: ' . $e->getMessage(), 0);
+        }
+
+    }
+
+    public function pagoExitoso()
+    {
+        header('Content-Type: application/json');
+
+        Openpay::getProductionMode(false);
+        $openpay = Openpay::getInstance('mex0qnhtpq3m0yvkl3sa', 'sk_0d2dbc7f9a6a4f88a5320c75a28815dd');
+
+        $id = $this->input->get('id');
+
+        try {
+            $customer = $openpay->customers->get('av9rszvzj0vtze8a39n1');
+            //  $charge = $customer->charges->get();
+            $pago = $openpay->charges->get("tro5mkqvqqjfvakczeab");
+
+            echo json_encode($pago->status);
 
         } catch (OpenpayApiTransactionError $e) {
             echo json_encode(['ERROR on the transaction: ' . $e->getMessage() .
