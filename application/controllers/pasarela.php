@@ -70,7 +70,12 @@ class Pasarela extends CI_Controller
 
     public function pagar()
     {
-        $this->load->view('pasarela');
+        $data['pk'] = 'pk_live_51JtbiWE2YIoXTzM7rBeQpef1CJn7Fwg79GUveG9wdhPDqxJQj2c5YhziGIgH39KOnqY21j7EzwWAfXqDklFfaDLG00WE2ADeys';
+        $this->load->view('inicio');
+        $this->load->view('pasarela2', $data);
+
+
+        //FGSU73502
     }
 
     public function datosPagos()
@@ -86,6 +91,7 @@ class Pasarela extends CI_Controller
             'source_id' => $_POST["token_id"],
             'amount' => (float) 5000,
             'currency' => 'MXN',
+            'order_id' => 'TREsdd023',
             'description' => "articulo de prueba desde Kober",
             'device_session_id' => $_POST["deviceIdHiddenFieldName"],
             'customer' => $customer,
@@ -98,9 +104,8 @@ class Pasarela extends CI_Controller
         try {
 
             $charge = $this->openpay->charges->create($chargeData);
-            echo json_encode($charge->payment_method);
 
-            //header("Location: " . $charge->payment_method->url);
+            header("Location: " . $charge->payment_method->url);
 
         } catch (OpenpayApiTransactionError $e) {
             echo json_encode(['ERROR on the transaction: ' . $e->getMessage() .
@@ -135,8 +140,8 @@ class Pasarela extends CI_Controller
 
         try {
 
-            $pago = $this->openpay->charges->get("tro5mkqvqqjfvakczeab");
-            echo json_encode($pago->status);
+            $pago = $this->openpay->charges->get($id);
+            echo json_encode($pago->order_id);
 
         } catch (OpenpayApiTransactionError $e) {
             echo json_encode(['ERROR on the transaction: ' . $e->getMessage() .
