@@ -36,50 +36,76 @@ class Pasarela extends CI_Controller
 
     public function index()
     {
-        // header('Content-Type: application/json');
-        Openpay::getProductionMode(false);
-        $openpay = Openpay::getInstance('mex0qnhtpq3m0yvkl3sa', 'sk_0d2dbc7f9a6a4f88a5320c75a28815dd', 'MX');
 
-        /* $customerData = array(
-        'name' => 'Teofilo',
-        'last_name' => 'Velazco',
-        'email' => 'teofilo@payments.com',
-        'phone_number' => '4421112233',
-        'address' => array(
-        'line1' => 'Privada Rio No. 12',
-        'line2' => 'Co. El Tintero',
-        'line3' => '',
-        'postal_code' => '76920',
-        'state' => 'Querétaro',
-        'city' => 'Querétaro.',
-        'country_code' => 'MX'));
+    }
 
-        $customer = $openpay->customers->add($customerData);
-         */
+    /**
+     * Regresa los datos de una compra si esta es valida
+     *
+     * @return void
+     */
+    public function getCompra()
+    {
 
-        $findData = array(
-            'creation[gte]' => '2022-01-01',
-            'creation[lte]' => '2022-12-31',
-            'offset' => 0,
-            'limit' => 5);
+        $folio = $this->input->get('folio');
 
-        $customerList = $openpay->customers->getList($findData);
+        //CONEXION A DATOS DE LA BASE SQLSRV
+        //$datosCompra = $this->m_plados->obtDatosPedido($folio);
+        $datosCompra = $this->m_plados->datosPrueba();
 
-        // echo json_encode($customerList);
+        if (sizeof($datosCompra)) {
+            echo json_encode(
+                [
+                    'resumen' => $datosCompra,
+                    'articulos' => [],
+                ]);
+            die();
+        } else {
+            echo json_encode("no enconte nada algo");
+            die();
+        }
+
+        $customer = array(
+            'name' => 'Pago chido',
+            'last_name' => 'Kober',
+            'phone_number' => '3312124587',
+            'email' => 'daniel.mora@kober.com');
+
+        $chargeData = array(
+            'method' => 'card',
+
+            'amount' => (float) 5000,
+            'currency' => 'MXN',
+            'order_id' => 'TREsdd023',
+            'description' => "articulo de prueba desde Kober",
+
+            'customer' => $customer,
+            'use_3d_secure' => true,
+            'redirect_url' => 'https://localhost/pagosmsi/pasarela/pagoExitoso?',
+        );
+
+        echo json_encode([
+            'cliente' => $customer,
+            'pagp' => $chargeData,
+            'folio' => $folio,
+        ]);
+
     }
 
     public function pagar()
     {
         $data['pk'] = 'pk_live_51JtbiWE2YIoXTzM7rBeQpef1CJn7Fwg79GUveG9wdhPDqxJQj2c5YhziGIgH39KOnqY21j7EzwWAfXqDklFfaDLG00WE2ADeys';
+        $data['venta'] = $this->m_plados->datosPrueba();
         $this->load->view('inicio');
         $this->load->view('pasarela2', $data);
-
 
         //FGSU73502
     }
 
     public function datosPagos()
     {
+        header('Content-Type: application/json');
+
         $customer = array(
             'name' => 'Pago chido',
             'last_name' => 'Kober',
