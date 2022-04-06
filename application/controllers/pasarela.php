@@ -50,8 +50,8 @@ class Pasarela extends CI_Controller
         $folio = $this->input->get('folio');
 
         //CONEXION A DATOS DE LA BASE SQLSRV
-        //$datosCompra = $this->m_plados->obtDatosPedido($folio);
-        $datosCompra = $this->m_plados->datosPrueba();
+        $datosCompra = $this->m_plados->obtDatosPedido($folio);
+        //$datosCompra = $this->m_plados->datosPrueba();
 
         if (sizeof($datosCompra)) {
             echo json_encode(

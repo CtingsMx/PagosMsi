@@ -1,8 +1,12 @@
 const baseUrl = window.location.origin;
-const urlcompra = `${baseUrl}/pagosmsi/pasarela/getCompra?folio=001`;
-const body = document.getElementById("resumenCompra");
 
-const url = "https://randomuser.me/api/?results=10";
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+
+
+const urlcompra = `${baseUrl}/PagosMsi/pasarela/getCompra?folio=${params.folio}`;
+const body = document.getElementById("resumenCompra");
 
 (() => {
   imprimeResumenCompra();
@@ -12,30 +16,42 @@ function imprimeResumenCompra() {
   let html = '';
   const data = getCompra();
   const encabezados = [
-    '# Pedido',
-    'Sucursal',
-    'Cliente',
-    'Email',
-    'Telefonos',
-    'Rfc',
-    'Total a Cobrar'
+    {
+    'encabezado': '# Pedido',
+    'indice':  'ID'
+    },
+    {
+      'encabezado': 'Sucursal',
+      'indice':  'Sucursal'
+    },
+    {
+      'encabezado': 'Cliente',
+      'indice':  'Cliente'
+    },
+    {
+      'encabezado': 'Email',
+      'indice':  'eMail1'
+    }        
   ];
 
+  
+  encabezados.forEach((e,idx) => {
 
-  Object.values(data).forEach((element, id) => {
-    console.log(`${encabezados[id]} es igual a: ${element}`);
+    console.log(e);
 
     html = ` 
     <tr>
-      <td>${encabezados[id]}</td>
+      <td>${e.encabezado}</td>
       <td align="center" width="50%">
-        <b> ${element} </b>
+        <b> ${data[e.indice]} </b>
       </td>
     </tr>`;
 
-    body.innerHTML += html;                                 
-
+    body.innerHTML += html;   
   })
+
+
+
 
 
   //console.log(Object.values(data).length);
@@ -75,5 +91,5 @@ function getCompra() {
     },
   });
 
-  return data.resumen;
+  return data.resumen[0];
 }
