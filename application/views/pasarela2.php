@@ -14,9 +14,11 @@
                         <div class="accordion-body">
 
                         <div id="table-responsive">
-                        <span class="table cart" id='resumenCompra'>
-                             
-                        </span>
+                        
+
+                        <table class="table cart" id='resumenCompra'>
+                        </table>     
+                        
                         </div>
 
                             <!--<div class="table-responsive">
