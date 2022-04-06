@@ -91,7 +91,7 @@ class m_plados extends CI_Model
         $datos = array(
             'ID' => 123,
             'Sucursal' => "Guadalajara",
-            'Cliente' => 'Juan Perez',
+            'Nombre' => 'Juan Perez',
             'eMail1' => 'contoso@kober.com',
             'RFC' => 'MOCL9402236E1',
             'VentaTotal' => 30000,

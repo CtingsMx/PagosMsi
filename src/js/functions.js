@@ -2,7 +2,7 @@ const baseUrl = window.location.origin;
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
-const urlcompra = `${baseUrl}/PagosMsi/pasarela/getCompra?folio=${params.folio}`;
+const urlcompra = `${baseUrl}/pagos/pasarela/getCompra?folio=${params.folio}`;
 
 (() => {
   imprimeResumenCompra();
@@ -30,7 +30,7 @@ function imprimeResumenCompra() {
     },
     {
       encabezado: "Cliente",
-      indice: "Cliente",
+      indice: "Nombre",
     },
     {
       encabezado: "RFC",

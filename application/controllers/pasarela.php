@@ -53,8 +53,8 @@ class Pasarela extends CI_Controller
         $folio = $this->input->get('folio');
 
         //CONEXION A DATOS DE LA BASE SQLSRV
-        $datosCompra = $this->m_plados->obtDatosPedido($folio);
-        //$datosCompra = $this->m_plados->datosPrueba();
+        //$datosCompra = $this->m_plados->obtDatosPedido($folio);
+        $datosCompra = $this->m_plados->datosPrueba();
         if ($datosCompra) {
             echo json_encode(
                 [
@@ -71,7 +71,7 @@ class Pasarela extends CI_Controller
 
     /**
      * FUNCION PARA MOSTRAR PAGOS
-     * 
+     *
      * @deprecated SE MIGRO A INDEX
      *
      * @return void
@@ -87,7 +87,7 @@ class Pasarela extends CI_Controller
     }
 
     /**
-     * Valida el formulario 
+     * Valida el formulario
      *
      * @return void
      */
@@ -99,21 +99,21 @@ class Pasarela extends CI_Controller
         $msi = $this->input->post('msi');
         $name = $this->input->post('name');
 
-        $venta = $this->m_plados->obtVenta($pedido);
+        //@$venta = $this->m_plados->obtVenta($pedido);
+        $venta = $this->m_plados->datosPrueba();
+
         $this->m_stripe->generarCuenta($venta);
         $cuenta = $this->m_stripe->obtCuenta();
 
-       
-
-        if(!$venta->eMail1){
+        if (!$venta->eMail1) {
             $venta->eMail1 = 'sincorreo@kober.mx';
         }
 
         $customer = array(
             'name' => $venta->Nombre,
-           // 'last_name' => 'Kober',
+            // 'last_name' => 'Kober',
             'phone_number' => $venta->Telefonos,
-            'email' => $venta->eMail1
+            'email' => $venta->eMail1,
         );
 
         $chargeData = array(
@@ -127,11 +127,15 @@ class Pasarela extends CI_Controller
             'customer' => $customer,
             'use_3d_secure' => true,
             'payment_plan' => [
-                'payments' => $msi
+                'payments' => $msi,
             ],
 
             'redirect_url' => 'https://192.168.65.157/PagosMsi/pasarela/pagoExitoso?',
         );
+
+
+        echo json_encode(['cliente' => $customer, 'Cargo' => $chargeData]);
+        die();
 
         try {
 
