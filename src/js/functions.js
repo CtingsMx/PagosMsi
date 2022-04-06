@@ -2,7 +2,7 @@ const baseUrl = window.location.origin;
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
-const urlcompra = `${baseUrl}/pagosmsi/pasarela/getCompra?folio=${params.folio}`;
+const urlcompra = `${baseUrl}/pagos/pasarela/getCompra?folio=${params.folio}`;
 const body = document.getElementById("resumenCompra");
 
 (() => {
@@ -10,38 +10,36 @@ const body = document.getElementById("resumenCompra");
 })();
 
 function imprimeResumenCompra() {
-  let html = '';
+  let html = "";
   const data = getCompra();
   const encabezados = [
     {
-      'encabezado': '# Pedido',
-      'indice': 'ID'
+      encabezado: "# Pedido",
+      indice: "ID",
     },
     {
-      'encabezado': 'Sucursal',
-      'indice': 'Sucursal'
+      encabezado: "Sucursal",
+      indice: "Sucursal",
     },
     {
-      'encabezado': 'Cliente',
-      'indice': 'Cliente'
+      encabezado: "Cliente",
+      indice: "Cliente",
     },
     {
-      'encabezado': 'RFC',
-      'indice': 'RFC'
+      encabezado: "RFC",
+      indice: "RFC",
     },
     {
-      'encabezado': 'Email',
-      'indice': 'eMail1'
+      encabezado: "Email",
+      indice: "eMail1",
     },
     {
-      'encabezado': 'Total a Pagar',
-      'indice': 'VentaTotal'
-    }
+      encabezado: "Total a Pagar",
+      indice: "VentaTotal",
+    },
   ];
 
-
   encabezados.forEach((e, idx) => {
-
     console.log(e);
 
     html = ` 
@@ -53,11 +51,7 @@ function imprimeResumenCompra() {
     </tr>`;
 
     body.innerHTML += html;
-  })
-
-
-
-
+  });
 
   //console.log(Object.values(data).length);
 }
@@ -98,3 +92,32 @@ function getCompra() {
 
   return data.resumen;
 }
+
+function getPasarela()
+{
+  let pasarela = document.getElementById('pasarela');
+
+  pasarela.removeAttribute('hidden');
+}
+
+
+
+/////// MASCARAS DE ENTRADA PARA PASARELA
+
+const carNumber = document.getElementById("cardNumber");
+const month = document.getElementById("month");
+const year = document.getElementById("year");
+const ccv = document.getElementById("ccv");
+
+const maskCardNumber = IMask(carNumber, {
+  mask: "0000000000000000",
+});
+const maskMonth = IMask(month, {
+  mask: "{0}0",
+});
+const maskYear = IMask(year, {
+  mask: "{0}0",
+});
+const maskCvv = IMask(ccv, {
+  mask: "000",
+});

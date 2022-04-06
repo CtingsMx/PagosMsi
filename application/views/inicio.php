@@ -7,7 +7,7 @@
     <meta name="description" content="Pagos a Meses sin intereses KOBER" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../src/css/bootstrap.min.css" >
-    <link href="../src/vendors/openpay/style.css" rel="stylesheet" />
+    <link href="../src/vendors/openpay/style.css?v=1" rel="stylesheet" />
 
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>

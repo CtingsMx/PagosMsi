@@ -22,7 +22,7 @@
                                 <div class="row pull-right">
                                     <button class="btn btn-outline-danger btn-block text-center mt-3 " type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
-                                        aria-controls="collapseOne">
+                                        aria-controls="collapseOne" onclick="getPasarela()">
                                         Validar Datos y proceder con el Pago
                                     </button>
                                 </div>
@@ -35,52 +35,89 @@
     </div>
 
 
-    <div class="row justify-content-md-center mt-3">
+    <div class="row justify-content-md-center mt-3" id="pasarela" hidden>
         <div class="col-md-10">
             <div class="card">
+                <div class="card-header">
+                    Pagar a Meses sin Intereses
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Pasarela de Pagos</h5>
-
+                    <div class="row">
+                        <div class="card-expl">
+                            <div class="debit">
+                            </div>
+                        </div>
+                    </div>
 
                     <form action="./datosPagos" method="POST" id="payment-form">
                         <input type="hidden" name="token_id" id="token_id">
                         <div class="form-floating mb-3">
-                            <input type="text" 
-                                    class="form-control" 
-                                    id="name" 
-                                    placeholder="Como aparece en la tarjeta"
-                                    autocomplete="off" 
-                                    data-openpay-card="holder_name">
-                            
-                                    <label for="name">Nombre del titular</label>
+                            <input type="text" class="form-control" id="name" placeholder="Como aparece en la tarjeta"
+                                autocomplete="off" data-openpay-card="holder_name">
+
+                            <label for="name">Nombre del titular</label>
                         </div>
 
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="cardNumber" autocomplete="off"
-                                data-openpay-card="card_number">
+                                data-openpay-card="card_number" placeholder="16 digitos">
                             <label for="cardNumber">Número de tarjeta</label>
                         </div>
 
+                        <div class="row">
+
+                            <div class="form-floating mb-3 col-sm-6">
+                                <input type="text" class="form-control" placeholder="Mes"
+                                    data-openpay-card="expiration_month" placeholder="" id="month">
+                                <label for="month">&nbsp; Mes de expiración</label>
+
+                            </div>
 
 
+                            <div class="form-floating mb-3 col-sm-6">
+                                <input id="year" class="form-control" type="text" placeholder="Año"
+                                    data-openpay-card="expiration_year">
+                                <label for="year"> &nbsp; Año de Expiración</label>
+                            </div>
+                        </div>
 
+                        <div class="row">
+                            <div class="form-floating mb-3 col-sm-5">
+                                <input type="text" placeholder="3 dígitos" class="form-control" id="ccv"
+                                    autocomplete="off" data-openpay-card="cvv2">
+                                <label>&nbsp; Código de seguridad</label>
+                            </div>
 
-
-                        <label>Fecha de expiración</label>
-                        <input type="text" placeholder="Mes" data-openpay-card="expiration_month">
-                        <input type="text" placeholder="Año" data-openpay-card="expiration_year">
-                        <label>Código de seguridad</label>
-                        <input type="text" placeholder="3 dígitos" autocomplete="off" data-openpay-card="cvv2">
-
-                        <div class="openpay">
-                            <div class="logo">Transacciones realizadas vía:</div>
-                            <div class="shield">Tus pagos se realizan de forma segura con encriptación de 256
-                                bits</div>
+                            <div class="form-floating col-sm-7 mb-5">
+                                <select class="form-select" id="msi" name="msi"
+                                    aria-label="Floating label select example">
+                                   
+                                    <option selected value="1">Una Sola Excibición</option>
+                                    <option value="3">3 Meses Sin Intereses</option>
+                                    <option value="6">6 Meses Sin Intereses</option>
+                                </select>
+                                <label for="msi">Parcialidades de Pago (MSI)</label>
+                            </div>
                         </div>
 
 
 
-                        <a class="btn btn-success" id="pay-button">Pagar</a>
+
+                        <div class="d-grid gap-2 col-6 mx-auto mt-6">
+                            <a class="btn btn-outline-danger btn-lg  " id="pay-button">Pagar </a>
+
+                        </div>
+
+                        <div class=" row mt-4">
+                            <div class=" col openpay-logo pull-right">Transacciones realizadas vía: <img
+                                    src="../src/images/openpay/openpay.png">
+                            </div>
+                            <div class="col openpay-shield">Tus pagos se realizan de forma segura con encriptación
+                                de 256 bits
+
+                            </div>
+                        </div>
+
                 </div>
             </div>
         </div>
@@ -91,14 +128,7 @@
 
 
 
-</div>
-</div>
 
-</div>
-</div>
-
-</div>
-
-
+<script src="../src/js/imask.js"></script>
 <script src="../src/js/functions.js"></script>
 <script src="../src/vendors/openpay/openpay.js"></script>
