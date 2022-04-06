@@ -3,7 +3,6 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
 const urlcompra = `${baseUrl}/pagos/pasarela/getCompra?folio=${params.folio}`;
-const body = document.getElementById("resumenCompra");
 
 (() => {
   imprimeResumenCompra();
@@ -12,6 +11,9 @@ const body = document.getElementById("resumenCompra");
 function imprimeResumenCompra() {
   let html = "";
   const data = getCompra();
+
+  document.getElementById('idPedido').value = params.folio;
+  
   const encabezados = [
     {
       encabezado: "# Pedido",
@@ -39,9 +41,9 @@ function imprimeResumenCompra() {
     },
   ];
 
+  const body = document.getElementById("resumenCompra");
   encabezados.forEach((e, idx) => {
-    console.log(e);
-
+   
     html = ` 
     <tr>
       <td>${e.encabezado}</td>
@@ -89,18 +91,16 @@ function getCompra() {
       data = resp;
     },
   });
-
   return data.resumen;
 }
 
-function getPasarela()
-{
-  let pasarela = document.getElementById('pasarela');
-
-  pasarela.removeAttribute('hidden');
+/**
+ * Muestra la pasarela en el DOM
+ */
+function getPasarela() {
+  let pasarela = document.getElementById("pasarela");
+  pasarela.removeAttribute("hidden");
 }
-
-
 
 /////// MASCARAS DE ENTRADA PARA PASARELA
 

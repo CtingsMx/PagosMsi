@@ -49,10 +49,11 @@
                         </div>
                     </div>
 
-                    <form action="./datosPagos" method="POST" id="payment-form">
+                    <form action="./validaFormulario" method="POST" id="payment-form">
                         <input type="hidden" name="token_id" id="token_id">
+                        <input type="hidden" name="idPedido" id="idPedido">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="name" placeholder="Como aparece en la tarjeta"
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Como aparece en la tarjeta"
                                 autocomplete="off" data-openpay-card="holder_name">
 
                             <label for="name">Nombre del titular</label>
@@ -91,12 +92,12 @@
                             <div class="form-floating col-sm-7 mb-5">
                                 <select class="form-select" id="msi" name="msi"
                                     aria-label="Floating label select example">
-                                   
+
                                     <option selected value="1">Una Sola Excibición</option>
                                     <option value="3">3 Meses Sin Intereses</option>
                                     <option value="6">6 Meses Sin Intereses</option>
                                 </select>
-                                <label for="msi">Parcialidades de Pago (MSI)</label>
+                                <label for="msi">&nbsp; Parcialidades de Pago (MSI)</label>
                             </div>
                         </div>
 
@@ -110,7 +111,7 @@
 
                         <div class=" row mt-4">
                             <div class=" col openpay-logo pull-right">Transacciones realizadas vía: <img
-                                    src="../src/images/openpay/openpay.png">
+                                    src="./src/images/openpay/openpay.png">
                             </div>
                             <div class="col openpay-shield">Tus pagos se realizan de forma segura con encriptación
                                 de 256 bits
@@ -129,6 +130,6 @@
 
 
 
-<script src="../src/js/imask.js"></script>
-<script src="../src/js/functions.js"></script>
-<script src="../src/vendors/openpay/openpay.js"></script>
+<script src="./src/js/imask.js"></script>
+<script src="./src/js/functions.js"></script>
+<script src="./src/vendors/openpay/openpay.js"></script>

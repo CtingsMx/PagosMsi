@@ -55,13 +55,13 @@
 }
 
 .card-expl div.debit {
-  background-image: url("../../images/openpay/cards2.png");
+  background-image: url("./../images/openpay/cards2.png");
   margin-left: 20px;
   width: 90%;
 }
 
 .card-expl div.credit {
-  background-image: url("../../images/openpay/cards1.png");
+  background-image: url("./../images/openpay/cards1.png");
   border-right: 1px solid #ccc;
   margin-left: 30px;
   width: 209px;
