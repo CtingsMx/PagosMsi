@@ -39,6 +39,7 @@ class Stripe extends CI_Controller
 
         $this->load->view('inicio');
 
+        // VALIDACIONES 
         if (!$id) {
             $error['error'] = "ingrese el id del Movimiento";
             $this->load->view('errors', $error);
@@ -220,7 +221,7 @@ class Stripe extends CI_Controller
         $pedido = $this->m_plados->obtVenta($idPedido);
         $pedido = $pedido;
 
-        $pago = array(
+        @$pago = array(
             'ModuloID' => $pedido->ID,
             'mov' => $pedido->Mov,
             'movid' => $pedido->movid,
