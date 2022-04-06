@@ -1,11 +1,8 @@
 const baseUrl = window.location.origin;
-
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
-
-
-const urlcompra = `${baseUrl}/PagosMsi/pasarela/getCompra?folio=${params.folio}`;
+const urlcompra = `${baseUrl}/pagosmsi/pasarela/getCompra?folio=${params.folio}`;
 const body = document.getElementById("resumenCompra");
 
 (() => {
@@ -17,25 +14,33 @@ function imprimeResumenCompra() {
   const data = getCompra();
   const encabezados = [
     {
-    'encabezado': '# Pedido',
-    'indice':  'ID'
+      'encabezado': '# Pedido',
+      'indice': 'ID'
     },
     {
       'encabezado': 'Sucursal',
-      'indice':  'Sucursal'
+      'indice': 'Sucursal'
     },
     {
       'encabezado': 'Cliente',
-      'indice':  'Cliente'
+      'indice': 'Cliente'
+    },
+    {
+      'encabezado': 'RFC',
+      'indice': 'RFC'
     },
     {
       'encabezado': 'Email',
-      'indice':  'eMail1'
-    }        
+      'indice': 'eMail1'
+    },
+    {
+      'encabezado': 'Total a Pagar',
+      'indice': 'VentaTotal'
+    }
   ];
 
-  
-  encabezados.forEach((e,idx) => {
+
+  encabezados.forEach((e, idx) => {
 
     console.log(e);
 
@@ -47,7 +52,7 @@ function imprimeResumenCompra() {
       </td>
     </tr>`;
 
-    body.innerHTML += html;   
+    body.innerHTML += html;
   })
 
 
@@ -91,5 +96,5 @@ function getCompra() {
     },
   });
 
-  return data.resumen[0];
+  return data.resumen;
 }

@@ -45,23 +45,68 @@ class m_plados extends CI_Model
         WHERE movid='{$id}'
         AND Mov LIKE 'Factura%'";
 
+        return $this->db->query($qry)->row();
+    }
+
+    /**
+     * Retorna una lista de productos Pedidos
+     *
+     * @param int $id identificador del pedido
+     * 
+     * @return object
+     */
+    public function obtProductosPedidos($id)
+    {
+
+        $qry = "";
+
+        $qry = "
+        
+        v3.VentaSubTotal,
+        ISNULL(v3.VentaDescuentoImporte,0) AS Descuento,
+        v3.VentaTotal,
+        v3.MonedaV33,
+        d.Articulo,
+        a.Descripcion1,
+        d.Cantidad,
+        v.MSI
+        FROM venta v
+        JOIN CFDVentaV33 v3 ON v3.id=v.id
+        JOIN ventad d ON d.id=v.id
+        JOIN art a ON a.Articulo=d.Articulo
+        JOIN cte c ON c.Cliente=v.Cliente
+        WHERE movid='{$id}'
+        AND Mov LIKE 'Factura%'";
+
         return $this->db->query($qry)->result();
     }
 
     /**
-     * Regresa datos de prueba 
+     * Regresa datos de prueba
      *
      * @return void
      */
     public function datosPrueba()
     {
         $datos = array(
-            'movid' => 123,
-            'pedido' => "123das",
+            'ID' => 123,
+            'Sucursal' => "Guadalajara",
+            'Cliente' => 'Juan Perez',
+            'eMail1' => 'contoso@kober.com',
+            'RFC' => 'MOCL9402236E1',
+            'VentaTotal' => 30000,
 
         );
 
         return $datos;
+    }
+
+    function productosPrueba() {
+        $productos = array(
+            [
+                
+            ]
+            );
     }
 
     public function obtVenta($id)

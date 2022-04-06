@@ -50,8 +50,8 @@ class Pasarela extends CI_Controller
         $folio = $this->input->get('folio');
 
         //CONEXION A DATOS DE LA BASE SQLSRV
-        $datosCompra = $this->m_plados->obtDatosPedido($folio);
-        //$datosCompra = $this->m_plados->datosPrueba();
+        //$datosCompra = $this->m_plados->obtDatosPedido($folio);
+        $datosCompra = $this->m_plados->datosPrueba();
 
         if (sizeof($datosCompra)) {
             echo json_encode(
@@ -76,7 +76,7 @@ class Pasarela extends CI_Controller
 
             'amount' => (float) 5000,
             'currency' => 'MXN',
-            'order_id' => 'TREsdd023',
+            //'order_id' => 'TREsdd023123',
             'description' => "articulo de prueba desde Kober",
 
             'customer' => $customer,
@@ -117,7 +117,7 @@ class Pasarela extends CI_Controller
             'source_id' => $_POST["token_id"],
             'amount' => (float) 5000,
             'currency' => 'MXN',
-            'order_id' => 'TREsdd023',
+            //'order_id' => 'TREsdd023',
             'description' => "articulo de prueba desde Kober",
             'device_session_id' => $_POST["deviceIdHiddenFieldName"],
             'customer' => $customer,
