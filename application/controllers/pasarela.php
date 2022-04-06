@@ -53,9 +53,9 @@ class Pasarela extends CI_Controller
         $folio = $this->input->get('folio');
 
         //CONEXION A DATOS DE LA BASE SQLSRV
-        //$datosCompra = $this->m_plados->obtDatosPedido($folio);
-        $datosCompra = $this->m_plados->datosPrueba();
-        if (sizeof($datosCompra)) {
+        $datosCompra = $this->m_plados->obtDatosPedido($folio);
+        //$datosCompra = $this->m_plados->datosPrueba();
+        if ($datosCompra) {
             echo json_encode(
                 [
                     'resumen' => $datosCompra,
@@ -103,8 +103,14 @@ class Pasarela extends CI_Controller
         $this->m_stripe->generarCuenta($venta);
         $cuenta = $this->m_stripe->obtCuenta();
 
+       
+
+        if(!$venta->eMail1){
+            $venta->eMail1 = 'sincorreo@kober.mx';
+        }
+
         $customer = array(
-            'name' => $venta->Cliente,
+            'name' => $venta->Nombre,
            // 'last_name' => 'Kober',
             'phone_number' => $venta->Telefonos,
             'email' => $venta->eMail1
@@ -113,19 +119,19 @@ class Pasarela extends CI_Controller
         $chargeData = array(
             'method' => 'card',
             'source_id' => $_POST["token_id"],
-            'amount' => (float) 5000,
+            'amount' => (float) $cuenta['total'] * 10,
             'currency' => 'MXN',
-            //'order_id' => 'TREsdd023',
-            'description' => "articulo de prueba desde Kober",
+            'order_id' => $venta->movid,
+            'description' => "pedido con movid: {$venta->movid}",
             'device_session_id' => $_POST["deviceIdHiddenFieldName"],
             'customer' => $customer,
             'use_3d_secure' => true,
-            'redirect_url' => 'https://localhost/pagosmsi/pasarela/pagoExitoso?',
+            'payment_plan' => [
+                'payments' => $msi
+            ],
+
+            'redirect_url' => 'https://192.168.65.157/PagosMsi/pasarela/pagoExitoso?',
         );
-
-        echo json_encode(['usuario' => $customer, 'cargo' => $chargeData]);
-
-        $chargeData['payment_plan'] = array('payments' => 6);
 
         try {
 

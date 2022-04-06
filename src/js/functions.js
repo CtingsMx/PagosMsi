@@ -2,15 +2,20 @@ const baseUrl = window.location.origin;
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
-const urlcompra = `${baseUrl}/pagos/pasarela/getCompra?folio=${params.folio}`;
+const urlcompra = `${baseUrl}/PagosMsi/pasarela/getCompra?folio=${params.folio}`;
 
 (() => {
   imprimeResumenCompra();
 })();
 
 function imprimeResumenCompra() {
+  const body = document.getElementById("resumenCompra");
   let html = "";
-  const data = getCompra();
+  let data = '';
+  data = getCompra();
+
+
+  console.log(data)
 
   document.getElementById('idPedido').value = params.folio;
   
@@ -41,7 +46,6 @@ function imprimeResumenCompra() {
     },
   ];
 
-  const body = document.getElementById("resumenCompra");
   encabezados.forEach((e, idx) => {
    
     html = ` 
@@ -88,9 +92,16 @@ function getCompra() {
       console.log("cargando");
     },
     success: (resp) => {
+      console.log(resp);
       data = resp;
     },
+    error: (e) =>  {
+      console.log(`Se ha producido un error: `)
+      console.log(e.responseText);
+    }
   });
+
+ 
   return data.resumen;
 }
 
