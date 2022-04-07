@@ -52,7 +52,7 @@ class m_plados extends CI_Model
      * Retorna una lista de productos Pedidos
      *
      * @param int $id identificador del pedido
-     * 
+     *
      * @return object
      */
     public function obtProductosPedidos($id)
@@ -61,7 +61,7 @@ class m_plados extends CI_Model
         $qry = "";
 
         $qry = "
-        
+
         v3.VentaSubTotal,
         ISNULL(v3.VentaDescuentoImporte,0) AS Descuento,
         v3.VentaTotal,
@@ -88,25 +88,33 @@ class m_plados extends CI_Model
      */
     public function datosPrueba()
     {
-        $datos = array(
-            'ID' => 123,
-            'Sucursal' => "Guadalajara",
-            'Nombre' => 'Juan Perez',
-            'eMail1' => 'contoso@kober.com',
-            'RFC' => 'MOCL9402236E1',
-            'VentaTotal' => 30000,
-
-        );
+        $datos = new \stdClass;
+        $datos->ID = 123;
+        $datos->Mov = 1;
+        $datos->movid = "flañl";
+        $datos->Sucursal = "Guadalajara";
+        $datos->Cliente = 12;
+        $datos->Nombre = 'Juan Perez';
+        $datos->eMail1 = 'contoso@kober.com';
+        $datos->RFC = 'MOCL9402236E1';
+        $datos->Telefonos = "3333336546";
+        $datos->VentaTotal = 3000;
 
         return $datos;
     }
 
-    function productosPrueba() {
+    /**
+     * Provee un objeto de datos de prueba
+     *
+     * @return void
+     */
+    public function productosPrueba()
+    {
         $productos = array(
             [
-                
+
             ]
-            );
+        );
     }
 
     public function obtVenta($id)

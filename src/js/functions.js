@@ -2,7 +2,7 @@ const baseUrl = window.location.origin;
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
-const urlcompra = `${baseUrl}/pagos/pasarela/getCompra?folio=${params.folio}`;
+const urlcompra = `${baseUrl}/pagosmsi/pasarela/getCompra?folio=${params.folio}`;
 
 (() => {
   imprimeResumenCompra();
@@ -14,15 +14,12 @@ function imprimeResumenCompra() {
   let data = '';
   data = getCompra();
 
-
-  console.log(data)
-
   document.getElementById('idPedido').value = params.folio;
   
   const encabezados = [
     {
       encabezado: "# Pedido",
-      indice: "ID",
+      indice: "movid",
     },
     {
       encabezado: "Sucursal",

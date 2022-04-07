@@ -29,6 +29,7 @@ class Pasarela extends CI_Controller
         //INICIANDO OPENPAY
         Openpay::getProductionMode(false);
         $this->openpay = Openpay::getInstance('mex0qnhtpq3m0yvkl3sa', 'sk_0d2dbc7f9a6a4f88a5320c75a28815dd');
+        $this->baseUrl = base_url();
 
         session_start();
 
@@ -95,7 +96,6 @@ class Pasarela extends CI_Controller
     {
         header('Content-Type: application/json');
 
-        $pedido = $this->input->post('idPedido');
         $msi = $this->input->post('msi');
         $name = $this->input->post('name');
 
@@ -119,7 +119,7 @@ class Pasarela extends CI_Controller
         $chargeData = array(
             'method' => 'card',
             'source_id' => $_POST["token_id"],
-            'amount' => (float) $cuenta['total'] * 10,
+            'amount' => (float) $cuenta['total'],
             'currency' => 'MXN',
             'order_id' => $venta->movid,
             'description' => "pedido con movid: {$venta->movid}",
@@ -130,12 +130,8 @@ class Pasarela extends CI_Controller
                 'payments' => $msi,
             ],
 
-            'redirect_url' => 'https://192.168.65.157/PagosMsi/pasarela/pagoExitoso?',
+            'redirect_url' => "{$this->baseUrl}pasarela/pagoExitoso?venta={$venta->movid}",
         );
-
-
-        echo json_encode(['cliente' => $customer, 'Cargo' => $chargeData]);
-        die();
 
         try {
 
@@ -168,16 +164,26 @@ class Pasarela extends CI_Controller
 
     }
 
+    /**
+     * revisa
+     *
+     * @return void
+     */
     public function pagoExitoso()
     {
         header('Content-Type: application/json');
 
         $id = $this->input->get('id');
+        $venta = $this->input->get('venta');
 
         try {
 
             $pago = $this->openpay->charges->get($id);
-            echo json_encode($pago->order_id);
+
+            // Si el pago esta validado:
+            if ($pago->status === 'completed') {
+                $this->guardaPedido($pago, $id);
+            }
 
         } catch (OpenpayApiTransactionError $e) {
             echo json_encode(['ERROR on the transaction: ' . $e->getMessage() .
@@ -202,6 +208,50 @@ class Pasarela extends CI_Controller
             echo json_encode('Error on the script: ' . $e->getMessage(), 0);
         }
 
+    }
+
+    /**
+     * Guarda el pedido en la bd
+     *
+     * Almacena en la base de datos el pedido validado por Openpay
+     *
+     * @param string $idPago  pago de de Openpay
+     * @param string $estatus estatus desde Openpay
+     *
+     * @return json
+     */
+    public function guardaPedido($PI, $idPedido)
+    {
+        //$pedido = $this->m_plados->obtVenta($idPedido);
+
+        $pedido = $this->m_plados->datosPrueba();
+
+        //$pedido = $pedido;
+
+        $pago = array(
+            'ModuloID' => $pedido->ID,
+            'mov' => $pedido->Mov,
+            'movid' => $pedido->movid,
+            'sucursal' => $pedido->Sucursal,
+            'cliente' => $pedido->Cliente,
+            'nombreCliente' => $pedido->Nombre,
+            //'cp' => $PI->charges->data->billing_details->address->postal_code,
+            'referencia' => $PI->id,
+            'fechaRegistro' => $PI->operation_date,
+            'importeTotal' => $PI->amount,
+            'msi' => 3,
+            'last4' => substr($PI->card->card_number, -4),
+            'mesExp' => $PI->card->expiration_month,
+            'anioExp' => $PI->card->expiration_year,
+            'tipo' => $PI->charges->card->brand,
+        );
+
+        echo json_encode($pago);
+        die();
+
+        $this->m_stripe->guardarRespuesta($pago);
+
+        $_SESSION['cart'] = null;
     }
 
     public function codigoEjemplo()
