@@ -56,7 +56,6 @@ class Pasarela extends CI_Controller
 
         $folio = $this->input->get('folio');
 
-      
         $datosCompra = $this->m_plados->obtDatosPedido($folio);
         //$datosCompra = $this->m_plados->datosPrueba();
         if ($datosCompra) {
@@ -108,9 +107,9 @@ class Pasarela extends CI_Controller
         $chargeData = array(
             'method' => 'card',
             'source_id' => $_POST["token_id"],
-            'amount' => (float) $cuenta['total']*2,
+            'amount' => (float) $cuenta['total'] * 2,
             'currency' => 'MXN',
-            'order_id' => $venta->ID.'123',
+            'order_id' => $venta->ID . '123',
             'description' => "pedido con movid: {$venta->movid}",
             'device_session_id' => $_POST["deviceIdHiddenFieldName"],
             'customer' => $customer,
@@ -129,11 +128,15 @@ class Pasarela extends CI_Controller
             header("Location: " . $charge->payment_method->url);
 
         } catch (OpenpayApiTransactionError $e) {
-            echo json_encode(['ERROR on the transaction: ' . $e->getMessage() .
-                ' [error code: ' . $e->getErrorCode() .
-                ', error category: ' . $e->getCategory() .
-                ', HTTP code: ' . $e->getHttpCode() .
-                ', request ID: ' . $e->getRequestId() . ']', 0]);
+            echo json_encode(
+                [
+                    'ERROR on the transaction: ' . $e->getMessage() .
+                    ' [error code: ' . $e->getErrorCode() .
+                    ', error category: ' . $e->getCategory() .
+                    ', HTTP code: ' . $e->getHttpCode() .
+                    ', request ID: ' . $e->getRequestId() . ']', 0,
+                ]
+            );
 
         } catch (OpenpayApiRequestError $e) {
             echo json_encode('ERROR on the request: ' . $e->getMessage(), 0);
@@ -154,7 +157,7 @@ class Pasarela extends CI_Controller
     }
 
     /**
-     * revisa
+     * Valida un pedido Exitoso
      *
      * @return void
      */
@@ -214,7 +217,7 @@ class Pasarela extends CI_Controller
 
         $pedido = $this->m_plados->obtVenta($idPedido);
 
-       //$pedido = $this->m_plados->datosPrueba();
+        //$pedido = $this->m_plados->datosPrueba();
 
         $pago = array(
             'ModuloID' => $pedido->ID,
@@ -225,7 +228,7 @@ class Pasarela extends CI_Controller
             'nombreCliente' => $pedido->Nombre,
             //'cp' => $PI->charges->data->billing_details->address->postal_code,
             'referencia' => $PI->id,
-            'fechaRegistro' => $this->m_plados->fecha_actual() ,
+            'fechaRegistro' => $this->m_plados->fecha_actual(),
             'importeTotal' => $PI->amount,
             'msi' => 3,
             'last4' => substr($PI->card->card_number, -4),

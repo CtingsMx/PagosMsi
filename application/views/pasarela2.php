@@ -19,7 +19,7 @@
                                 <table class="table cart" id='resumenCompra'>
                                 </table>
 
-                                <div class="row pull-right">
+                                <div class="row pull-right" id="btn-validar-pago" hidden>
                                     <button class="btn btn-outline-danger btn-block text-center mt-3 " type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
                                         aria-controls="collapseOne" onclick="getPasarela()">
@@ -132,5 +132,5 @@
 
 
 <script src="./src/js/imask.js"></script>
-<script src="./src/js/functions.js?v=2"></script>
+<script src="./src/js/functions.js?v=2.1"></script>
 <script src="./src/vendors/openpay/openpay.js"></script>

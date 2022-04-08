@@ -1,21 +1,25 @@
-const baseUrl = window.location.origin;
+const urlcompra = `https://148.244.208.26/PagosMsi/pasarela/getCompra?folio=`;
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
-const urlcompra = `${baseUrl}/pagosmsi/pasarela/getCompra?folio=${params.folio}`;
 
 (() => {
   imprimeResumenCompra();
 })();
 
 function imprimeResumenCompra() {
-  const body = document.getElementById("resumenCompra");
-  let html = "";
-  let data = '';
-  data = getCompra();
+  let data = "";
 
-  document.getElementById('idPedido').value = params.folio;
-  
+  if (!params.folio) {
+    console.log("no hay");
+    return 0;
+  }
+
+  data = getCompra(params.folio);
+  console.log("found");
+
+  document.getElementById("idPedido").value = params.folio;
+
   const encabezados = [
     {
       encabezado: "# Pedido",
@@ -43,8 +47,10 @@ function imprimeResumenCompra() {
     },
   ];
 
+  const body = document.getElementById("resumenCompra");
+  let html = "";
+
   encabezados.forEach((e, idx) => {
-   
     html = ` 
     <tr>
       <td>${e.encabezado}</td>
@@ -89,16 +95,14 @@ function getCompra() {
       console.log("cargando");
     },
     success: (resp) => {
-      console.log(resp);
       data = resp;
     },
-    error: (e) =>  {
-      console.log(`Se ha producido un error: `)
+    error: (e) => {
+      console.log(`Se ha producido un error: `);
       console.log(e.responseText);
-    }
+    },
   });
 
- 
   return data.resumen;
 }
 
@@ -129,3 +133,42 @@ const maskYear = IMask(year, {
 const maskCvv = IMask(ccv, {
   mask: "000",
 });
+
+function validar() {
+  Swal.fire({
+    title: "Ingresa el ID de la compra",
+    input: "text",
+    showCancelButton: false,
+    confirmButtonText: "Validar Pedido",
+    showLoaderOnConfirm: true,
+    preConfirm: (idVenta) => {
+      return fetch(`./stripe/validaId?idVenta=${idVenta}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(response.mensaje);
+          }
+          return response.json();
+        })
+        .catch((error) => {
+          console.log(error);
+          Swal.showValidationMessage(`Request failed: ${error}`);
+        });
+    },
+    allowOutsideClick: () => !Swal.isLoading(),
+  }).then((result) => {
+    if (result.value.error) {
+      Swal.fire({
+        confirmButtonText: "reintentar",
+        html: `
+              <div class="swal2-validation-message" 
+                  id="swal2-validation-message" style="display: flex;">
+                      Error en la solicitud: ${result.value.mensaje}
+                  </div>`,
+      }).then((r) => {
+        validar();
+      });
+    } else {
+      window.location.href = `<?=base_url()?>?id=${result.value.id}`;
+    }
+  });
+}
