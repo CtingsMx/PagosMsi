@@ -88,6 +88,7 @@ class Pasarela extends CI_Controller
         $idPedido = $this->input->post('idPedido');
 
         $venta = $this->m_plados->obtVenta($idPedido);
+
         //$venta = $this->m_plados->datosPrueba();
 
         $this->m_stripe->generarCuenta($venta);
@@ -107,9 +108,9 @@ class Pasarela extends CI_Controller
         $chargeData = array(
             'method' => 'card',
             'source_id' => $_POST["token_id"],
-            'amount' => (float) $cuenta['total'],
+            'amount' => (float) $cuenta['total']*2,
             'currency' => 'MXN',
-            'order_id' => $venta->movid,
+            'order_id' => $venta->ID.'123',
             'description' => "pedido con movid: {$venta->movid}",
             'device_session_id' => $_POST["deviceIdHiddenFieldName"],
             'customer' => $customer,
@@ -170,7 +171,7 @@ class Pasarela extends CI_Controller
 
             // Si el pago esta validado:
             if ($pago->status === 'completed') {
-                $this->guardaPedido($pago, $id);
+                $this->guardaPedido($pago, $venta);
             }
 
         } catch (OpenpayApiTransactionError $e) {
@@ -213,7 +214,7 @@ class Pasarela extends CI_Controller
 
         $pedido = $this->m_plados->obtVenta($idPedido);
 
-        //$pedido = $this->m_plados->datosPrueba();
+       //$pedido = $this->m_plados->datosPrueba();
 
         $pago = array(
             'ModuloID' => $pedido->ID,
@@ -224,17 +225,14 @@ class Pasarela extends CI_Controller
             'nombreCliente' => $pedido->Nombre,
             //'cp' => $PI->charges->data->billing_details->address->postal_code,
             'referencia' => $PI->id,
-            'fechaRegistro' => $PI->operation_date,
+            'fechaRegistro' => $this->m_plados->fecha_actual() ,
             'importeTotal' => $PI->amount,
             'msi' => 3,
             'last4' => substr($PI->card->card_number, -4),
             'mesExp' => $PI->card->expiration_month,
             'anioExp' => $PI->card->expiration_year,
-            'tipo' => $PI->charges->card->brand,
+            'tipo' => $PI->card->brand,
         );
-
-        echo json_encode($pago);
-        die();
 
         $this->m_stripe->guardarRespuesta($pago);
 

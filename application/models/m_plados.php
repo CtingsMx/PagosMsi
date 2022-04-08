@@ -11,7 +11,7 @@ class m_plados extends CI_Model
      * @return objeto
      */
 
-    public function obtDatosPedido(string $id): object
+    public function obtDatosPedido(string $id)
     {
 
         if ($id == 123) {
@@ -129,7 +129,7 @@ class m_plados extends CI_Model
      * @param string $id
      * @return object
      */
-    public function obtVenta(string $id): object
+    public function obtVenta(string $id)
     {
         $qry = "";
 
