@@ -133,7 +133,7 @@ class m_plados extends CI_Model
     {
         $qry = "";
 
-        if ($id === 123) {
+        if ($id == 123) {
             return $this->datosPrueba();
         }
 
