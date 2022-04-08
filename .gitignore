@@ -3,3 +3,4 @@ vendor/
 .well-known
 vendor/*
 application/logs
+production.env

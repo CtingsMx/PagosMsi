@@ -12,7 +12,7 @@
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <input Type="hidden" value="" name="pedido" id="pedido">
+                            <input Type="hidden" value="" name="idpedido" id="idPedido">
                             <input type="hidden" value="<?php echo $pk ?> " id="pk" name="pk">
 
                             <div id="table-responsive">
@@ -51,10 +51,11 @@
 
                     <form action="./validaFormulario" method="POST" id="payment-form">
                         <input type="hidden" name="token_id" id="token_id">
-                        <input type="hidden" name="idPedido" id="idPedido">
+                        <input type="hidden" name="idPedido" id="idñPedido">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Como aparece en la tarjeta"
-                                autocomplete="off" data-openpay-card="holder_name">
+                            <input type="text" class="form-control" id="name" name="name"
+                                placeholder="Como aparece en la tarjeta" autocomplete="off"
+                                data-openpay-card="holder_name">
 
                             <label for="name">Nombre del titular</label>
                         </div>

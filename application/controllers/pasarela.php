@@ -28,7 +28,11 @@ class Pasarela extends CI_Controller
 
         //INICIANDO OPENPAY
         Openpay::getProductionMode(false);
-        $this->openpay = Openpay::getInstance('mex0qnhtpq3m0yvkl3sa', 'sk_0d2dbc7f9a6a4f88a5320c75a28815dd');
+        $this->openpay = Openpay::getInstance(
+            $_ENV['OP_ID'],
+            $_ENV['OP_PRIVATE_KEY']
+        );
+
         $this->baseUrl = base_url();
 
         session_start();
@@ -37,8 +41,7 @@ class Pasarela extends CI_Controller
 
     public function index()
     {
-        $data['pk'] = 'pk_live_51JtbiWE2YIoXTzM7rBeQpef1CJn7Fwg79GUveG9wdhPDqxJQj2c5YhziGIgH39KOnqY21j7EzwWAfXqDklFfaDLG00WE2ADeys';
-        $data['venta'] = $this->m_plados->datosPrueba();
+        $data['pk'] = $_ENV['OP_PUBLIC_KEY'];
         $this->load->view('inicio');
         $this->load->view('pasarela2', $data);
     }
@@ -71,23 +74,6 @@ class Pasarela extends CI_Controller
     }
 
     /**
-     * FUNCION PARA MOSTRAR PAGOS
-     *
-     * @deprecated SE MIGRO A INDEX
-     *
-     * @return void
-     */
-    public function pagar()
-    {
-        $data['pk'] = 'pk_live_51JtbiWE2YIoXTzM7rBeQpef1CJn7Fwg79GUveG9wdhPDqxJQj2c5YhziGIgH39KOnqY21j7EzwWAfXqDklFfaDLG00WE2ADeys';
-        $data['venta'] = $this->m_plados->datosPrueba();
-        $this->load->view('inicio');
-        $this->load->view('pasarela2', $data);
-
-        //FGSU73502
-    }
-
-    /**
      * Valida el formulario
      *
      * @return void
@@ -98,8 +84,9 @@ class Pasarela extends CI_Controller
 
         $msi = $this->input->post('msi');
         $name = $this->input->post('name');
+        $idPedido = $this->input->post('idPedido');
 
-        //@$venta = $this->m_plados->obtVenta($pedido);
+        //@$venta = $this->m_plados->obtVenta($idPedido);
         $venta = $this->m_plados->datosPrueba();
 
         $this->m_stripe->generarCuenta($venta);
