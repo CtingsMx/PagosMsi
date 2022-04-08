@@ -56,15 +56,16 @@ class Pasarela extends CI_Controller
 
         $folio = $this->input->get('folio');
 
-        //CONEXION A DATOS DE LA BASE SQLSRV
-        //$datosCompra = $this->m_plados->obtDatosPedido($folio);
-        $datosCompra = $this->m_plados->datosPrueba();
+      
+        $datosCompra = $this->m_plados->obtDatosPedido($folio);
+        //$datosCompra = $this->m_plados->datosPrueba();
         if ($datosCompra) {
             echo json_encode(
                 [
                     'resumen' => $datosCompra,
                     'articulos' => [],
-                ]);
+                ]
+            );
 
         } else {
             echo json_encode("no enconte nada ");
@@ -86,8 +87,8 @@ class Pasarela extends CI_Controller
         $name = $this->input->post('name');
         $idPedido = $this->input->post('idPedido');
 
-        //@$venta = $this->m_plados->obtVenta($idPedido);
-        $venta = $this->m_plados->datosPrueba();
+        $venta = $this->m_plados->obtVenta($idPedido);
+        //$venta = $this->m_plados->datosPrueba();
 
         $this->m_stripe->generarCuenta($venta);
         $cuenta = $this->m_stripe->obtCuenta();
@@ -209,11 +210,10 @@ class Pasarela extends CI_Controller
      */
     public function guardaPedido($PI, $idPedido)
     {
-        //$pedido = $this->m_plados->obtVenta($idPedido);
 
-        $pedido = $this->m_plados->datosPrueba();
+        $pedido = $this->m_plados->obtVenta($idPedido);
 
-        //$pedido = $pedido;
+        //$pedido = $this->m_plados->datosPrueba();
 
         $pago = array(
             'ModuloID' => $pedido->ID,

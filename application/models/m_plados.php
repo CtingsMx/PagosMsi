@@ -6,12 +6,18 @@ class m_plados extends CI_Model
     /**
      * Retorna un objeto con toda la informacion del pedido
      *
-     * @param int $id Identificador de la compra
+     * @param string $id Identificador de la compra
      *
-     * @return void
+     * @return objeto
      */
-    public function obtDatosPedido($id)
+
+    public function obtDatosPedido(string $id): object
     {
+
+        if ($id == 123) {
+            return $this->datosPrueba();
+            die();
+        }
 
         $qry = "";
 
@@ -91,7 +97,7 @@ class m_plados extends CI_Model
         $datos = new \stdClass;
         $datos->ID = 123;
         $datos->Mov = 1;
-        $datos->movid = "flañl";
+        $datos->movid = "X123489";
         $datos->Sucursal = "Guadalajara";
         $datos->Cliente = 12;
         $datos->Nombre = 'Juan Perez';
@@ -117,10 +123,19 @@ class m_plados extends CI_Model
         );
     }
 
-    public function obtVenta($id)
+    /**
+     * Obtiena los datos de venta a pagar
+     *
+     * @param string $id
+     * @return object
+     */
+    public function obtVenta(string $id): object
     {
-
         $qry = "";
+
+        if ($id === 123) {
+            return $this->datosPrueba();
+        }
 
         $qry = "
         SELECT v.ID,

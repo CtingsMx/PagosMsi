@@ -4,3 +4,4 @@ vendor/
 vendor/*
 application/logs
 production.env
+.idea
