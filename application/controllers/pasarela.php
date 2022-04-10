@@ -75,6 +75,9 @@ class Pasarela extends CI_Controller
     public function validaId()
     {
         header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Methods: GET, OPTIONS");
+
         $id = $this->input->get('folio');
 
         if (!$id) {
@@ -97,7 +100,8 @@ class Pasarela extends CI_Controller
             return;
         }
 
-        $venta = $this->m_plados->obtVenta($id);
+        //OBTENEMOS LA VENTA, DESPUES DE PASAR LAS VALIDACIONES
+        $venta = $this->m_plados->obtDatosPedido($id);
 
         if (empty($venta)) {
             echo json_encode(

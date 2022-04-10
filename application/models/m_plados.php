@@ -105,6 +105,7 @@ class m_plados extends CI_Model
         $datos->RFC = 'MOCL9402236E1';
         $datos->Telefonos = "3333336546";
         $datos->VentaTotal = 3000;
+        $datos->MSI = 1;
 
         return $datos;
     }
