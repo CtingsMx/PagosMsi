@@ -143,7 +143,8 @@ class Pasarela extends CI_Controller
         echo json_encode(
             [
                 'error' => false,
-                'id' => $id,
+                'resumen' => $venta,
+                'articulos' => [],
             ]
         );
     }
