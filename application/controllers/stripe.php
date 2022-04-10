@@ -244,65 +244,7 @@ class Stripe extends CI_Controller
         $_SESSION['cart'] = null;
     }
 
-    public function validaId()
-    {
-        header('Content-Type: application/json');
-        $id = $this->input->get('idVenta');
 
-        if (!$id) {
-            echo json_encode([
-                'error' => true,
-                'mensaje' => "ingrese la Compra",
-            ]);
-            return;
-        }
-
-        if ($this->m_plados->esPagoRealizado($id)) {
-            echo json_encode([
-                'error' => true,
-                'mensaje' => "Esta compra ya fue Pagada",
-            ]);
-            return;
-        }
-
-        $venta = $this->m_plados->obtVenta($id);
-
-        if (empty($venta)) {
-            echo json_encode([
-                'error' => true,
-                'mensaje' => "La compra solicitada no existe",
-            ]);
-            return;
-        }
-
-        if (!$venta->MSI) {
-            echo json_encode([
-                'error' => true,
-                'mensaje' => "Este pedido no cuenta con Pagos a Meses sin intereses",
-                'MSI' => $venta->MSI,
-            ]);
-            return;
-        }
-
-        $sucursal = $this->m_plados->obtKeySucursal($venta->Sucursal);
-
-        //PARA PRUEBAS... BORRAR EN PROD
-        $sucursal = $this->m_plados->obtKeySucursal(0);
-
-        if (empty($sucursal)) {
-
-            echo json_encode([
-                'error' => true,
-                'mensaje' => "La sucursal no cuenta aún con Pagos a Meses sin intereses",
-            ]);
-            return;
-        }
-
-        echo json_encode([
-            'error' => false,
-            'id' => $id,
-        ]);
-    }
 
     /**
      * Genera un nuevo cupon en Stripe

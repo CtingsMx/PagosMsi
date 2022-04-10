@@ -1,24 +1,44 @@
-const urlcompra = `https://148.244.208.26/PagosMsi/pasarela/getCompra?folio=`;
+
+let btnValida = document.getElementById('btn-validar-pago');
+
+const urlcompra = `https://148.244.208.26/PagosMsi/pasarela/validaId?folio=`;
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
 
+let folio = params.folio;
+
 (() => {
-  imprimeResumenCompra();
+  validaParams();
 })();
 
-function imprimeResumenCompra() {
+
+function validaParams()
+{
+  console.log(`el folio = ${folio}`);
+
   let data = "";
 
-  if (!params.folio) {
+  if (!folio) {
     console.log("no hay");
+    ingresaVenta();
     return 0;
   }
+}
 
-  data = getCompra(params.folio);
-  console.log("found");
+/**
+ * Muestra en pantalla la pasarela, asi como los datos de la venta
+ *
+ * @returns void
+ */
+function imprimeResumenCompra(data) {
 
-  document.getElementById("idPedido").value = params.folio;
+ 
+  btnValida.removeAttribute('hidden');
+
+  //data = getCompra(folio);
+
+  document.getElementById("idPedido").value = folio;
 
   const encabezados = [
     {
@@ -48,6 +68,7 @@ function imprimeResumenCompra() {
   ];
 
   const body = document.getElementById("resumenCompra");
+  body.innerHTML = '';
   let html = "";
 
   encabezados.forEach((e, idx) => {
@@ -59,6 +80,7 @@ function imprimeResumenCompra() {
       </td>
     </tr>`;
 
+
     body.innerHTML += html;
   });
 
@@ -66,33 +88,22 @@ function imprimeResumenCompra() {
 }
 
 /**
- * Genera un elemento Http en el DOM
- * @param {*} element Elemento a Generar
- * @returns httpElemento
+ * Regresa el contenido de una busqueda de informacion
+ *
+ * @deprecated en su lugar usar IngresaVenta()
+ * @param {string} folio id de la compra
+ * @returns {object}
  */
-function createNode(element) {
-  return document.createElement(element);
-}
-
-/**
- * Ingresa dentro de un elemento, otro dentro del arbol del Dom
- * @param {*} parent Elemento donde se añadira el hijo
- * @param {*} el Elemento a ingresar
- * @returns
- */
-function append(parent, el) {
-  return parent.appendChild(el);
-}
-
-function getCompra() {
+function getCompra(folio) {
   let data = [];
+
   $.ajax({
     type: "GET",
     dataType: "json",
     async: false,
-    url: urlcompra,
+    url: `${urlcompra}${folio}`,
     beforeSend: () => {
-      console.log("cargando");
+      // cargandoModal();
     },
     success: (resp) => {
       data = resp;
@@ -114,6 +125,66 @@ function getPasarela() {
   pasarela.removeAttribute("hidden");
 }
 
+function ingresaVenta() {
+  Swal.fire({
+    title: "Ingresa el ID de la compra",
+    input: "text",
+    showCancelButton: false,
+    confirmButtonText: "Validar Pedido",
+    showLoaderOnConfirm: true,
+    preConfirm: (idVenta) => {
+      //    imprimeResumenCompra();
+      return fetch(`${urlcompra}${idVenta}`)
+        .then((response) => {
+          if (!response.ok) {
+            btnValida.setAttribute('hidden')
+            throw new Error(response.mensaje);
+          }
+          return response.json();
+        })
+        .catch((error) => {
+          console.log(error);
+          Swal.showValidationMessage(`Request failed: ${error}`);
+        });
+    },
+    allowOutsideClick: false// () => !Swal.isLoading(),
+  }).then((result) => {
+    if (result.value.error) {
+      Swal.fire({
+        confirmButtonText: "reintentar",
+        html: `
+              <div class="swal2-validation-message" 
+                  id="swal2-validation-message" style="display: flex;">
+                      Error en la solicitud: ${result.value.mensaje}
+                  </div>`,
+      }).then((r) => {
+        ingresaVenta();
+      });
+    } else {
+      imprimeResumenCompra(result.value.resumen);
+    }
+  });
+}
+
+/**
+ * Muestra modal cargando
+ */
+function cargandoModal() {
+  let timerInterval;
+  Swal.fire({
+    title: "Cargando Información",
+    html: "Por favor Espere",
+    timer: 1000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    },
+  }).then((e) => { });
+}
+
 /////// MASCARAS DE ENTRADA PARA PASARELA
 
 const carNumber = document.getElementById("cardNumber");
@@ -133,42 +204,3 @@ const maskYear = IMask(year, {
 const maskCvv = IMask(ccv, {
   mask: "000",
 });
-
-function validar() {
-  Swal.fire({
-    title: "Ingresa el ID de la compra",
-    input: "text",
-    showCancelButton: false,
-    confirmButtonText: "Validar Pedido",
-    showLoaderOnConfirm: true,
-    preConfirm: (idVenta) => {
-      return fetch(`./stripe/validaId?idVenta=${idVenta}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(response.mensaje);
-          }
-          return response.json();
-        })
-        .catch((error) => {
-          console.log(error);
-          Swal.showValidationMessage(`Request failed: ${error}`);
-        });
-    },
-    allowOutsideClick: () => !Swal.isLoading(),
-  }).then((result) => {
-    if (result.value.error) {
-      Swal.fire({
-        confirmButtonText: "reintentar",
-        html: `
-              <div class="swal2-validation-message" 
-                  id="swal2-validation-message" style="display: flex;">
-                      Error en la solicitud: ${result.value.mensaje}
-                  </div>`,
-      }).then((r) => {
-        validar();
-      });
-    } else {
-      window.location.href = `<?=base_url()?>?id=${result.value.id}`;
-    }
-  });
-}

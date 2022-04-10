@@ -12,15 +12,19 @@
                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                    
+
                             <input type="hidden" value="<?php echo $pk ?> " id="pk" name="pk">
 
                             <div id="table-responsive">
                                 <table class="table cart" id='resumenCompra'>
                                 </table>
 
-                                <div class="row pull-right" id="btn-validar-pago" hidden>
-                                    <button class="btn btn-outline-danger btn-block text-center mt-3 " type="button"
+                                <div class="row">
+                                    <a class="btn btn-outline-info" onclick="ingresaVenta()">
+                                    Reingresar Venta
+                                </a>
+                                    <button id="btn-validar-pago" hidden
+                                        class="btn btn-outline-danger btn-block text-center mt-3 " type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
                                         aria-controls="collapseOne" onclick="getPasarela()">
                                         Validar Datos y proceder con el Pago
@@ -49,7 +53,7 @@
                         </div>
                     </div>
 
-                    <form action="./validaFormulario" method="POST" id="payment-form">
+                    <form action="https://148.244.208.26/PagosMsi/validaFormulario" method="POST" id="payment-form">
                         <input type="hidden" name="token_id" id="token_id">
                         <input type="hidden" name="idPedido" id="idPedido">
                         <div class="form-floating mb-3">

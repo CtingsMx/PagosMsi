@@ -8,6 +8,7 @@ $(document).ready(function() {
 
     $('#pay-button').on('click', function(event) {
         event.preventDefault();
+        cargandoModal();
         $("#errorOpenpay").hide().html('');
         $("#pay-button").prop("disabled", true);
         OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);
