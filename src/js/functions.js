@@ -15,12 +15,7 @@ let folio = params.folio;
 
 function validaParams()
 {
-  console.log(`el folio = ${folio}`);
-
-  let data = "";
-
   if (!folio) {
-    console.log("no hay");
     ingresaVenta();
     return 0;
   }
@@ -71,7 +66,7 @@ function imprimeResumenCompra(data) {
   body.innerHTML = '';
   let html = "";
 
-  encabezados.forEach((e, idx) => {
+  encabezados.forEach((e) => {
     html = ` 
     <tr>
       <td>${e.encabezado}</td>
@@ -157,7 +152,7 @@ function ingresaVenta() {
                   id="swal2-validation-message" style="display: flex;">
                       Error en la solicitud: ${result.value.mensaje}
                   </div>`,
-      }).then((r) => {
+      }).then(() => {
         ingresaVenta();
       });
     } else {
@@ -182,7 +177,7 @@ function cargandoModal() {
     willClose: () => {
       clearInterval(timerInterval);
     },
-  }).then((e) => { });
+  }).then(() => { });
 }
 
 /////// MASCARAS DE ENTRADA PARA PASARELA

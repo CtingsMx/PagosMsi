@@ -29,7 +29,7 @@ class Server extends CI_Controller
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 
-        $this->load->model('M_Server', "", true);
+        $this->load->model('m_server', "", true);
         $this->load->model('m_stripe', "", true);
 
         //INICIANDO OPENPAY
@@ -65,7 +65,7 @@ class Server extends CI_Controller
             return;
         }
 
-        if ($this->M_Pasarela->esPagoRealizado($id)) {
+        if ($this->m_pasarela->esPagoRealizado($id)) {
             echo json_encode(
                 [
                     'error' => true,
@@ -76,7 +76,7 @@ class Server extends CI_Controller
         }
 
         //OBTENEMOS LA VENTA, DESPUES DE PASAR LAS VALIDACIONES
-        $venta = $this->M_Pasarela->obtDatosPedido($id);
+        $venta = $this->m_pasarela->obtDatosPedido($id);
 
         if (empty($venta)) {
             echo json_encode(
@@ -99,10 +99,10 @@ class Server extends CI_Controller
             return;
         }
 
-        //  $sucursal = $this->M_Pasarela->obtKeySucursal($venta->Sucursal);
+        //  $sucursal = $this->m_pasarela->obtKeySucursal($venta->Sucursal);
 
         //PARA PRUEBAS... BORRAR EN PROD
-        $sucursal = $this->M_Pasarela->obtKeySucursal(0);
+        $sucursal = $this->m_pasarela->obtKeySucursal(0);
 
         if (empty($sucursal)) {
 
@@ -134,7 +134,7 @@ class Server extends CI_Controller
 
         $id = $this->input->get('movid');
 
-        $venta = $this->M_Pasarela->obtVenta($id);
+        $venta = $this->m_pasarela->obtVenta($id);
 
         echo json_encode($venta);
 

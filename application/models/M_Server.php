@@ -6,7 +6,7 @@
  * @author Daniel Mora <daniel.mora@ctings.com>
  *
  */
-class M_Server extends CI_Model
+class m_server extends CI_Model
 {
 
     /**

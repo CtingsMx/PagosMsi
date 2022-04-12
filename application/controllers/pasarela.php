@@ -21,7 +21,7 @@ class Pasarela extends CI_Controller
         parent::__construct();
 
         $this->load->helper('url');
-        $this->load->model('M_Pasarela', "", true);
+        $this->load->model('m_pasarela', "", true);
         $this->load->model('m_stripe', "", true);
         $this->load->library('session');
         $this->load->library('encrypt');
@@ -51,6 +51,15 @@ class Pasarela extends CI_Controller
         $this->load->view('pasarela', $data);
     }
 
+    public function revisaId()
+    {
+        $id = $this->input->get('folio');        
+
+        $respuesta = $this->m_pasarela->validaID($id);
+
+        echo json_encode($respuesta);
+    }
+
     /**
      * Regresa los datos de una compra si esta es valida
      *
@@ -62,7 +71,7 @@ class Pasarela extends CI_Controller
 
         $folio = $this->input->get('folio');
 
-        $datosCompra = $this->M_Pasarela->obtDatosPedido($folio);
+        $datosCompra = $this->m_pasarela->obtDatosPedido($folio);
         if ($datosCompra) {
             echo json_encode(
                 [
@@ -91,12 +100,12 @@ class Pasarela extends CI_Controller
         $name = $this->input->post('name');
         $idPedido = $this->input->post('idPedido');
 
-        $venta = $this->M_Pasarela->obtVenta;
+        $venta = $this->m_pasarela->obtVenta;
 
         //CAMBIAR A CURL
-        //$venta = $this->M_Pasarela->obtVenta($idPedido);
+        //$venta = $this->m_pasarela->obtVenta($idPedido);
 
-        //$venta = $this->M_Pasarela->datosPrueba();
+        //$venta = $this->m_pasarela->datosPrueba();
 
         $this->m_stripe->generarCuenta($venta);
         $cuenta = $this->m_stripe->obtCuenta();
@@ -223,7 +232,7 @@ class Pasarela extends CI_Controller
     public function guardaPedido($PI, $idPedido)
     {
 
-        $pedido = $this->M_Pasarela->obtVenta($idPedido);
+        $pedido = $this->m_pasarela->obtVenta($idPedido);
 
         $pago = array(
             'ModuloID' => $pedido->ID,
@@ -234,7 +243,7 @@ class Pasarela extends CI_Controller
             'nombreCliente' => $pedido->Nombre,
             //'cp' => $PI->charges->data->billing_details->address->postal_code,
             'referencia' => $PI->id,
-            'fechaRegistro' => $this->M_Pasarela->fecha_actual(),
+            'fechaRegistro' => $this->m_pasarela->fecha_actual(),
             'importeTotal' => $PI->amount,
             'msi' => 3,
             'last4' => substr($PI->card->card_number, -4),

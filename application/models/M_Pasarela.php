@@ -1,10 +1,10 @@
 <?php
 
-class M_Pasarela extends CI_Model
+class m_pasarela extends CI_Model
 {
     public function __construct()
     {
-        $this->url = "https://148.244.208.26/PagosMsi/";
+        $this->url = "https://148.244.208.26/PagosMsi/server";
     }
 
     /**
@@ -24,7 +24,8 @@ class M_Pasarela extends CI_Model
         curl_setopt($ch, CURLOPT_HEADER, 0); 
         $data = curl_exec($ch); 
         curl_close($ch); 
-        die(var_dump($data)); 
+       
+        die(var_dump($data));
     }
 
     public function fecha_actual()
