@@ -50,7 +50,7 @@ class Server extends CI_Controller
      *
      * @return void
      */
-    public function validaID()
+    public function validaID ()
     {
 
         $id = $this->input->get('folio');
@@ -65,7 +65,7 @@ class Server extends CI_Controller
             return;
         }
 
-        if ($this->m_pasarela->esPagoRealizado($id)) {
+        if ($this->m_server->esPagoRealizado($id)) {
             echo json_encode(
                 [
                     'error' => true,
@@ -76,7 +76,7 @@ class Server extends CI_Controller
         }
 
         //OBTENEMOS LA VENTA, DESPUES DE PASAR LAS VALIDACIONES
-        $venta = $this->m_pasarela->obtDatosPedido($id);
+        $venta = $this->m_server->obtDatosPedido($id);
 
         if (empty($venta)) {
             echo json_encode(
@@ -102,7 +102,7 @@ class Server extends CI_Controller
         //  $sucursal = $this->m_pasarela->obtKeySucursal($venta->Sucursal);
 
         //PARA PRUEBAS... BORRAR EN PROD
-        $sucursal = $this->m_pasarela->obtKeySucursal(0);
+        $sucursal = $this->m_server->obtKeySucursal(0);
 
         if (empty($sucursal)) {
 
