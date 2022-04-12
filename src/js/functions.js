@@ -1,7 +1,7 @@
 
 let btnValida = document.getElementById('btn-validar-pago');
 
-const urlcompra = `https://148.244.208.26/PagosMsi/pasarela/validaId?folio=`;
+const urlcompra = `https://msi.kober.com.mx/revisaId?folio=`;
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });

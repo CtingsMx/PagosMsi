@@ -1,126 +1,140 @@
-<!doctype html>
-<html>
+<div class="container">
+    <div class="row justify-content-md-center mt-3">
+        <div class="col-md-6">
+            <div class="accordion" id="accordionExample" style="margin-top: 50px;">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Resumen de Compra
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
 
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+                            <input type="hidden" value="<?php echo $pk ?> " id="pk" name="pk">
 
-    <link href="<?=base_url('src/vendors/openpay/style.css')?>" rel="stylesheet" />
+                            <div id="table-responsive">
+                                <table class="table cart" id='resumenCompra'>
+                                </table>
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script type="text/javascript" src="https://openpay.s3.amazonaws.com/openpay.v1.min.js"></script>
-    <script type='text/javascript' src="https://openpay.s3.amazonaws.com/openpay-data.v1.min.js"></script>
-
-    <script type="text/javascript">
-    
-
-    /*
-    $(document).ready(function() {
-
-        OpenPay.setId('mex0qnhtpq3m0yvkl3sa');
-        OpenPay.setApiKey('pk_1b9a4ef755b8431c91824246ae34f55b');
-        OpenPay.setSandboxMode(true);
-        //Se genera el id de dispositivo
-        var deviceSessionId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
-
-        $('#pay-button').on('click', function(event) {
-            event.preventDefault();
-            $("#pay-button").prop("disabled", true);
-            OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);
-        });
-
-        var sucess_callbak = function(response) {
-            var token_id = response.data.id;
-            console.log("Su token es " + token_id);
-            $('#token_id').val(token_id);
-            // $('#payment-form').submit();
-
-            var data = $("#payment-form").serializeArray();
-
-
-
-            $.ajax({
-                type: 'POST', //aqui puede ser igual get
-                url: './datosPagos', //aqui va tu direccion donde esta tu funcion php
-                data: data, //aqui tus datos
-            });
-        }
-
-        var error_callbak = function(response) {
-            var desc = response.data.description != undefined ? response.data.description : response
-                .message;
-            alert("ERROR [" + response.status + "] " + desc);
-            $("#pay-button").prop("disabled", false);
-        };
-
-    });
-    */
-    </script>
-
-
-</head>
-
-<body>
-    <div class="bkng-tb-cntnt">
-        <div class="pymnts">
-            <form action="./datosPagos" method="POST" id="payment-form">
-                <input type="hidden" name="token_id" id="token_id">
-                <div class="pymnt-itm card active">
-                    <h2>Tarjeta de crédito o débito</h2>
-                    <div class="pymnt-cntnt">
-                        <div class="card-expl">
-                            <div class="credit">
-                                <h4>Tarjetas de crédito</h4>
+                                <div class="row">
+                                    <a class="btn btn-outline-info" onclick="ingresaVenta()">
+                                    Reingresar Venta
+                                </a>
+                                    <button id="btn-validar-pago" hidden
+                                        class="btn btn-outline-danger btn-block text-center mt-3 " type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                                        aria-controls="collapseOne" onclick="getPasarela()">
+                                        Validar Datos y proceder con el Pago
+                                    </button>
+                                </div>
                             </div>
-                            <div class="debit">
-                                <h4>Tarjetas de débito</h4>
-                            </div>
-                        </div>
-                        <div class="sctn-row">
-                            <div class="sctn-col l">
-                                <label>Nombre del titular</label><input type="text"
-                                    placeholder="Como aparece en la tarjeta" autocomplete="off"
-                                    data-openpay-card="holder_name">
-                            </div>
-                            <div class="sctn-col">
-                                <label>Número de tarjeta</label><input type="text" autocomplete="off"
-                                    data-openpay-card="card_number">
-                            </div>
-                        </div>
-                        <div class="sctn-row">
-                            <div class="sctn-col l">
-                                <label>Fecha de expiración</label>
-                                <div class="sctn-col half l"><input type="text" placeholder="Mes"
-                                        data-openpay-card="expiration_month"></div>
-                                <div class="sctn-col half l"><input type="text" placeholder="Año"
-                                        data-openpay-card="expiration_year"></div>
-                            </div>
-                            <div class="sctn-col cvv"><label>Código de seguridad</label>
-                                <div class="sctn-col half l"><input type="text" placeholder="3 dígitos"
-                                        autocomplete="off" data-openpay-card="cvv2"></div>
-                            </div>
-                        </div>
-                        <div class="openpay">
-                            <div class="logo">Transacciones realizadas vía:</div>
-                            <div class="shield">Tus pagos se realizan de forma segura con encriptación de 256 bits</div>
-                        </div>
-                        <div class="sctn-row">
-
-                            <div class="alert alert-danger" role="alert"
-                                style="<?php echo (!isset($_GET['error'])) ? "display:none" : "" ?>" id="errorOpenpay">
-                                <?php if (isset($_GET['error'])) {
-    echo "Su tarjeta fue declinada y no se pudo procesar el pago.";
-}
-?>
-                            </div>
-
-
-                            <a class="button rght" id="pay-button">Pagar</a>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-</body>
 
-</html>
+
+    <div class="row justify-content-md-center mt-3" id="pasarela" hidden>
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    Pagar a Meses sin Intereses
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="card-expl">
+                            <div class="debit">
+                            </div>
+                        </div>
+                    </div>
+
+                    <form action="https://148.244.208.26/PagosMsi/validaFormulario" method="POST" id="payment-form">
+                        <input type="hidden" name="token_id" id="token_id">
+                        <input type="hidden" name="idPedido" id="idPedido">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="name" name="name"
+                                placeholder="Como aparece en la tarjeta" autocomplete="off"
+                                data-openpay-card="holder_name">
+
+                            <label for="name">Nombre del titular</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="cardNumber" autocomplete="off"
+                                data-openpay-card="card_number" placeholder="16 digitos">
+                            <label for="cardNumber">Número de tarjeta</label>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="form-floating mb-3 col-sm-6">
+                                <input type="text" class="form-control" placeholder="Mes"
+                                    data-openpay-card="expiration_month" placeholder="" id="month">
+                                <label for="month">&nbsp; Mes de expiración</label>
+
+                            </div>
+
+
+                            <div class="form-floating mb-3 col-sm-6">
+                                <input id="year" class="form-control" type="text" placeholder="Año"
+                                    data-openpay-card="expiration_year">
+                                <label for="year"> &nbsp; Año de Expiración</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-floating mb-3 col-sm-5">
+                                <input type="text" placeholder="3 dígitos" class="form-control" id="ccv"
+                                    autocomplete="off" data-openpay-card="cvv2">
+                                <label>&nbsp; Código de seguridad</label>
+                            </div>
+
+                            <div class="form-floating col-sm-7 mb-5">
+                                <select class="form-select" id="msi" name="msi"
+                                    aria-label="Floating label select example">
+
+                                    <option selected value="1">Una Sola Excibición</option>
+                                    <option value="3">3 Meses Sin Intereses</option>
+                                    <option value="6">6 Meses Sin Intereses</option>
+                                </select>
+                                <label for="msi">&nbsp; Parcialidades de Pago (MSI)</label>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="d-grid gap-2 col-6 mx-auto mt-6">
+                            <a class="btn btn-outline-danger btn-lg  " id="pay-button">Pagar </a>
+
+                        </div>
+
+                        <div class=" row mt-4">
+                            <div class=" col openpay-logo pull-right">Transacciones realizadas vía: <img
+                                    src="./src/images/openpay/openpay.png">
+                            </div>
+                            <div class="col openpay-shield">Tus pagos se realizan de forma segura con encriptación
+                                de 256 bits
+
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+        </div>
+        </form>
+
+    </div>
+</div>
+
+
+
+
+<script src="./src/js/imask.js"></script>
+<script src="./src/js/functions.js?v=2.1"></script>
+<script src="./src/vendors/openpay/openpay.js"></script>

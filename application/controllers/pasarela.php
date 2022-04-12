@@ -21,7 +21,7 @@ class Pasarela extends CI_Controller
         parent::__construct();
 
         $this->load->helper('url');
-        $this->load->model('m_plados', "", true);
+        $this->load->model('M_Pasarela', "", true);
         $this->load->model('m_stripe', "", true);
         $this->load->library('session');
         $this->load->library('encrypt');
@@ -39,24 +39,30 @@ class Pasarela extends CI_Controller
 
     }
 
+    /**
+     * Muestra la interfaz inicial del sistema
+     *
+     * @return void
+     */
     public function index()
     {
         $data['pk'] = $_ENV['OP_PUBLIC_KEY'];
         $this->load->view('inicio');
-        $this->load->view('pasarela2', $data);
+        $this->load->view('pasarela', $data);
     }
 
     /**
      * Regresa los datos de una compra si esta es valida
      *
      * @return void
+     * @deprecated En su lugar usar: validaID
      */
     public function getCompra()
     {
 
         $folio = $this->input->get('folio');
 
-        $datosCompra = $this->m_plados->obtDatosPedido($folio);
+        $datosCompra = $this->M_Pasarela->obtDatosPedido($folio);
         if ($datosCompra) {
             echo json_encode(
                 [
@@ -72,83 +78,6 @@ class Pasarela extends CI_Controller
 
     }
 
-    public function validaId()
-    {
-        header('Content-Type: application/json');
-        header('Access-Control-Allow-Origin: *');
-        header("Access-Control-Allow-Methods: GET, OPTIONS");
-
-        $id = $this->input->get('folio');
-
-        if (!$id) {
-            echo json_encode(
-                [
-                    'error' => true,
-                    'mensaje' => "ingrese la Compra",
-                ]
-            );
-            return;
-        }
-
-        if ($this->m_plados->esPagoRealizado($id)) {
-            echo json_encode(
-                [
-                    'error' => true,
-                    'mensaje' => "Esta compra ya fue Pagada",
-                ]
-            );
-            return;
-        }
-
-        //OBTENEMOS LA VENTA, DESPUES DE PASAR LAS VALIDACIONES
-        $venta = $this->m_plados->obtDatosPedido($id);
-
-        if (empty($venta)) {
-            echo json_encode(
-                [
-                    'error' => true,
-                    'mensaje' => "La compra solicitada no existe",
-                ]
-            );
-            return;
-        }
-
-        if (!$venta->MSI) {
-            echo json_encode(
-                [
-                    'error' => true,
-                    'mensaje' => "Este pedido no cuenta con Pagos a Meses sin intereses",
-                    'MSI' => $venta->MSI,
-                ]
-            );
-            return;
-        }
-
-        //  $sucursal = $this->m_plados->obtKeySucursal($venta->Sucursal);
-
-        //PARA PRUEBAS... BORRAR EN PROD
-        $sucursal = $this->m_plados->obtKeySucursal(0);
-
-        if (empty($sucursal)) {
-
-            echo json_encode(
-                [
-                    'error' => true,
-                    'mensaje' => "La sucursal no cuenta aún con Pagos a Meses sin intereses",
-                ]
-            );
-            return;
-        }
-
-        echo json_encode(
-            [
-                'error' => false,
-                'resumen' => $venta,
-                'articulos' => [],
-            ]
-        );
-    }
-
     /**
      * Valida el formulario
      *
@@ -162,9 +91,12 @@ class Pasarela extends CI_Controller
         $name = $this->input->post('name');
         $idPedido = $this->input->post('idPedido');
 
-        $venta = $this->m_plados->obtVenta($idPedido);
+        $venta = $this->M_Pasarela->obtVenta;
 
-        //$venta = $this->m_plados->datosPrueba();
+        //CAMBIAR A CURL
+        //$venta = $this->M_Pasarela->obtVenta($idPedido);
+
+        //$venta = $this->M_Pasarela->datosPrueba();
 
         $this->m_stripe->generarCuenta($venta);
         $cuenta = $this->m_stripe->obtCuenta();
@@ -291,9 +223,7 @@ class Pasarela extends CI_Controller
     public function guardaPedido($PI, $idPedido)
     {
 
-        $pedido = $this->m_plados->obtVenta($idPedido);
-
-        //$pedido = $this->m_plados->datosPrueba();
+        $pedido = $this->M_Pasarela->obtVenta($idPedido);
 
         $pago = array(
             'ModuloID' => $pedido->ID,
@@ -304,7 +234,7 @@ class Pasarela extends CI_Controller
             'nombreCliente' => $pedido->Nombre,
             //'cp' => $PI->charges->data->billing_details->address->postal_code,
             'referencia' => $PI->id,
-            'fechaRegistro' => $this->m_plados->fecha_actual(),
+            'fechaRegistro' => $this->M_Pasarela->fecha_actual(),
             'importeTotal' => $PI->amount,
             'msi' => 3,
             'last4' => substr($PI->card->card_number, -4),

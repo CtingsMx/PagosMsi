@@ -15,7 +15,7 @@ class Stripe extends CI_Controller
         parent::__construct();
 
         $this->load->helper('url');
-        $this->load->model('m_plados', "", true);
+        $this->load->model('M_Pasarela', "", true);
         $this->load->model('m_stripe', "", true);
         $this->load->library('session');
         $this->load->library('encrypt');
@@ -46,13 +46,13 @@ class Stripe extends CI_Controller
             return;
         }
 
-        if ($this->m_plados->esPagoRealizado($id)) {
+        if ($this->M_Pasarela->esPagoRealizado($id)) {
             $error['error'] = "Esta compra ya fue Pagada";
             $this->load->view('errors', $error);
             return;
         }
 
-        $venta = $this->m_plados->obtVenta($id);
+        $venta = $this->M_Pasarela->obtVenta($id);
 
         if (empty($venta)) {
             $error['error'] = "La compra solicitada no existe";
@@ -67,10 +67,10 @@ class Stripe extends CI_Controller
 
         $this->m_stripe->generarCuenta($venta);
 
-        $sucursal = $this->m_plados->obtKeySucursal($venta->Sucursal);
+        $sucursal = $this->M_Pasarela->obtKeySucursal($venta->Sucursal);
 
         //PARA PRUEBAS... BORRAR EN PROD
-        $sucursal = $this->m_plados->obtKeySucursal(0);
+        $sucursal = $this->M_Pasarela->obtKeySucursal(0);
 
         if (empty($sucursal)) {
             $error['error'] = "La sucursal no cuenta aún con Pagos a Meses sin intereses";
@@ -104,7 +104,7 @@ class Stripe extends CI_Controller
         }
         // retrieve json from POST body
         $cuenta = $this->m_stripe->obtCuenta();
-        // $usuario = $this->m_plados->obt_cliente($_SESSION['idCliente']);
+        // $usuario = $this->M_Pasarela->obt_cliente($_SESSION['idCliente']);
 
         $json_str = file_get_contents('php://input');
         $json_obj = json_decode($json_str);
@@ -218,7 +218,7 @@ class Stripe extends CI_Controller
      */
     public function guardaPedido($PI, $idPedido)
     {
-        $pedido = $this->m_plados->obtVenta($idPedido);
+        $pedido = $this->M_Pasarela->obtVenta($idPedido);
         $pedido = $pedido;
 
         @$pago = array(
@@ -230,7 +230,7 @@ class Stripe extends CI_Controller
             'nombreCliente' => $PI->charges->data->billing_details->name,
             'cp' => $PI->charges->data->billing_details->address->postal_code,
             'referencia' => $PI->id,
-            'fechaRegistro' => $this->m_plados->fecha_actual(),
+            'fechaRegistro' => $this->M_Pasarela->fecha_actual(),
             'importeTotal' => $PI->amount,
             'msi' => $PI->charges->data->payment_method_details->card->installments->plan->count,
             'last4' => $PI->charges->data->payment_method_details->card->last4,
