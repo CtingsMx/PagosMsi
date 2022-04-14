@@ -102,9 +102,9 @@ class m_server extends CI_Model
     public function datosPrueba()
     {
         $datos = new \stdClass;
-        $datos->ID = 123;
+        $datos->ID = 56465462;
         $datos->Mov = 1;
-        $datos->movid = "X123489";
+        $datos->movid = "123";
         $datos->Sucursal = "Guadalajara";
         $datos->Cliente = 12;
         $datos->Nombre = 'Juan Perez';

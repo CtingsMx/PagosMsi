@@ -58,7 +58,7 @@ class Pasarela extends CI_Controller
      */
     public function revisaId()
     {
-        $id = $this->input->get('folio');        
+        $id = $this->input->get('folio');
 
         $respuesta = $this->m_pasarela->validaID($id);
 
@@ -68,8 +68,9 @@ class Pasarela extends CI_Controller
     /**
      * Regresa los datos de una compra si esta es valida
      *
-     * @return void
      * @deprecated En su lugar usar: validaID
+     *
+     * @return void
      */
     public function getCompra()
     {
@@ -88,7 +89,7 @@ class Pasarela extends CI_Controller
         } else {
             echo json_encode("no enconte nada ");
             die();
-        } 
+        }
 
     }
 
@@ -105,7 +106,10 @@ class Pasarela extends CI_Controller
         $name = $this->input->post('name');
         $idPedido = $this->input->post('idPedido');
 
-        $venta = $this->m_pasarela->obtVenta;
+        $venta = $this->m_pasarela->obtVenta($idPedido);
+
+        echo json_encode($idPedido);
+        die();
 
         //CAMBIAR A CURL
         //$venta = $this->m_pasarela->obtVenta($idPedido);

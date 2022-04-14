@@ -1,7 +1,8 @@
 
 let btnValida = document.getElementById('btn-validar-pago');
 
-const urlcompra = `https://msi.kober.com.mx/revisaId?folio=`;
+const urlcompra = `https://localhost/pagosmsi/revisaId?folio=`;
+//const urlcompra = `https://msi.kober.com.mx/revisaId?folio=`;
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
@@ -32,6 +33,8 @@ function imprimeResumenCompra(data) {
   btnValida.removeAttribute('hidden');
 
   //data = getCompra(folio);
+
+  console.log(folio);
 
   document.getElementById("idPedido").value = folio;
 
@@ -97,9 +100,6 @@ function getCompra(folio) {
     dataType: "json",
     async: false,
     url: `${urlcompra}${folio}`,
-    beforeSend: () => {
-      // cargandoModal();
-    },
     success: (resp) => {
       data = resp;
     },
@@ -156,6 +156,7 @@ function ingresaVenta() {
         ingresaVenta();
       });
     } else {
+      folio = result.value.resumen.movid;
       imprimeResumenCompra(result.value.resumen);
     }
   });

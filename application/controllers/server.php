@@ -52,10 +52,7 @@ class Server extends CI_Controller
      */
     public function validaID()
     {
-
-        $id = $this->input->post('folio');
-
-        echo json_encode("hola");
+        $id = $this->input->get('folio');
 
         if (!$id) {
             echo json_encode(
@@ -136,7 +133,7 @@ class Server extends CI_Controller
 
         $id = $this->input->get('movid');
 
-        $venta = $this->m_pasarela->obtVenta($id);
+        $venta = $this->m_server->obtVenta($id);
 
         echo json_encode($venta);
 

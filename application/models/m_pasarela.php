@@ -1,10 +1,12 @@
 <?php
 
+use PHP_CodeSniffer\Reports\Json;
+
 class m_pasarela extends CI_Model
 {
     public function __construct()
     {
-        $this->url = "https://148.244.194.93/PagosMsi/server/";
+        $this->url = "http://148.244.194.93/PagosMsi/server/";
     }
 
     /**
@@ -13,19 +15,18 @@ class m_pasarela extends CI_Model
      *
      * @param string $id identificador de la venta
      *
-     * @return object
+     * @return Json
      */
     public function validaID($id)
     {
+        $data = file_get_contents("{$this->url}validaID?folio={$id}");
+        return json_decode($data, true);
+    }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "{$this->url}validaID?folio={$id}");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        $data = curl_exec($ch);
-        curl_close($ch);
-
-        return $data;
+    public function obtVenta($id)
+    {
+        $data = file_get_contents("{$this->url}getVenta?movid={$id}");
+        return json_decode($data, true);   
     }
 
     public function fecha_actual()
