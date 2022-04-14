@@ -50,10 +50,10 @@ class Server extends CI_Controller
      *
      * @return void
      */
-    public function validaID ()
+    public function validaID()
     {
 
-        $id = $this->input->get('folio');
+        $id = $this->input->post('folio');
 
         if (!$id) {
             echo json_encode(

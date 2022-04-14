@@ -51,6 +51,11 @@ class Pasarela extends CI_Controller
         $this->load->view('pasarela', $data);
     }
 
+    /**
+     * Recibe un Id mediante Get y lo balida con la Bd Kober
+     *
+     * @return void
+     */
     public function revisaId()
     {
         $id = $this->input->get('folio');        
@@ -83,7 +88,7 @@ class Pasarela extends CI_Controller
         } else {
             echo json_encode("no enconte nada ");
             die();
-        }
+        } 
 
     }
 

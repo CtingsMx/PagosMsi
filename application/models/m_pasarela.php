@@ -4,28 +4,28 @@ class m_pasarela extends CI_Model
 {
     public function __construct()
     {
-        $this->url = "https://148.244.208.26/PagosMsi/server";
+        $this->url = "https://148.244.194.93/PagosMsi/server/";
     }
 
     /**
-     * Envia una peticion al servidor de aplicacion solicitando 
+     * Envia una peticion al servidor de aplicacion solicitando
      * la validacion de una compra
      *
      * @param string $id identificador de la venta
-     * 
+     *
      * @return object
      */
     public function validaID($id)
     {
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "{$this->url}validaId?folio={$id}"); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-        curl_setopt($ch, CURLOPT_HEADER, 0); 
-        $data = curl_exec($ch); 
-        curl_close($ch); 
-       
-        die(var_dump($data));
+        curl_setopt($ch, CURLOPT_URL, "{$this->url}validaID?folio={$id}");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        $data = curl_exec($ch);
+        curl_close($ch);
+
+        return $data;
     }
 
     public function fecha_actual()
