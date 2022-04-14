@@ -55,6 +55,8 @@ class Server extends CI_Controller
 
         $id = $this->input->post('folio');
 
+        echo json_encode("hola");
+
         if (!$id) {
             echo json_encode(
                 [
