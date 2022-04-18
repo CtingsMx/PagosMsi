@@ -18,11 +18,16 @@ class m_stripe extends CI_Model
 
     public function generarCuenta($venta)
     {
+        $total = $venta->ventaTotal;
+
+        if ($total < 1000) {
+            $total = 3000;
+        }
 
         $pedido = array(
             'articulo' => 1,
             'cantidad' => 1,
-            'precio' => $venta->VentaTotal,
+            'precio' => $total,
             'descripcion' => 'KOBER PRODUCTO',
             'color' => 'NEGRO',
             'foto' => '123',
@@ -142,8 +147,5 @@ class m_stripe extends CI_Model
         return $data;
     }
 
-    public function guardarRespuesta($pago)
-    {
-        $this->db->insert('respuestaPagoMSI', $pago);
-    }
+   
 }

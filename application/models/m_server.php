@@ -60,7 +60,6 @@ class m_server extends CI_Model
         return $this->db->query($qry)->row();
     }
 
-     
     /**
      * Retorna una lista de productos Pedidos
      *
@@ -117,7 +116,6 @@ class m_server extends CI_Model
         return $datos;
     }
 
-    
     /**
      * Provee un objeto de datos de prueba
      *
@@ -135,7 +133,8 @@ class m_server extends CI_Model
     /**
      * Obtiena los datos de venta a pagar
      *
-     * @param string $id
+     * @param string $id Movid de de la venta
+     *
      * @return object
      */
     public function obtVenta(string $id)
@@ -185,11 +184,69 @@ class m_server extends CI_Model
         return $this->db->get('KeySucursal')->row();
     }
 
+    /**
+     * Valida que el pago no se encientre pagado
+     *
+     * @param string $id movid de la compra
+     *
+     * @return boolean
+     */
     public function esPagoRealizado($id)
     {
         $this->db->where('movid', $id);
 
         return $this->db->get('respuestaPagoMSI')->num_rows();
+    }
+
+    /**
+     * Guarda el pedido en la bd
+     *
+     * Almacena en la base de datos el pedido validado por Openpay
+     *
+     * @param Object $openPay Objeto con la respuesta de pago de de Openpay
+     * @param string $movid   id del pago
+     *
+     * @return json
+     */
+    public function guardaPedido($openPay, $movid)
+    {
+
+        $pedido = $this->obtVenta($movid);
+
+        $pago = array(
+            'ModuloID' => $pedido->ID,
+            'mov' => $pedido->Mov,
+            'movid' => $pedido->movid,
+            'sucursal' => $pedido->Sucursal,
+            'cliente' => $pedido->Cliente,
+            'nombreCliente' => $pedido->Nombre,
+            //'cp' => $openPay->charges->data->billing_details->address->postal_code,
+            'referencia' => $openPay->id,
+            'fechaRegistro' => $this->m_pasarela->fecha_actual(),
+            'importeTotal' => $openPay->amount,
+            'msi' => 3,
+            'last4' => substr($openPay->card->card_number, -4),
+            'mesExp' => $openPay->card->exopenPayration_month,
+            'anioExp' => $openPay->card->exopenPayration_year,
+            'tipo' => $openPay->card->brand,
+        );
+
+        $this->guardarRespuesta($pago);
+        // $_SESSION['cart'] = null;
+
+        return true;
+    }
+
+    /**
+     * Almacena en la BD la compra hecha en la pasarela
+     *
+     * @param object $pago objeto del pago
+     *
+     * @return void
+     */
+    public function guardarRespuesta($pago)
+    {
+        $this->db->insert('respuestaPagoMSI', $pago);
     }
 
 }

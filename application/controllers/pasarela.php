@@ -106,18 +106,13 @@ class Pasarela extends CI_Controller
         $name = $this->input->post('name');
         $idPedido = $this->input->post('idPedido');
 
-        $venta = $this->m_pasarela->obtVenta($idPedido);
+        $venta = $this->m_pasarela->obtVe´89iinta($idPedido);
 
         echo json_encode($idPedido);
         die();
 
-        //CAMBIAR A CURL
-        //$venta = $this->m_pasarela->obtVenta($idPedido);
-
-        //$venta = $this->m_pasarela->datosPrueba();
-
-        $this->m_stripe->generarCuenta($venta);
-        $cuenta = $this->m_stripe->obtCuenta();
+        $this->m_pasarela->generarCuenta($venta);
+        $cuenta = $this->m_pasarela->obtCuenta();
 
         if (!$venta->eMail1) {
             $venta->eMail1 = 'sincorreo@kober.mx';
@@ -133,7 +128,7 @@ class Pasarela extends CI_Controller
         $chargeData = array(
             'method' => 'card',
             'source_id' => $_POST["token_id"],
-            'amount' => (float) $cuenta['total'] * 2,
+            'amount' => (float) $cuenta['total'],
             'currency' => 'MXN',
             'order_id' => $venta->ID . '123',
             'description' => "pedido con movid: {$venta->movid}",
@@ -191,6 +186,7 @@ class Pasarela extends CI_Controller
     {
         header('Content-Type: application/json');
 
+        $pagoGuardado = false;
         $id = $this->input->get('id');
         $venta = $this->input->get('venta');
 
@@ -200,15 +196,20 @@ class Pasarela extends CI_Controller
 
             // Si el pago esta validado:
             if ($pago->status === 'completed') {
-                $this->guardaPedido($pago, $venta);
+                $pagoGuardado = $this->m_pasarela->enviaPagoServer($id, $venta);
+                //$this->guardaPedido($pago, $venta);   cambiado logica hacia server
             }
 
         } catch (OpenpayApiTransactionError $e) {
-            echo json_encode(['ERROR on the transaction: ' . $e->getMessage() .
-                ' [error code: ' . $e->getErrorCode() .
-                ', error category: ' . $e->getCategory() .
-                ', HTTP code: ' . $e->getHttpCode() .
-                ', request ID: ' . $e->getRequestId() . ']', 0]);
+            echo json_encode(
+                [
+                    'ERROR on the transaction: ' . $e->getMessage() .
+                    ' [error code: ' . $e->getErrorCode() .
+                    ', error category: ' . $e->getCategory() .
+                    ', HTTP code: ' . $e->getHttpCode() .
+                    ', request ID: ' . $e->getRequestId() . ']', 0,
+                ]
+            );
 
         } catch (OpenpayApiRequestError $e) {
             echo json_encode('ERROR on the request: ' . $e->getMessage(), 0);
@@ -226,44 +227,22 @@ class Pasarela extends CI_Controller
             echo json_encode('Error on the script: ' . $e->getMessage(), 0);
         }
 
+        if ($pagoGuardado) {
+            header("Location: " . "{$this->baseUrl}pasarela/exito");
+        }else{
+            echo "ERROR PREOCESANDO EL PAGO";
+        }
+
     }
 
     /**
-     * Guarda el pedido en la bd
+     * Mestra la vista para una venta Exitosa
      *
-     * Almacena en la base de datos el pedido validado por Openpay
-     *
-     * @param string $idPago  pago de de Openpay
-     * @param string $estatus estatus desde Openpay
-     *
-     * @return json
+     * @return void
      */
-    public function guardaPedido($PI, $idPedido)
+    public function exito()
     {
-
-        $pedido = $this->m_pasarela->obtVenta($idPedido);
-
-        $pago = array(
-            'ModuloID' => $pedido->ID,
-            'mov' => $pedido->Mov,
-            'movid' => $pedido->movid,
-            'sucursal' => $pedido->Sucursal,
-            'cliente' => $pedido->Cliente,
-            'nombreCliente' => $pedido->Nombre,
-            //'cp' => $PI->charges->data->billing_details->address->postal_code,
-            'referencia' => $PI->id,
-            'fechaRegistro' => $this->m_pasarela->fecha_actual(),
-            'importeTotal' => $PI->amount,
-            'msi' => 3,
-            'last4' => substr($PI->card->card_number, -4),
-            'mesExp' => $PI->card->expiration_month,
-            'anioExp' => $PI->card->expiration_year,
-            'tipo' => $PI->card->brand,
-        );
-
-        $this->m_stripe->guardarRespuesta($pago);
-
-        $_SESSION['cart'] = null;
+        $this->load->view('exito');
     }
 
     public function codigoEjemplo()
