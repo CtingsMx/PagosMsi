@@ -56,4 +56,8 @@ $route['translate_uri_dashes'] = false;
 $route['/'] = 'pasarela/index';
 
 $route['revisaId'] = 'pasarela/revisaId';
+$route['exito'] = 'pasarela/exito';
+$route['contacto'] = 'pasarela/contacto';
 $route['validaFormulario'] = 'pasarela/validaFormulario';
+$route['enviarMensaje'] = 'pasarela/enviarMensaje';
+$route['privacy']       = 'pasarela/avisoPrivacidad';

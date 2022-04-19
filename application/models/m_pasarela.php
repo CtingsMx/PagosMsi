@@ -171,11 +171,6 @@ class m_pasarela extends CI_Model
     {
         $objeto['movid'] = $movid;
         $objeto['fechaRegistro'] = $this->fecha_actual();
-        /*
-        $data = file_get_contents("{$this->url}guardaPagoValidado?idOpen={$id}&idVenta={$movid}");
-        $data = json_decode($data);
-
-         */
 
         $cliente = curl_init();
         curl_setopt($cliente, CURLOPT_URL, "{$this->url}guardaPagoValidado");
@@ -186,9 +181,6 @@ class m_pasarela extends CI_Model
 
         $data = curl_exec($cliente);
         curl_close($cliente);
-
-        echo json_encode($data);
-        die();
 
         return $data;
     }

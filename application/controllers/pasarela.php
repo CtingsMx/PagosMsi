@@ -49,6 +49,7 @@ class Pasarela extends CI_Controller
         $data['pk'] = $_ENV['OP_PUBLIC_KEY'];
         $this->load->view('inicio');
         $this->load->view('pasarela', $data);
+        $this->load->view('footer');
     }
 
     /**
@@ -239,7 +240,30 @@ class Pasarela extends CI_Controller
      */
     public function exito()
     {
+        $this->load->view('inicio');
         $this->load->view('exito');
+    }
+
+    function contacto()
+    {
+        $this->load->view('inicio');
+        $this->load->view('contacto');
+    }
+
+    /**
+     * Envia mensaje de contacto
+     *
+     * @return void
+     */
+    function enviarMensaje()
+    {
+        header("Location: / ");
+    }
+
+    function avisoPrivacidad()
+    {
+        $this->load->view('inicio');
+        $this->load->view('privacidad');
     }
 
     public function codigoEjemplo()
