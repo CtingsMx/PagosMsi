@@ -85,32 +85,7 @@ function imprimeResumenCompra(data) {
   //console.log(Object.values(data).length);
 }
 
-/**
- * Regresa el contenido de una busqueda de informacion
- *
- * @deprecated en su lugar usar IngresaVenta()
- * @param {string} folio id de la compra
- * @returns {object}
- */
-function getCompra(folio) {
-  let data = [];
 
-  $.ajax({
-    type: "GET",
-    dataType: "json",
-    async: false,
-    url: `${urlcompra}${folio}`,
-    success: (resp) => {
-      data = resp;
-    },
-    error: (e) => {
-      console.log(`Se ha producido un error: `);
-      console.log(e.responseText);
-    },
-  });
-
-  return data.resumen;
-}
 
 /**
  * Muestra la pasarela en el DOM
@@ -157,7 +132,9 @@ function ingresaVenta() {
       });
     } else {
       folio = result.value.resumen.movid;
+      
       imprimeResumenCompra(result.value.resumen);
+
     }
   });
 }
