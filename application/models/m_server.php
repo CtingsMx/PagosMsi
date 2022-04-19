@@ -220,7 +220,7 @@ class m_server extends CI_Model
             'sucursal' => $pedido->Sucursal,
             'cliente' => $pedido->Cliente,
             'nombreCliente' => $pedido->Nombre,
-            'fechaRegistro' => $this->m_pasarela->fecha_actual(),
+            'fechaRegistro' => $this->input->post('fechaRegistro'),
             //'cp' => $openPay->charges->data->billing_details->address->postal_code,
             'referencia' => $this->input->post('referencia'),
             'importeTotal' => $this->input->post('importeTotal'),
