@@ -1,5 +1,5 @@
 
-<div class="row mt-5" style="position: fixed; bottom:0px; right:10px">
+<div class="row mt-5" style=" position: fixed; bottom:0px; right:10px" id="footer" hidden>
     <div class="col">
         <small>
         <a href="./privacy" class="mr-5" style="margin-right: 100px;">Aviso de Privacidad, </a>
