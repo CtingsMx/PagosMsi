@@ -231,9 +231,6 @@ class m_server extends CI_Model
             'tipo' => $this->input->post('tipo'),
         );
 
-        echo json_encode($pago);
-        die();
-
         $this->guardarRespuesta($pago);
         // $_SESSION['cart'] = null;
 

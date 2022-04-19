@@ -159,13 +159,24 @@ class Server extends CI_Controller
         }
 
         $this->m_server->guardaPedido($movid);
- 
 
-        echo json_encode(
-            [
-                'ok' => true,
-            ]
-        );
+        $compraGuardada = $this->db->insert_id();
+        if ($compraGuardada != '') {
+
+            echo json_encode(
+                [
+                    'ok' => true,
+                    'msg' => "Se Guardo con exito la compra",
+                ]
+            );
+        } else {
+            echo json_encode(
+                [
+                    'ok' => false,
+                    'msg' => "Hubo un error al intentar alamacenar en BD",
+                ]
+            );
+        }
 
     }
 
