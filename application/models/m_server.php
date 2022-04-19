@@ -208,7 +208,7 @@ class m_server extends CI_Model
      *
      * @return json
      */
-    public function guardaPedido($openPay, $movid)
+    public function guardaPedido($movid)
     {
 
         $pedido = $this->obtVenta($movid);
@@ -220,16 +220,19 @@ class m_server extends CI_Model
             'sucursal' => $pedido->Sucursal,
             'cliente' => $pedido->Cliente,
             'nombreCliente' => $pedido->Nombre,
-            //'cp' => $openPay->charges->data->billing_details->address->postal_code,
-            'referencia' => $openPay->id,
             'fechaRegistro' => $this->m_pasarela->fecha_actual(),
-            'importeTotal' => $openPay->amount,
-            'msi' => 3,
-            'last4' => substr($openPay->card->card_number, -4),
-            'mesExp' => $openPay->card->exopenPayration_month,
-            'anioExp' => $openPay->card->exopenPayration_year,
-            'tipo' => $openPay->card->brand,
+            //'cp' => $openPay->charges->data->billing_details->address->postal_code,
+            'referencia' => $this->input->post('referencia'),
+            'importeTotal' => $this->input->post('importeTotal'),
+            'msi' => $this->input->post('msi'),
+            'last4' => $this->input->post('last4'),
+            'mesExp' => $this->input->post('mesExp'),
+            'anioExp' => $this->input->post('anioExp'),
+            'tipo' => $this->input->post('tipo'),
         );
+
+        echo json_encode($pago);
+        die();
 
         $this->guardarRespuesta($pago);
         // $_SESSION['cart'] = null;

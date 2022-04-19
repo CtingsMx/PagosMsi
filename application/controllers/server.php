@@ -2,11 +2,6 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 use Openpay\Data\Openpay;
-use Openpay\Data\OpenpayApiAuthError;
-use Openpay\Data\OpenpayApiConnectionError;
-use Openpay\Data\OpenpayApiError;
-use Openpay\Data\OpenpayApiRequestError;
-use Openpay\Data\OpenpayApiTransactionError;
 
 /**
  * Clase dedicada a las funciones realizadas del lado del back
@@ -151,44 +146,20 @@ class Server extends CI_Controller
      */
     public function guardaPagoValidado()
     {
-        $idOpenPay = $this->input->get('idOpen');
-        $movid = $this->input->get('idVenta');
 
-        try {
+        $movid = $this->input->post('movid');
 
-            $pago = $this->openpay->charges->get($idOpenPay);
-
-            // Si el pago esta validado:
-            if ($pago->status === 'completed') {
-                $this->m_server->guardaPedido($pago, $movid);
-            }
-
-        } catch (OpenpayApiTransactionError $e) {
+        if (!$movid) {
             echo json_encode(
                 [
-                    'ERROR on the transaction: ' . $e->getMessage() .
-                    ' [error code: ' . $e->getErrorCode() .
-                    ', error category: ' . $e->getCategory() .
-                    ', HTTP code: ' . $e->getHttpCode() .
-                    ', request ID: ' . $e->getRequestId() . ']', 0,
+                    "error" => true,
+                    "msg" => "Error al recibir los parametros de la venta",
                 ]
             );
-
-        } catch (OpenpayApiRequestError $e) {
-            echo json_encode('ERROR on the request: ' . $e->getMessage(), 0);
-
-        } catch (OpenpayApiConnectionError $e) {
-            echo json_encode('ERROR while connecting to the API: ' . $e->getMessage(), 0);
-
-        } catch (OpenpayApiAuthError $e) {
-            echo json_encode('ERROR on the authentication: ' . $e->getMessage(), 0);
-
-        } catch (OpenpayApiError $e) {
-            echo json_encode('ERROR on the API: ' . $e->getMessage(), 0);
-
-        } catch (Exception $e) {
-            echo json_encode('Error on the script: ' . $e->getMessage(), 0);
         }
+
+        $this->m_server->guardaPedido($movid);
+ 
 
         echo json_encode(
             [

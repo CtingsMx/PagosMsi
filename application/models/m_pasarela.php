@@ -56,7 +56,8 @@ class m_pasarela extends CI_Model
      */
     public function generarCuenta($venta)
     {
-        $total = $venta->ventaTotal;
+
+        $total = $venta['VentaTotal'];
 
         if ($total < 1000) {
             $total = 3000;
@@ -132,20 +133,63 @@ class m_pasarela extends CI_Model
     }
 
     /**
+     * Filtra los datos retornados por OpenPay
+     *
+     * Filtra los datos necesarios para alamacenar la venta en la
+     * bd de Kober
+     *
+     * @param object $openPay datos retornados por OpenPay API
+     *
+     * @return array
+     */
+    public function generaObjetoOpenPay($openPay)
+    {
+        $obj = array(
+            //'cp' => $openPay->charges->data->billing_details->address->postal_code,
+            'referencia'    => $openPay->id,
+            'importeTotal'  => $openPay->amount,
+            'msi'           => $openPay->payment_plan->payments,
+            'last4'         => substr($openPay->card->card_number, -4),
+            'mesExp'        => $openPay->card->expiration_month,
+            'anioExp'       => $openPay->card->expiration_year,
+            'tipo'          => $openPay->card->brand,
+
+        );
+
+        return $obj;
+    }
+
+    /**
      * Envia al Servidor la venta para almacenarla en la
      *
-     * @param string $id    id de pago de Openpay  
+     * @param string $id    id de pago de Openpay
      * @param string $movid id de la venta
-     * 
+     *
      * @return boolean
      */
-    public function enviaPagoServer($id, $movid)
+    public function enviaPagoServer($objeto, $movid)
     {
-
-        $data = file_get_contents("{$this->url}guardaPagoValidado?idOpen={$id}&idVenta=${$movid}");
+        $objeto['movid'] = $movid;
+        /*
+        $data = file_get_contents("{$this->url}guardaPagoValidado?idOpen={$id}&idVenta={$movid}");
         $data = json_decode($data);
 
-        return $data->ok;
+         */
+
+        $cliente = curl_init();
+        curl_setopt($cliente, CURLOPT_URL, "{$this->url}guardaPagoValidado");
+        curl_setopt($cliente, CURLOPT_HEADER, 0);
+        curl_setopt($cliente, CURLOPT_POST, true);
+        curl_setopt($cliente, CURLOPT_POSTFIELDS, http_build_query($objeto));
+        curl_setopt($cliente, CURLOPT_RETURNTRANSFER, true);
+
+        $data = curl_exec($cliente);
+        curl_close($cliente);
+
+        echo json_encode($data);
+        die();
+
+        return $data;
     }
 
     public function fecha_actual()

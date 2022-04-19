@@ -106,23 +106,20 @@ class Pasarela extends CI_Controller
         $name = $this->input->post('name');
         $idPedido = $this->input->post('idPedido');
 
-        $venta = $this->m_pasarela->obtVe´89iinta($idPedido);
-
-        echo json_encode($idPedido);
-        die();
+        $venta = $this->m_pasarela->obtVenta($idPedido);
 
         $this->m_pasarela->generarCuenta($venta);
         $cuenta = $this->m_pasarela->obtCuenta();
 
-        if (!$venta->eMail1) {
-            $venta->eMail1 = 'sincorreo@kober.mx';
+        if (!$venta['eMail1']) {
+            $venta['eMail1'] = 'sincorreo@kober.mx';
         }
 
         $customer = array(
-            'name' => $venta->Nombre,
+            'name' => $venta['Nombre'],
             // 'last_name' => 'Kober',
-            'phone_number' => $venta->Telefonos,
-            'email' => $venta->eMail1,
+            'phone_number' => $venta['Telefonos'],
+            'email' => $venta['eMail1'],
         );
 
         $chargeData = array(
@@ -130,8 +127,8 @@ class Pasarela extends CI_Controller
             'source_id' => $_POST["token_id"],
             'amount' => (float) $cuenta['total'],
             'currency' => 'MXN',
-            'order_id' => $venta->ID . '123',
-            'description' => "pedido con movid: {$venta->movid}",
+            'order_id' => $venta['ID'] . '123',
+            'description' => "pedido con movid: {$venta['movid']}",
             'device_session_id' => $_POST["deviceIdHiddenFieldName"],
             'customer' => $customer,
             'use_3d_secure' => true,
@@ -139,7 +136,7 @@ class Pasarela extends CI_Controller
                 'payments' => $msi,
             ],
 
-            'redirect_url' => "{$this->baseUrl}pasarela/pagoExitoso?venta={$venta->movid}",
+            'redirect_url' => "{$this->baseUrl}pasarela/pagoExitoso?venta={$venta['movid']}",
         );
 
         try {
@@ -196,8 +193,8 @@ class Pasarela extends CI_Controller
 
             // Si el pago esta validado:
             if ($pago->status === 'completed') {
-                $pagoGuardado = $this->m_pasarela->enviaPagoServer($id, $venta);
-                //$this->guardaPedido($pago, $venta);   cambiado logica hacia server
+                $objOpenPay = $this->m_pasarela->generaObjetoOpenPay($pago);
+                $pagoGuardado = $this->m_pasarela->enviaPagoServer($objOpenPay, $venta);
             }
 
         } catch (OpenpayApiTransactionError $e) {
@@ -227,10 +224,10 @@ class Pasarela extends CI_Controller
             echo json_encode('Error on the script: ' . $e->getMessage(), 0);
         }
 
-        if ($pagoGuardado) {
+        if ($pagoGuardado['ok']) {
             header("Location: " . "{$this->baseUrl}pasarela/exito");
-        }else{
-            echo "ERROR PREOCESANDO EL PAGO";
+        } else {
+            echo json_encode("ERROR PREOCESANDO EL PAGO", $pagoGuardado);
         }
 
     }
