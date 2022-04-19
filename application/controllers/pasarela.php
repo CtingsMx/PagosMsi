@@ -46,9 +46,9 @@ class Pasarela extends CI_Controller
      */
     public function index()
     {
-        $data['pk'] = $_ENV['OP_PUBLIC_KEY'];
+        //  $data['pk'] = $_ENV['OP_PUBLIC_KEY'];
         $this->load->view('inicio');
-        $this->load->view('pasarela', $data);
+        $this->load->view('pasarela');
         $this->load->view('footer');
     }
 
@@ -62,6 +62,11 @@ class Pasarela extends CI_Controller
         $id = $this->input->get('folio');
 
         $respuesta = $this->m_pasarela->validaID($id);
+
+        if (!$respuesta['error']) {
+            $_SESSION['private_key'] = $respuesta['private_key'];
+            $_SESSION['merchant']   = $respuesta['merchant'];            
+        }
 
         echo json_encode($respuesta);
     }
@@ -244,7 +249,7 @@ class Pasarela extends CI_Controller
         $this->load->view('exito');
     }
 
-    function contacto()
+    public function contacto()
     {
         $this->load->view('inicio');
         $this->load->view('contacto');
@@ -255,12 +260,12 @@ class Pasarela extends CI_Controller
      *
      * @return void
      */
-    function enviarMensaje()
+    public function enviarMensaje()
     {
         header("Location: / ");
     }
 
-    function avisoPrivacidad()
+    public function avisoPrivacidad()
     {
         $this->load->view('inicio');
         $this->load->view('privacidad');

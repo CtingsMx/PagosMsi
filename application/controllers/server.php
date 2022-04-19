@@ -101,7 +101,7 @@ class Server extends CI_Controller
         //  $sucursal = $this->m_pasarela->obtKeySucursal($venta->Sucursal);
 
         //PARA PRUEBAS... BORRAR EN PROD
-        $sucursal = $this->m_server->obtKeySucursal(0);
+        $sucursal = $this->m_server->obtKeySucursal(1);
 
         if (empty($sucursal)) {
 
@@ -118,6 +118,9 @@ class Server extends CI_Controller
             [
                 'error' => false,
                 'resumen' => $venta,
+                'public_key'    => $sucursal->llave_publica,
+                'private_key'   => $sucursal->llave_secreta,
+                'merchant'      => $sucursal->nombre,
                 'articulos' => [],
             ]
         );

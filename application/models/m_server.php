@@ -178,6 +178,13 @@ class m_server extends CI_Model
         return $this->db->query($qry)->row();
     }
 
+    /**
+     * Obtiene los Keys necesarios para realizar la compra
+     *
+     * @param int $idSucursal id de la sucursal
+     * 
+     * @return object
+     */
     public function obtKeySucursal($idSucursal)
     {
         $this->db->where('sucursal', $idSucursal);
