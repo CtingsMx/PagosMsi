@@ -131,8 +131,11 @@ function ingresaVenta() {
         ingresaVenta();
       });
     } else {
+
       folio = result.value.resumen.movid;
-      
+
+      document.getElementById('pk').value = result.value.public_key;
+
       imprimeResumenCompra(result.value.resumen);
 
     }

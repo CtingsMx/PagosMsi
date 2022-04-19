@@ -13,7 +13,7 @@
                         data-bs-parent="#accordionExample">
                         <div class="accordion-body">
 
-                            <input type="hidden" value="<?php echo $pk ?> " id="pk" name="pk">
+                            <input type="hidden" value="" id="pk" name="pk">
 
                             <div id="table-responsive">
                                 <table class="table cart" id='resumenCompra'>
@@ -136,5 +136,5 @@
 
 
 <script src="./src/js/imask.js"></script>
-<script src="./src/js/functions.js?v=3.1"></script>
+<script src="./src/js/functions.js?v=3.2"></script>
 <script src="./src/vendors/openpay/openpay.js"></script>

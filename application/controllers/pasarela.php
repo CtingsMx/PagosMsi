@@ -26,13 +26,6 @@ class Pasarela extends CI_Controller
         $this->load->library('session');
         $this->load->library('encrypt');
 
-        //INICIANDO OPENPAY
-        Openpay::getProductionMode(false);
-        $this->openpay = Openpay::getInstance(
-            $_ENV['OP_ID'],
-            $_ENV['OP_PRIVATE_KEY']
-        );
-
         $this->baseUrl = base_url();
 
         session_start();
@@ -52,6 +45,18 @@ class Pasarela extends CI_Controller
         $this->load->view('footer');
     }
 
+    private function getOpenPay()
+    {
+        //INICIANDO OPENPAY
+        Openpay::getProductionMode(false);
+        $openPay = Openpay::getInstance(
+            $_SESSION['merchant'],
+            $_SESSION['private_key']
+        );
+
+        return $openPay;
+    }
+
     /**
      * Recibe un Id mediante Get y lo balida con la Bd Kober
      *
@@ -65,7 +70,10 @@ class Pasarela extends CI_Controller
 
         if (!$respuesta['error']) {
             $_SESSION['private_key'] = $respuesta['private_key'];
-            $_SESSION['merchant']   = $respuesta['merchant'];            
+            $_SESSION['merchant'] = $respuesta['merchant'];
+
+            unset($respuesta['private_key']);
+            unset($respuesta['merchant']);
         }
 
         echo json_encode($respuesta);
@@ -108,6 +116,8 @@ class Pasarela extends CI_Controller
     {
         header('Content-Type: application/json');
 
+        $openPay = $this->getOpenPay();
+
         $msi = $this->input->post('msi');
         $name = $this->input->post('name');
         $idPedido = $this->input->post('idPedido');
@@ -147,7 +157,7 @@ class Pasarela extends CI_Controller
 
         try {
 
-            $charge = $this->openpay->charges->create($chargeData);
+            $charge = $openPay->charges->create($chargeData);
 
             header("Location: " . $charge->payment_method->url);
 
@@ -189,13 +199,15 @@ class Pasarela extends CI_Controller
     {
         header('Content-Type: application/json');
 
+        $openPay = $this->getOpenPay();
+
         $pagoGuardado = false;
         $id = $this->input->get('id');
         $venta = $this->input->get('venta');
 
         try {
 
-            $pago = $this->openpay->charges->get($id);
+            $pago = $openPay->charges->get($id);
 
             // Si el pago esta validado:
             if ($pago->status === 'completed') {
@@ -231,7 +243,10 @@ class Pasarela extends CI_Controller
         }
 
         if ($pagoGuardado['ok']) {
-            header("Location: " . "{$this->baseUrl}pasarela/exito");
+
+            //unset($_SESSION);
+
+            header("Location: " . "{$this->baseUrl}exito");
         } else {
             echo json_encode("ERROR PREOCESANDO EL PAGO", $pagoGuardado);
         }
