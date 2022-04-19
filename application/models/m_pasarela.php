@@ -170,6 +170,7 @@ class m_pasarela extends CI_Model
     public function enviaPagoServer($objeto, $movid)
     {
         $objeto['movid'] = $movid;
+        $objeto['fechaRegistro'] = $this->fecha_actual();
         /*
         $data = file_get_contents("{$this->url}guardaPagoValidado?idOpen={$id}&idVenta={$movid}");
         $data = json_decode($data);
