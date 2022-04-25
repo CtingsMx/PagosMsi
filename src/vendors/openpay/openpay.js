@@ -25,13 +25,17 @@ $(document).ready(function() {
         .message;
         if (response.status >= 2004 && response.status <= 3205) {
             $("#errorOpenpay").show().html(
-                'Favor de completar tú información, recuerda que la tarjeta debe ser de 16 dígitos y sin espacios, además debes capturar la fecha de expiración y tu código de seguridad.'
+                `<div class="alert alert-warning">
+                    Datos incompletos: por favor ingresa los 16 digítos de tu tarjeta de crédito, la fecha de expiración y código de seguridad.
+                </div>`
                 );
         } else if (response.status >= 1000 && esponse.status <= 1025) {
             $("#errorOpenpay").show().html('Hubo un problema al intentar procesar tu pago.');
         } else {
             $("#errorOpenpay").show().html(
-                'Favor de completar tú información, recuerda que la tarjeta debe ser de 16 dígitos y sin espacios, además debes capturar la fecha de expiración y tu código de seguridad.'
+                `<div class="alert alert-warning">
+                    ${desc}
+                </div>`
                 );
         }
         $("#pay-button").prop("disabled", false);

@@ -46,12 +46,15 @@
                     Pagar a Meses sin Intereses
                 </div>
                 <div class="card-body">
+
                     <div class="row">
                         <div class="card-expl">
                             <div class="debit">
                             </div>
                         </div>
                     </div>
+
+                    <div id="errorOpenpay" class="text-red" > </div>
 
                     <form action="./validaFormulario" method="POST" id="payment-form">
                         <input type="hidden" name="token_id" id="token_id">

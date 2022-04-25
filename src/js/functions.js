@@ -1,8 +1,8 @@
 
 let btnValida = document.getElementById('btn-validar-pago');
-
+//const urlcompra =  window.location.origin+'/pagos/revisaId?folio=';
 const urlcompra = `https://msi.kober.com.mx/revisaId?folio=`;
-//const urlcompra = `https://msi.kober.com.mx/revisaId?folio=`;
+
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
