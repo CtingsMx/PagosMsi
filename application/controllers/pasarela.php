@@ -73,38 +73,9 @@ class Pasarela extends CI_Controller
             $_SESSION['merchant'] = $respuesta['merchant'];
 
             unset($respuesta['private_key']);
-            unset($respuesta['merchant']);
         }
 
         echo json_encode($respuesta);
-    }
-
-    /**
-     * Regresa los datos de una compra si esta es valida
-     *
-     * @deprecated En su lugar usar: validaID
-     *
-     * @return void
-     */
-    public function getCompra()
-    {
-
-        $folio = $this->input->get('folio');
-
-        $datosCompra = $this->m_pasarela->obtDatosPedido($folio);
-        if ($datosCompra) {
-            echo json_encode(
-                [
-                    'resumen' => $datosCompra,
-                    'articulos' => [],
-                ]
-            );
-
-        } else {
-            echo json_encode("no enconte nada ");
-            die();
-        }
-
     }
 
     /**

@@ -1,10 +1,22 @@
 $(document).ready(function() {
 
-    OpenPay.setId('mex0qnhtpq3m0yvkl3sa');
-    OpenPay.setApiKey('pk_1b9a4ef755b8431c91824246ae34f55b');
-    OpenPay.setSandboxMode(true);
-    //Se genera el id de dispositivo
-    var deviceSessionId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
+    var deviceSessionId;
+
+
+   $('#btn-validar-pago').on('click',
+       () => {
+
+        const pk = $('#token_id').val();
+        const merchant = $('#opMerchant').val();
+
+           OpenPay.setId(merchant);
+           OpenPay.setApiKey(pk);
+           OpenPay.setSandboxMode(true);
+           //Se genera el id de dispositivo
+           deviceSessionId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
+
+       });
+
 
     $('#pay-button').on('click', function(event) {
         event.preventDefault();

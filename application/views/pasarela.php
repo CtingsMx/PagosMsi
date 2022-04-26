@@ -58,6 +58,7 @@
 
                     <form action="./validaFormulario" method="POST" id="payment-form">
                         <input type="hidden" name="token_id" id="token_id">
+                        <input type="hidden" id="opMerchant">
                         <input type="hidden" name="idPedido" id="idPedido">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="name" name="name"
@@ -139,5 +140,5 @@
 
 
 <script src="./src/js/imask.js"></script>
-<script src="./src/js/functions.js?v=3.5"></script>
-<script src="./src/vendors/openpay/openpay.js"></script>
+<script src="./src/js/functions.js?v=3.6"></script>
+<script src="./src/vendors/openpay/openpay.js?v=2.1"></script>

@@ -100,9 +100,6 @@ class Server extends CI_Controller
 
         $sucursal = $this->m_server->obtKeySucursal($venta->Sucursal);
 
-        //PARA PRUEBAS... BORRAR EN PROD
-       // $sucursal = $this->m_server->obtKeySucursal(1);
-
         if (empty($sucursal)) {
 
             echo json_encode(
