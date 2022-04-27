@@ -22,7 +22,7 @@ class Pasarela extends CI_Controller
 
         $this->load->helper('url');
         $this->load->model('m_pasarela', "", true);
-        $this->load->model('m_stripe', "", true);
+      //  $this->load->model('m_stripe', "", true);
         $this->load->library('session');
         $this->load->library('encrypt');
 

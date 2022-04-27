@@ -140,5 +140,5 @@
 
 
 <script src="./src/js/imask.js"></script>
-<script src="./src/js/functions.js?v=3.6"></script>
-<script src="./src/vendors/openpay/openpay.js?v=2.1"></script>
+<script src="./src/js/functions.js?v=3.7"></script>
+<script src="./src/vendors/openpay/openpay.js?v=2.2"></script>

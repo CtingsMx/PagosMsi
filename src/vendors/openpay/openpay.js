@@ -6,8 +6,13 @@ $(document).ready(function() {
    $('#btn-validar-pago').on('click',
        () => {
 
-        const pk = $('#token_id').val();
+        const pk = $('#pk').val();
         const merchant = $('#opMerchant').val();
+
+
+           console.log("hola ");
+           console.log(`pk = ${pk}`);
+           console.log(`merchant = ${merchant}`);
 
            OpenPay.setId(merchant);
            OpenPay.setApiKey(pk);
