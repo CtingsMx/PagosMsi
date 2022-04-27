@@ -102,8 +102,8 @@
                                 <select class="form-select" id="msi" name="msi"
                                     aria-label="Floating label select example">
 
-                                    <option selected value="1">Una Sola Excibición</option>
-                                    <option value="3">3 Meses Sin Intereses</option>
+
+                                    <option selected value="3">3 Meses Sin Intereses</option>
                                     <option value="6">6 Meses Sin Intereses</option>
                                 </select>
                                 <label for="msi">&nbsp; Parcialidades de Pago (MSI)</label>

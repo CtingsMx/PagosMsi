@@ -1,15 +1,29 @@
 
 let btnValida = document.getElementById('btn-validar-pago');
-const urlcompra =  window.location.origin+'/pagos/revisaId?folio=';
+const urlcompra =  window.location.origin+'/pagosmsi/revisaId?folio=';
 //const urlcompra = `https://msi.kober.com.mx/revisaId?folio=`;
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
 
+//variables de error
+
+const error_codes = {
+  3001: 'La tarjeta fue declinada por el banco.',
+  3002: 'La tarjeta ha expirado.',
+  3003: 'La tarjeta no tiene fondos suficientes.',
+  3004: 'La tarjeta ha sido identificada como una tarjeta robada.',
+  3005: 'La tarjeta ha sido rechazada por el sistema antifraudes.'
+};
+
+
 let folio = params.folio;
+let error_code = params.code;
 
 (() => {
+  console.log(error_code);
+  validaErrores();
   validaParams();
 })();
 
@@ -130,7 +144,6 @@ function ingresaVenta() {
     } else {
 
       folio = result.value.resumen.movid;
-
       document.getElementById('pk').value = result.value.public_key;
       document.getElementById('opMerchant').value = result.value.merchant;
 
@@ -178,3 +191,23 @@ const maskYear = IMask(year, {
 const maskCvv = IMask(ccv, {
   mask: "000",
 });
+
+//FUNCIONES PARA ERRORES
+
+
+
+
+function validaErrores() {
+
+  console.log(error_code);
+
+
+  if (error_code){
+    Swal.fire({
+      icon: 'error',
+      title:  error_codes[error_code],
+      text: 'Por favor, vuelve a validar tu compra e ingresa una tarjeta de crédito valida',
+    })
+  }
+}
+

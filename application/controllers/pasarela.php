@@ -15,6 +15,7 @@ class Pasarela extends CI_Controller
      * Get All Data from this method.
      *
      * @return Response
+     * @noinspection PhpInconsistentReturnPointsInspection
      */
     public function __construct()
     {
@@ -22,14 +23,11 @@ class Pasarela extends CI_Controller
 
         $this->load->helper('url');
         $this->load->model('m_pasarela', "", true);
-      //  $this->load->model('m_stripe', "", true);
         $this->load->library('session');
         $this->load->library('encrypt');
 
         $this->baseUrl = base_url();
-
         session_start();
-
     }
 
     /**
@@ -185,6 +183,11 @@ class Pasarela extends CI_Controller
                 $objOpenPay = $this->m_pasarela->generaObjetoOpenPay($pago);
                 $pagoGuardado = $this->m_pasarela->enviaPagoServer($objOpenPay, $venta);
             }
+            else{
+
+                header("Location: " . "{$this->baseUrl}?folio={$venta}&code={$pago->error_code}");
+                die();
+            }
 
         } catch (OpenpayApiTransactionError $e) {
             echo json_encode(
@@ -213,13 +216,11 @@ class Pasarela extends CI_Controller
             echo json_encode('Error on the script: ' . $e->getMessage(), 0);
         }
 
+        //SI el responde OK a la petición de almacenar los datos
         if ($pagoGuardado['ok']) {
-
-            //unset($_SESSION);
-
             header("Location: " . "{$this->baseUrl}exito");
         } else {
-            echo json_encode("ERROR PREOCESANDO EL PAGO", $pagoGuardado);
+            echo json_encode("ERROR PREOCESANDO EL PAGO");
         }
 
     }
