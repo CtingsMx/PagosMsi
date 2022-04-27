@@ -1,7 +1,7 @@
 
 let btnValida = document.getElementById('btn-validar-pago');
-const urlcompra =  window.location.origin+'/pagosmsi/revisaId?folio=';
-//const urlcompra = `https://msi.kober.com.mx/revisaId?folio=`;
+//const urlcompra =  window.location.origin+'/pagos/revisaId?folio=';
+const urlcompra = `https://msi.kober.com.mx/revisaId?folio=`;
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
@@ -10,6 +10,10 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 //variables de error
 
 const error_codes = {
+  1001: 'Por Favor, ingrese el número de tarjeta, mes y fecha de expiración validos. ',
+  2005: 'La fecha de expiración de la tarjeta es anterior a la fecha actual.',
+  2006: 'El código de seguridad de la tarjeta (CVV2) no fue proporcionado.',
+  2010: 'Autenticación 3D Secure fallida',
   3001: 'La tarjeta fue declinada por el banco.',
   3002: 'La tarjeta ha expirado.',
   3003: 'La tarjeta no tiene fondos suficientes.',
@@ -22,7 +26,7 @@ let folio = params.folio;
 let error_code = params.code;
 
 (() => {
-  console.log(error_code);
+
   validaErrores();
   validaParams();
 })();

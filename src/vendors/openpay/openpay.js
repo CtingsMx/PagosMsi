@@ -38,8 +38,21 @@ $(document).ready(function() {
     };
 
     var error_callbak = function(response) {
-        var desc = response.data.description != undefined ? response.data.description : response
-        .message;
+        var desc = response.data.description != undefined
+            ? response.data.description :
+            response.message;
+
+        const error_code = response.data.error_code;
+
+
+        $("#errorOpenpay").show().html(
+            `<div class="alert alert-warning">
+                    ${error_codes[error_code]}
+                </div>`
+        );
+
+        /**
+
         if (response.status >= 2004 && response.status <= 3205) {
             $("#errorOpenpay").show().html(
                 `<div class="alert alert-warning">
@@ -54,7 +67,7 @@ $(document).ready(function() {
                     ${desc}
                 </div>`
                 );
-        }
+        }*/
         $("#pay-button").prop("disabled", false);
     };
 
