@@ -11,6 +11,7 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 
 const error_codes = {
   1001: 'Por Favor, ingrese el número de tarjeta, mes y fecha de expiración validos. ',
+  1012: 'El monto transacción esta fuera de los limites permitidos.',
   2005: 'La fecha de expiración de la tarjeta es anterior a la fecha actual.',
   2006: 'El código de seguridad de la tarjeta (CVV2) no fue proporcionado.',
   2010: 'Autenticación 3D Secure fallida',

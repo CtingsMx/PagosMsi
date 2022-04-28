@@ -131,6 +131,12 @@ class Pasarela extends CI_Controller
             header("Location: " . $charge->payment_method->url);
 
         } catch (OpenpayApiTransactionError $e) {
+
+            header("Location: " . "{$this->baseUrl}?folio={$venta['movid']}&code={$e->getErrorCode()}");
+            die();
+
+
+
             echo json_encode(
                 [
                     'ERROR on the transaction: ' . $e->getMessage() .
