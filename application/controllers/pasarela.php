@@ -14,7 +14,7 @@ class Pasarela extends CI_Controller
     /**
      * Get All Data from this method.
      *
-     * @return Response
+     * @return       Response
      * @noinspection PhpInconsistentReturnPointsInspection
      */
     public function __construct()
@@ -43,10 +43,15 @@ class Pasarela extends CI_Controller
         $this->load->view('footer');
     }
 
-    private function getOpenPay()
+    /**
+     * Inicializa un objeto de compra OpenPay
+     *
+     * @return OpenpayObject
+     */
+    private function _getOpenPay()
     {
         //INICIANDO OPENPAY
-        Openpay::getProductionMode(false);
+        Openpay::setProductionMode(true);
         $openPay = Openpay::getInstance(
             $_SESSION['merchant'],
             $_SESSION['private_key']
@@ -85,7 +90,7 @@ class Pasarela extends CI_Controller
     {
         header('Content-Type: application/json');
 
-        $openPay = $this->getOpenPay();
+        $openPay = $this->_getOpenPay();
 
         $msi = $this->input->post('msi');
         $name = $this->input->post('name');
@@ -110,13 +115,13 @@ class Pasarela extends CI_Controller
         $chargeData = array(
             'method' => 'card',
             'source_id' => $_POST["token_id"],
-            'amount' => (float) $cuenta['total'],
+            'amount' => (float) round($cuenta['total']),
             'currency' => 'MXN',
             'order_id' => $venta['ID'] . '123',
-            'description' => "pedido con movid: {$venta['movid']}",
+            'description' => "pedido en msi.kober.com.mx con movid: {$venta['movid']}",
             'device_session_id' => $_POST["deviceIdHiddenFieldName"],
             'customer' => $customer,
-            'use_3d_secure' => true,
+            'use_3d_secure' => false,
             'payment_plan' => [
                 'payments' => $msi,
             ],
@@ -134,8 +139,6 @@ class Pasarela extends CI_Controller
 
             header("Location: " . "{$this->baseUrl}?folio={$venta['movid']}&code={$e->getErrorCode()}");
             die();
-
-
 
             echo json_encode(
                 [
@@ -174,7 +177,7 @@ class Pasarela extends CI_Controller
     {
         header('Content-Type: application/json');
 
-        $openPay = $this->getOpenPay();
+        $openPay = $this->_getOpenPay();
 
         $pagoGuardado = false;
         $id = $this->input->get('id');
@@ -188,8 +191,7 @@ class Pasarela extends CI_Controller
             if ($pago->status === 'completed') {
                 $objOpenPay = $this->m_pasarela->generaObjetoOpenPay($pago);
                 $pagoGuardado = $this->m_pasarela->enviaPagoServer($objOpenPay, $venta);
-            }
-            else{
+            } else {
 
                 header("Location: " . "{$this->baseUrl}?folio={$venta}&code={$pago->error_code}");
                 die();

@@ -16,7 +16,7 @@ $(document).ready(function() {
 
            OpenPay.setId(merchant);
            OpenPay.setApiKey(pk);
-           OpenPay.setSandboxMode(true);
+          // OpenPay.setSandboxMode(true);
            //Se genera el id de dispositivo
            deviceSessionId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
 

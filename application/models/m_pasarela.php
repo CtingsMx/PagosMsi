@@ -59,10 +59,6 @@ class m_pasarela extends CI_Model
 
         $total = $venta['VentaTotal'];
 
-        if ($total < 1000) {
-            $total = 3000;
-        }
-
         $pedido = array(
             'articulo' => 1,
             'cantidad' => 1,
@@ -113,7 +109,7 @@ class m_pasarela extends CI_Model
         }
 
         if ((int) ($sub - (-$puntos)) < 999) {
-            $envio = 150;
+            $envio = 0;
         }
 
         $total = $sub + $puntos + $envio;
